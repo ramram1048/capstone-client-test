@@ -1,60 +1,59 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { Link as RouterLink } from 'react-router-dom'
-import { Toolbar, Link } from '@material-ui/core'
-
-import { handleDrawerOpen } from '../actions/sketchDrawer'
-
-const drawerWidth = 240;
+import { AppBar, Toolbar, IconButton, Link, Typography,
+  ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails,
+} from '@material-ui/core'
+import { Menu as MenuIcon,
+  ExpandMore as ExpandMoreIcon,
+} from '@material-ui/icons'
 
 const useStyles = makeStyles((theme) => ({
-  /*topbar: {
+  toolbar: {
+    width: '100%',
     justifyContent: 'flex-end',
     overflowX: 'auto',
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },*/
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
   },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+  toolbarLink: {
+    padding: theme.spacing(1),
+    flexShrink: 0,
   },
   menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  hide: {
-    display: 'none',
+    margin: theme.spacing(1),
   },
 }));
 
-const NavBar = function({menus}){
+const NavBar = ({menus}) => {
   const classes = useStyles();
-
   return(
-    <Toolbar className={classes.appBar}>
-      <IconButton
-        color="inherit"
-        aria-label="open drawer"
-        onClick={handleDrawerOpen}
-        edge="start"
-        className={clsx(classes.menuButton, open && classes.hide)}
-      >
-        <MenuIcon />
-      </IconButton>
-      <Link component={RouterLink} to="/">Home</Link>
-      {menus.map(({component, path}) => (
-        <Link component={RouterLink} to={path}>{component}</Link>
-      ))}
-    </Toolbar>
+    <AppBar position="static">
+        <Toolbar
+          component="nav" 
+          variant="dense"
+          className={classes.toolbar}>
+            <Link component={RouterLink} to="/"
+                color="inherit"
+                noWrap
+                variant="body2"
+                className={classes.toolbarLink}>
+                Home
+            </Link>
+            {menus.map(({component, path}) => (
+                <Link component={RouterLink} to={path}
+                color="inherit"
+                noWrap
+                variant="body2"
+                className={classes.toolbarLink}>{component}</Link>
+            ))}
+        
+        </Toolbar>
+    </AppBar>
   )
+}
+
+NavBar.propTypes = {
+  menus: PropTypes.object,
 }
 
 export default NavBar
