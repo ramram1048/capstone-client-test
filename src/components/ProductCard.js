@@ -27,12 +27,12 @@ const ProductCard = ({product}) => {
         <CardActionArea>
           <CardMedia
             className={classes.cardMedia}
-            image={product.thumbnails[0]}
-            title={product.title}
+            image={product.img}
+            title={product.pname}
           />
           <CardContent className={classes.cardContent}>
             <Typography gutterBottom>
-              {product.title}
+              {product.pname}
             </Typography>
           </CardContent>
         </CardActionArea>
