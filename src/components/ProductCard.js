@@ -23,7 +23,7 @@ const ProductCard = ({product}) => {
 
   return (
     <Card className={classes.card} variant="outlined">
-      <Link to={"/product?id="+product.id}>
+      <Link to={"/product/"+product.id}>
         <CardActionArea>
           <CardMedia
             className={classes.cardMedia}

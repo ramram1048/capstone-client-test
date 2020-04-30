@@ -3,23 +3,22 @@ import ProductListSummary from './ProductListSummary';
 
 
 const Home = () => {
-  const [externalData, fetchData] = useState(null);
-  fetchData = (data) => {externalData = data};
+  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:3000/products")
       .then(res => res.json())
-      .then(data => fetchData(data));
-  })
+      .then(data => {
+        setData(data)
+        setLoading(false)
+  })}, [loading]);
 
-  if(externalData === null) return(
-    <div>
-      home...loading
-    </div>
+  if(loading) return(
+    <div />
   )
-  console.log(externalData);
   return(
-    <ProductListSummary list={externalData} />
+    <ProductListSummary title="모든제품" data={data} />
   )
 }
 
