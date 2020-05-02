@@ -10,7 +10,7 @@ const Home = () => {
     fetch("http://localhost:3000/products")
       .then(res => res.json())
       .then(data => {
-        setData(data)
+        setData(data.result)
         setLoading(false)
   })}, [loading]);
 

@@ -20,6 +20,7 @@ const ProductListSummary = ({title, data}) => {
             <ProductCard product={product} />
         </Grid>
     ));
+    // console.log(data);
 
     return (
         <Container maxWidth="md">

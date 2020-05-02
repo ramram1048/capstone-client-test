@@ -5,6 +5,7 @@ import routes from './routes'
 
 import NavBar from './components/NavBar'
 import SketchDrawer from './components/SketchDrawer'
+import { SnackbarProvider } from 'notistack'
 
 import { CssBaseline, Container } from '@material-ui/core'
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles'
@@ -58,10 +59,13 @@ const App = ({ history }) => {
         <div className={classes.root}>
           <CssBaseline />
           <Container className={classes.content} maxWidth="lg">
-            <NavBar menus={menus}/>
-            <Container className={classes.context}>
-              { routes }
-            </Container>
+            
+            <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+              <NavBar menus={menus}/>
+              <Container className={classes.context}>
+                { routes }
+              </Container>
+            </SnackbarProvider>
           </Container>
           <SketchDrawer />
         </div>

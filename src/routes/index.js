@@ -5,6 +5,7 @@ import Home from '../components/Home'
 import Hello from '../components/Hello'
 import Counter from '../components/Counter'
 import ProductDetail from '../components/ProductDetail'
+import OrderPage from '../components/OrderPage'
 import NoMatch from '../components/NoMatch'
 
 const routes = (
@@ -13,6 +14,7 @@ const routes = (
         <Route path="/hello" component={Hello} />
         <Route path="/counter" component={Counter} />  
         <Route path="/product" component={ProductDetail} /> 
+        <Route path="/order" component={OrderPage} /> 
         <Route component={NoMatch} />
       </Switch>
 )
