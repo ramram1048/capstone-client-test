@@ -37,7 +37,7 @@ const NavBar = ({menus}) => {
                 noWrap
                 variant="body2"
                 className={classes.toolbarLink}>
-                Home
+                메인
             </Link>
             {menus.map(({component, path}) => (
                 <Link component={RouterLink} to={path}

@@ -4,9 +4,10 @@ import { Route, Switch } from 'react-router'
 import Home from '../components/Home'
 import Hello from '../components/Hello'
 import Counter from '../components/Counter'
-import ProductDetail from '../components/ProductDetail'
-import OrderPage from '../components/OrderPage'
-import CommunityPage from '../components/CommunityPage'
+import ProductListPage from '../components/Product/ProductListPage'
+import ProductDetailPage from '../components/Product/ProductDetailPage'
+import OrderPage from '../components/Order/OrderPage'
+import CommunityPage from '../components/Community/CommunityPage'
 import NoMatch from '../components/NoMatch'
 
 const routes = (
@@ -14,7 +15,8 @@ const routes = (
         <Route exact path="/" component={Home} />
         <Route path="/hello" component={Hello} />
         <Route path="/counter" component={Counter} />  
-        <Route path="/product" component={ProductDetail} /> 
+        <Route path="/productList" component={ProductListPage} /> 
+        <Route path="/product" component={ProductDetailPage} /> 
         <Route path="/order" component={OrderPage} /> 
         <Route path="/community" component={CommunityPage} fetchurl="https://jsonplaceholder.typicode.com/posts" /> 
         <Route component={NoMatch} />

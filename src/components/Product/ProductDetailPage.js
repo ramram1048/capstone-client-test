@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
-import { cleanOrderList, pushToOrderList } from '../actions/orderList'
+import { cleanOrderList, pushToOrderList } from '../../actions/orderList'
 import { useSnackbar } from 'notistack';
 
 import clsx from "clsx";
@@ -32,8 +32,7 @@ import {
   Delete as DeleteIcon, Store
 } from '@material-ui/icons'
 
-import queryString from 'query-string'
-import NoMatch from './NoMatch'
+//import queryString from 'query-string'
 
 const useStyles = makeStyles((theme) => ({
   root:{
@@ -66,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ProductDetail = ({pathname, cleanOrderList, pushToOrderList, push}) => {
+const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) => {
   const [pid, setPid] = useState(0);
   const [data, setData] = useState(null);
   const [detail, setDetail] = useState([]);
@@ -204,7 +203,7 @@ const ProductDetail = ({pathname, cleanOrderList, pushToOrderList, push}) => {
   )
 }
 
-ProductDetail.propTypes = {
+ProductDetailPage.propTypes = {
   pathname: PropTypes.string,
   //search: PropTypes.string,
   //hash: PropTypes.string,
@@ -223,4 +222,4 @@ const mapDispatchToProps = (dispatch) => ({
   push : (path, state) => dispatch(push(path, state)),
 })
   
-export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetailPage)

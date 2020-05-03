@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import ProductListSummary from './ProductListSummary';
+import ProductListSummary from './Product/ProductListSummary';
 
 
 const Home = () => {
