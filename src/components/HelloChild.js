@@ -2,25 +2,29 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import queryString from 'query-string'
 
-const HelloChild = ({ pathname, search, hash }) => (
-  <div>
-    Hello-Child
-    <ul>
-      <li><Link to="/hello?color=Blue&size=40">with query string</Link></li>
-      <li><Link to="/hello#lovelove">with hash</Link></li>
-    </ul>
+const HelloChild = ({ pathname, search, hash }) => {
+  const parsed = JSON.stringify(queryString.parse(search));
+  return(
     <div>
-      pathname: {pathname}
+      Hello-Child
+      <ul>
+        <li><Link to="/hello?color=Blue&size=40">with query string</Link></li>
+        <li><Link to="/hello#lovelove">with hash</Link></li>
+      </ul>
+      <div>
+        pathname: {pathname}
+      </div>
+      <div>
+        search: {parsed}
+      </div>
+      <div>
+        hash: {hash}
+      </div>
     </div>
-    <div>
-      search: {search}
-    </div>
-    <div>
-      hash: {hash}
-    </div>
-  </div>
-)
+  )
+}
 
 HelloChild.propTypes = {
   pathname: PropTypes.string,

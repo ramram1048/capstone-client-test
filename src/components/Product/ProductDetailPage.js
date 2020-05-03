@@ -32,8 +32,6 @@ import {
   Delete as DeleteIcon, Store
 } from '@material-ui/icons'
 
-//import queryString from 'query-string'
-
 const useStyles = makeStyles((theme) => ({
   root:{
     flexGrow: 1,

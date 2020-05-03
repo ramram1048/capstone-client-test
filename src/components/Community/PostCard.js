@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     card: {
         display: 'flex',
         flexGrow: 1,
+        margin: theme.spacing(2),
         '& > *': {
           padding: theme.spacing(2),
         },
@@ -48,7 +49,7 @@ const PostCard = ({post}) => {
     const summary = body.length>100?body.substring(0,100) + "...":body
 
     return(
-        <Card className={classes.card} variant="outlined">
+        <Card className={classes.card} elevation={0} square>
             <div className={classes.cardContent}>
                 <CardActionArea component={Link} to={"/community/post/"+id}>
                     <CardContent>
