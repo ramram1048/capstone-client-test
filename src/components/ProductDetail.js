@@ -77,20 +77,25 @@ const ProductDetail = ({pathname, cleanOrderList, pushToOrderList, push}) => {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-      setPid(pathname.substring(pathname.lastIndexOf('/') + 1));
-      //if(!pid.isInteger) return(<NoMatch/>);
-      fetch("http://localhost:3000/product/"+pid)
-      .then(res => res.json())
-      .then(json => {
-        setData(json.result[0]);
-        if(json.detail.length === 0){
-          setDetail([{
-            id: 1, productId: pid, color: "테스트용 기본", size: "기본", cnt: 100
-          }])
-        }
-        else{setDetail(json.detail)};
-        setReview(json.rows);
-  })}, [pid]);
+    setPid(pathname.substring(pathname.lastIndexOf('/') + 1));
+    //if(!pid.isInteger) return(<NoMatch/>);
+    fetch("http://localhost:3000/product/"+pid)
+    .then(res => res.json(),
+    error => {throw error},
+    )
+    .then(json => {
+      setData(json.result[0]);
+      if(json.detail.length === 0){
+        setDetail([{
+          id: 1, productId: pid, color: "테스트용 기본", size: "기본", cnt: 100
+        }])
+      }
+      else{setDetail(json.detail)};
+      setReview(json.rows);
+    })
+    .catch(
+      error => {console.warn(error)}
+  )}, [pid]);
 
   const addList = (event) => {
     const index = event.target.value;
@@ -188,7 +193,7 @@ const ProductDetail = ({pathname, cleanOrderList, pushToOrderList, push}) => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12}>
+      <Grid container xs={12}>
         <Paper className={classes.contentPanel} square>
           <Typography variant="h6" align="center" gutterBottom>상품상세정보</Typography>
           <Divider variant="middle"/>

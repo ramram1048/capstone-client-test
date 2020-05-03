@@ -6,6 +6,7 @@ import Hello from '../components/Hello'
 import Counter from '../components/Counter'
 import ProductDetail from '../components/ProductDetail'
 import OrderPage from '../components/OrderPage'
+import CommunityPage from '../components/CommunityPage'
 import NoMatch from '../components/NoMatch'
 
 const routes = (
@@ -15,6 +16,7 @@ const routes = (
         <Route path="/counter" component={Counter} />  
         <Route path="/product" component={ProductDetail} /> 
         <Route path="/order" component={OrderPage} /> 
+        <Route path="/community" component={CommunityPage} fetchurl="https://jsonplaceholder.typicode.com/posts" /> 
         <Route component={NoMatch} />
       </Switch>
 )

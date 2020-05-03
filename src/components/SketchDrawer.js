@@ -13,6 +13,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Hidden,
 } from '@material-ui/core'
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -62,25 +63,27 @@ const SketchDrawer = function({drawerOpen, handleDrawerOpen, handleDrawerClose})
   const classes = useStyles();
 
   return(
-    <Drawer
-      anchor="right"
-      variant="permanent"
-      className={clsx(classes.drawer, {
-        [classes.drawerOpen]: drawerOpen,
-        [classes.drawerClose]: !drawerOpen,
-      })}
-      classes={{
-        paper: clsx({
+    <Hidden smDown>
+      <Drawer
+        anchor="right"
+        variant="permanent"
+        className={clsx(classes.drawer, {
           [classes.drawerOpen]: drawerOpen,
           [classes.drawerClose]: !drawerOpen,
-        }),
-      }}
-    >
-      <div className={classes.toolbar}>
-        {drawerOpen?<IconButton onClick={handleDrawerClose}><ChevronRightIcon /></IconButton>
-         : <IconButton onClick={handleDrawerOpen}><ChevronLeftIcon /></IconButton>}
-      </div>
-    </Drawer>
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: drawerOpen,
+            [classes.drawerClose]: !drawerOpen,
+          }),
+        }}
+      >
+        <div className={classes.toolbar}>
+          {drawerOpen?<IconButton onClick={handleDrawerClose}><ChevronRightIcon /></IconButton>
+          : <IconButton onClick={handleDrawerOpen}><ChevronLeftIcon /></IconButton>}
+        </div>
+      </Drawer>
+    </Hidden>
   )
 }
 

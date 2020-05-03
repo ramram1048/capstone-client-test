@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Container } from '@material-ui/core';
@@ -11,11 +11,34 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ProductListSummary = ({title, data}) => {
+const ProductListSummary = ({fetchurl}) => {
     const classes = useStyles();
-    const items = !data.length?
-    <Typography variant="h6" align="center" gutterBottom>검색 결과가 없습니다.</Typography>
-    :data.map((product) => (
+    const [status, setStatus] = useState(0) // 0: loading, 1: success, -1: fetch error
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+    fetch(fetchurl)
+    .then(response => {
+        if(!response.ok){
+        setStatus(-1)
+        throw error;
+        }
+        return response.json()
+    },
+    error => {
+        setStatus(-1);
+        throw error
+    })
+    .then(json => {
+        setData(json.result)
+        setStatus(1)
+    .catch(error => {
+        console.warn("Error:", error)
+    })
+    })}, []);
+
+    if(!data) return (<div>loading</div>)
+    const items = data.map((product) => (
         <Grid item key={product.id}>
             <ProductCard product={product} />
         </Grid>
@@ -23,21 +46,14 @@ const ProductListSummary = ({title, data}) => {
     // console.log(data);
 
     return (
-        <Container maxWidth="md">
-            <Container maxWidth="sm">
-                <Typography variant="h6" align="center" gutterBottom>{title}</Typography>
-            </Container>
-            <Container className={classes.cardGrid}>
-                <Grid container spacing={1}>
-                    {items}
-                </Grid>
-            </Container>
-        </Container>
+        <Grid container spacing={1}>
+            {items}
+        </Grid>
     )
   }
   
   ProductListSummary.propTypes = {
-    list: PropTypes.object,
+    fetchurl: PropTypes.object,
   }
     
   export default ProductListSummary

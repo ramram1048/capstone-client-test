@@ -1,3 +1,5 @@
+// 확장형 navbar
+// 어차피 메뉴가 몇개없어서 이거말고 그냥 NavBar를 사용할것임.
 import React from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
