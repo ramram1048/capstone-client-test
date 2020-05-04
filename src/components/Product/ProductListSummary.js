@@ -39,9 +39,7 @@ const ProductListSummary = ({fetchurl}) => {
 
     if(!data) return (<div>loading</div>)
     const items = data.map((product) => (
-        <Grid item key={product.id}>
-            <ProductCard product={product} />
-        </Grid>
+        <ProductCard product={product} key={product.id}/>
     ));
     // console.log(data);
 

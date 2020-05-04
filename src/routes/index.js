@@ -7,9 +7,12 @@ import Counter from '../components/Counter'
 import ProductListPage from '../components/Product/ProductListPage'
 import ProductDetailPage from '../components/Product/ProductDetailPage'
 import OrderPage from '../components/Order/OrderPage'
+import ClosetPage from '../components/Closet/ClosetPage'
+import DesignPage from '../components/Design/DesignPage'
 import CommunityPage from '../components/Community/CommunityPage'
 import PostDetailPage from '../components/Community/PostDetailPage'
 import NoMatch from '../components/NoMatch'
+import Login from '../components/Login'
 
 const routes = (
       <Switch>
@@ -19,8 +22,11 @@ const routes = (
         <Route path="/productList" component={ProductListPage} /> 
         <Route path="/product" component={ProductDetailPage} /> 
         <Route path="/order" component={OrderPage} /> 
+        <Route path="/closet" component={ClosetPage} /> 
+        <Route path="/design" component={DesignPage} /> 
         <Route path="/community/post/" component={PostDetailPage}/> 
         <Route path="/community" component={CommunityPage}/>
+        <Route path="/login" component={Login} />
         <Route component={NoMatch} />
       </Switch>
 )

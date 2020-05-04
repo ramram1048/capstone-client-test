@@ -2,13 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
-import { Card, CardActionArea, CardContent, CardMedia, Button, Typography } from '@material-ui/core';
+import { 
+  Box,
+  Card, 
+  CardActionArea, 
+  CardContent, 
+  CardMedia, 
+  CardActions,
+  CardHeader,
+  Button, 
+  Typography 
+} from '@material-ui/core';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     card: {
-        width: '200px',
         display: 'flex',
         flexDirection: 'column',
+        padding: theme.spacing(1),
     },
     cardMedia: {
         paddingTop: '56.25%', // 16:9
@@ -16,13 +26,13 @@ const useStyles = makeStyles({
     cardContent: {
         flexGrow: 1,
     },
-});
+}));
 
 const ProductCard = ({product}) => {
   const classes = useStyles();
 
   return (
-    <Card className={classes.card} variant="outlined">
+    <Box component={Card} width={1/4} className={classes.card} elevation={0}>
       <Link to={"/product/"+product.id}>
         <CardActionArea>
           <CardMedia
@@ -31,13 +41,15 @@ const ProductCard = ({product}) => {
             title={product.pname}
           />
           <CardContent className={classes.cardContent}>
-            <Typography gutterBottom>
-              {product.pname}
-            </Typography>
+            <Typography gutterBottom>{product.pname}</Typography>
           </CardContent>
         </CardActionArea>
       </Link>
-    </Card>
+      <CardActions>
+        <Typography gutterBottom>{product.price}</Typography>
+        <Typography gutterBottom>{product.seller}</Typography>
+      </CardActions>
+    </Box>
   );
 }
 
