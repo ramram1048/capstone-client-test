@@ -23,7 +23,7 @@ const DesignPage = () => {
         <Grid container direction="column">
             <Typography variant="h4">추천코디</Typography>
             <Divider />
-            <DesignList fetchurl="http://172.16.101.25:8001/page/design/best" />
+            <DesignList fetchurl="http://172.16.101.25:8001/page/bestdesign" />
             <Typography variant="h4">모두가 올린 코디</Typography>
             <Divider />
             <DesignList fetchurl="http://172.16.101.25:8001/page/design" />
