@@ -1,4 +1,4 @@
-// "/design"에서 확인하는 추천코디페이지
+// "/cart"에서 확인하는 장바구니페이지
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -6,29 +6,21 @@ import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid,
-  Typography,
-  Divider,
 } from '@material-ui/core'
-
-import ClosetList from './ClosetList'
 
 const useStyles = makeStyles((theme) => ({
 
 }));
 
-const ClosetPage = () => {
+const LoginPage = (post) => {
     const classes = useStyles();
 
     return(
-        <Grid container direction="column">
-            <Typography variant="h4">나의 옷장</Typography>
-            <Divider />
-            <ClosetList fetchurl="http://172.16.101.25:8001/page/closet" />
-        </Grid>
+        <div></div>
     )
 }
 
-ClosetPage.propTypes = {
+LoginPage.propTypes = {
     //pathname: PropTypes.string,
     //search: PropTypes.string,
     //hash: PropTypes.string,
@@ -45,4 +37,4 @@ const mapDispatchToProps = (dispatch) => ({
     
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClosetPage)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage)

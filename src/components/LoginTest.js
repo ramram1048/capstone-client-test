@@ -13,6 +13,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { push } from 'connected-react-router'
+import axios from 'axios';
 
 function Copyright() {
   return (
@@ -47,8 +49,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function LoginTest() {
   const classes = useStyles();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+
+    // fetch('http://localhost:8001/auth/login',{
+    //   method: "POST",
+    // });
+    
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -62,9 +74,7 @@ export default function Login() {
         </Typography>
         <form 
           className={classes.form} 
-          noValidate
-          action="http://172.16.101.25:8001/auth/login"
-          method="POST"
+          onSubmit={handleSubmit}
         >
           <TextField
             variant="outlined"

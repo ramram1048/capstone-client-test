@@ -12,7 +12,7 @@ import DesignPage from '../components/Design/DesignPage'
 import CommunityPage from '../components/Community/CommunityPage'
 import PostDetailPage from '../components/Community/PostDetailPage'
 import NoMatch from '../components/NoMatch'
-import Login from '../components/Login'
+import LoginPage from '../components/Login/LoginPage'
 import PostTester from '../components/PostTester'
 
 const routes = (
@@ -28,7 +28,7 @@ const routes = (
         <Route path="/design" component={DesignPage} /> 
         <Route path="/community/post/" component={PostDetailPage}/> 
         <Route path="/community" component={CommunityPage}/>
-        <Route path="/login" component={Login} />
+        <Route path="/login" component={LoginPage} />
         <Route component={NoMatch} />
       </Switch>
 )

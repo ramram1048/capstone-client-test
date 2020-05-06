@@ -55,6 +55,7 @@ const menus = [
   {component: "패션케어커뮤니티", path: "/community"},
   {component: "Hello", path: "/hello"},
   {component: "Counter", path: "/counter"},
+  {component: "Login", path: "/login"},
 ];
 
 const App = ({ history }) => {
