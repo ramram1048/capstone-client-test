@@ -62,23 +62,23 @@ const LoginPage = ({status, loginRequest}) => {
 
   const onSubmit = (data) => {
     const {email, password} = data;
-    loginRequest(email, password);
-    // .then(() => {
-    //     if(status === "SUCCESS"){
-    //         // create session data
-    //         let loginData = {
-    //             isLoggedIn: true,
-    //             username: id,
-    //         };
+    loginRequest(email, password)
+    .then(() => {
+        if(status === "SUCCESS"){
+            // create session data
+            let loginData = {
+                isLoggedIn: true,
+                currentUser: email,
+            };
 
-    //         document.cookie = 'key=' + btoa(JSON.stringify(loginData));
-    //         console.log("로그인했음 "+email);
-    //         return true;
-    //     } else{
-    //         console.log("실패요");
-    //         return false;
-    //     }
-    // })
+            document.cookie = 'key=' + btoa(JSON.stringify(loginData));
+            console.log("로그인했음 "+email);
+            return true;
+        } else{
+            console.log("실패요");
+            return false;
+        }
+    })
   }
 
   return (

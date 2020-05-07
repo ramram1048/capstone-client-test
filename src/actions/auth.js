@@ -15,23 +15,58 @@ export const loginRequest = (email, password) => {
   //     // failed
   //     dispatch(loginFailure());
   // })
-    return axios.post('https://jsonplaceholder.typicode.com/posts', 
-    {
-      title: email,
-      body: password,
-      userId: 1,
+    // return axios.post('https://jsonplaceholder.typicode.com/posts', 
+    // {
+    //   title: email,
+    //   body: password,
+    //   userId: 1,
+    // })
+    // .then((res) => console.log(res.data))
+    // .catch((err) => (console.error(err)));
+    
+    // return axios.post('http://172.16.100.187:8001/auth/login', 
+    // {
+    //   email: email,
+    //   password: password,
+    // }, { header: {mode: 'no-cors', credentials: 'include',}}
+    // )
+    
+    // return axios({ method: 'POST', url: 'http://172.16.100.187:8001/auth/login', headers: {mode: 'no-cors', credentials: 'include'}, data: { email: email } })
+    // .then((res) => {
+    //   console.log(res)
+    //   dispatch(loginSuccess(email));
+    // })
+    // .catch((err) => {
+    //   dispatch(loginFailure());
+    // });
+    return fetch('http://172.16.100.187:8001/auth/login', {
+      method: "POST",
+      mode: 'no-cors',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+          email: email,
+          password: password,
+      })
     })
-    .then((res) => console.log(res.data))
-    .catch((err) => (console.error(err)));
+    .then((response) => {
+      console.log(response);
+      dispatch(loginSuccess(email));
+    })
+    .catch((err) => {
+      dispatch(loginFailure());
+    })
 }}
 
 export const login = () => ({
   type: 'AUTH_LOGIN',
 })
 
-export const loginSuccess = (username) => ({
+export const loginSuccess = (email) => ({
   type: 'AUTH_LOGIN_SUCCESS',
-  username
+  email
 })
 
 export const loginFailure = () => ({

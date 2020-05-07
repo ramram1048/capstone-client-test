@@ -115,11 +115,14 @@ const PostWritePage = (post) => {
                             type="file"
                             onChange={handleImageInput}
                         />
-                        <label htmlFor="icon-button-file">
-                            <Button component="span" color="primary" variant="outlined" className={classes.upImageButton}>
+                        <ButtonBase htmlFor="icon-button-file">
+                            {/* <Button component="span" color="primary" variant="outlined" className={classes.upImageButton}>
                                 <PhotoCamera />
-                            </Button>
-                        </label>
+                            </Button> */}
+                            <Avatar variant="rounded" className={classes.previewImage}>
+                                <PhotoCamera />
+                            </Avatar>
+                        </ButtonBase>
                     </Grid>
                     <Button type="submit" fillWidth variant="contained" color="primary">Submit</Button>
                 </form>

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import ProductListSummary from './Product/ProductListSummary';
+import ProductList from './Product/ProductList';
 
 
 const Home = () => {
   
   return(
-    <ProductListSummary fetchurl="http://localhost:3000/products" />
+    <ProductList fetchurl="http://172.16.101.1:3000/products" />
   )
 }
 

@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Container } from '@material-ui/core';
 import ProductCard from './ProductCard';
 
+import axios from 'axios'
+
 const useStyles = makeStyles((theme) => ({
     cardGrid: {
       paddingTop: theme.spacing(1),
@@ -11,30 +13,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ProductListSummary = ({fetchurl}) => {
+const ProductList = ({fetchurl}) => {
     const classes = useStyles();
     const [status, setStatus] = useState(0) // 0: loading, 1: success, -1: fetch error
     const [data, setData] = useState([]);
 
     useEffect(() => {
-    fetch(fetchurl)
-    .then(response => {
-        if(!response.ok){
-        setStatus(-1)
-        throw error;
-        }
-        return response.json()
-    },
-    error => {
-        setStatus(-1);
-        throw error
-    })
-    .then(json => {
-        setData(json.result)
-        setStatus(1)
-    .catch(error => {
-        console.warn("Error:", error)
-    })
+        axios.get(fetchurl)
+        .then(response => {
+            console.log(response)
+            setData(response.data.rows)
+            setStatus(1)
+        .catch(error => {
+            console.warn("Error:", error)
+        })
     })}, []);
 
     if(!data) return (<div>loading</div>)
@@ -50,8 +42,8 @@ const ProductListSummary = ({fetchurl}) => {
     )
   }
   
-  ProductListSummary.propTypes = {
+  ProductList.propTypes = {
     fetchurl: PropTypes.object,
   }
     
-  export default ProductListSummary
+  export default ProductList

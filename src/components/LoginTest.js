@@ -54,11 +54,28 @@ export default function LoginTest() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.target);
+    // const data = new FormData(event.target);
+    console.log(event.target);
+    // console.log(email, password);
 
-    // fetch('http://localhost:8001/auth/login',{
-    //   method: "POST",
-    // });
+    fetch('http://172.16.100.187:8001/auth/login', {
+      method: "POST",
+      mode: 'no-cors',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+          email: email,
+          password: password,
+      })
+    })
+    .then((res) => {
+      
+    })
+    .catch((err) => {
+
+    })
     
   }
 
@@ -74,7 +91,9 @@ export default function LoginTest() {
         </Typography>
         <form 
           className={classes.form} 
-          onSubmit={handleSubmit}
+          method="post"
+          action='http://172.16.100.187:8001/auth/login'
+          onClick={handleSubmit}
         >
           <TextField
             variant="outlined"

@@ -11,7 +11,7 @@ import {
   Divider,
 } from '@material-ui/core'
 
-import ProductListSummary from './ProductListSummary'
+import ProductList from './ProductList'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -20,23 +20,19 @@ const useStyles = makeStyles((theme) => ({
 const categoryMatches = [
     {
         "id": 1,
-        "cname": "top",
         "title": "상의",
     },
     {
         "id": 2,
-        "cname": "bottom",
         "title": "하의",
     },
     {
         "id": 3,
-        "cname": "shoes",
-        "title": "신발",
+        "title": "악세서리",
     },
     {
         "id": 4,
-        "cname": "acc",
-        "title": "패션잡화",
+        "title": "신발",
     },
 ]
 
@@ -49,7 +45,7 @@ const ProductListPage = ({search}) => {
         <Grid container>
             <Typography variant="h4" gutterBottom>{category.title}</Typography>
             <Divider />
-            <ProductListSummary fetchurl={"http://localhost:3000/"+category.cname} />
+            <ProductList fetchurl={"http://localhost:3000/productList/"+category.id} />
         </Grid>
     )
 }

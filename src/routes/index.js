@@ -14,12 +14,15 @@ import CommunityPage from '../components/Community/CommunityPage'
 import PostDetailPage from '../components/Community/PostDetailPage'
 import NoMatch from '../components/NoMatch'
 import LoginPage from '../components/Login/LoginPage'
+
+import LoginTest from '../components/LoginTest'
 import PostTester from '../components/PostTester'
 
 const routes = (
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/login" component={LoginPage} />
+        <Route path="/logintest" component={LoginTest} />
         <Route path="/hello" component={Hello} />
         <Route path="/counter" component={Counter} />  
         <Route path="/productList" component={ProductListPage} /> 
@@ -29,7 +32,7 @@ const routes = (
         <Route path="/test" component={PostTester} /> 
         <Route path="/design" component={DesignPage} /> 
         <Route path="/community/post/" component={PostDetailPage}/> 
-        <Route path="/community/write" component={PostWritePage}/> 
+        <Route path="/community/post/write" component={PostWritePage}/> 
         <Route path="/community" component={CommunityPage}/>
         <Route component={NoMatch} />
       </Switch>

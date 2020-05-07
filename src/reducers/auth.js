@@ -26,7 +26,7 @@ const authReducer = (state = init, action) => {
                 status: {
                     ...state.status,
                     isLoggedIn: true,
-                    currentUser: action.username,
+                    currentUser: action.email,
                 }
             }
         case 'AUTH_LOGIN_FAILURE':
