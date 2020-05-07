@@ -13,6 +13,8 @@ import {
 } from '@material-ui/core'
 import PostList from './PostList'
 
+import yujinserver from '../../restfulapi'
+
 const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1

@@ -10,6 +10,7 @@ import {
   Typography,
   Divider,
 } from '@material-ui/core'
+import sangminserver from '../../restfulapi';
 
 import ProductList from './ProductList'
 
@@ -45,7 +46,7 @@ const ProductListPage = ({search}) => {
         <Grid container>
             <Typography variant="h4" gutterBottom>{category.title}</Typography>
             <Divider />
-            <ProductList fetchurl={"http://localhost:3000/productList/"+category.id} />
+            <ProductList fetchurl={sangminserver+"/productList/"+category.id} />
         </Grid>
     )
 }

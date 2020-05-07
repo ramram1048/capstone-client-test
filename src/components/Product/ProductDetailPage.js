@@ -32,6 +32,8 @@ import {
   Delete as DeleteIcon, Store
 } from '@material-ui/icons'
 
+import sangminserver from '../../restfulapi';
+
 const useStyles = makeStyles((theme) => ({
   root:{
     flexGrow: 1,
@@ -76,7 +78,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   useEffect(() => {
     setPid(pathname.substring(pathname.lastIndexOf('/') + 1));
     //if(!pid.isInteger) return(<NoMatch/>);
-    fetch("http://localhost:3000/product/"+pid)
+    fetch(sangminserver+"/product/"+pid)
     .then(res => res.json(),
     error => {throw error},
     )

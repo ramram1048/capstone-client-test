@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import ProductList from './Product/ProductList';
-
+import sangminserver from '../restfulapi';
 
 const Home = () => {
   
   return(
-    <ProductList fetchurl="http://172.16.101.1:3000/products" />
+    <ProductList fetchurl={sangminserver+"/products"} />
   )
 }
 
