@@ -1,5 +1,6 @@
 // https://velopert.com/1967
 import axios from 'axios'
+import yujinserver from '../restfulapi'
 
 export const loginRequest = (email, password) => {
   console.log(email, password)
@@ -39,7 +40,7 @@ export const loginRequest = (email, password) => {
     // .catch((err) => {
     //   dispatch(loginFailure());
     // });
-    return fetch('http://172.16.100.187:8001/auth/login', {
+    return fetch(yujinserver+'/auth/login', {
       method: "POST",
       mode: 'no-cors',
       headers: {

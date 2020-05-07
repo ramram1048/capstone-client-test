@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core'
 
 import ClosetList from './ClosetList'
+import yujinserver from '../../restfulapi'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -23,7 +24,7 @@ const ClosetPage = () => {
         <Grid container direction="column">
             <Typography variant="h4">나의 옷장</Typography>
             <Divider />
-            <ClosetList fetchurl="http://172.16.101.25:8001/page/closet" />
+            <ClosetList fetchurl={yujinserver+"/page/closet"} />
         </Grid>
     )
 }
