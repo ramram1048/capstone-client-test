@@ -4125,6 +4125,11 @@ react-dom@^16.6.0:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
+react-hook-form@^5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-5.6.1.tgz#8b6017ec01731bde4f6a6bcd94955ff5e69e28cc"
+  integrity sha512-pqlAiWyZqngdEVUinxPSmhs9k2L/ETsTf8LU7wfwrE1bXJnslRsb4aKlYiL2z0bgGrCuksN8el5bxFbnR1/qEA==
+
 react-hot-loader@^4.3.12:
   version "4.12.21"
   resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.21.tgz#332e830801fb33024b5a147d6b13417f491eb975"
@@ -4235,6 +4240,11 @@ readdirp@^2.0.0, readdirp@^2.2.1:
     graceful-fs "^4.1.11"
     micromatch "^3.1.10"
     readable-stream "^2.0.2"
+
+redux-thunk@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
+  integrity sha512-km6dclyFnmcvxhAcrQV2AkZmPQjzPDjgVlQtR0EQjxZPyJ0BnMf3in1ryuR8A2qU0HldVRfxYXbFSKlI3N7Slw==
 
 redux@^4.0.1:
   version "4.0.5"

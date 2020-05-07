@@ -9,6 +9,7 @@ import {
   Grid,
 } from '@material-ui/core'
 import ClosetCard from './ClosetCard';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -57,6 +58,7 @@ const ClosetList = ({fetchurl}) => {
         // })
         // .catch(error => {
         // console.warn("Error:", error)
+        // axios.get(fetchurl, {withCredentials: true})
         setClosets(sampleCloset);
     }, [fetchurl]);
     if(!closets) return(<div>loading.</div>)

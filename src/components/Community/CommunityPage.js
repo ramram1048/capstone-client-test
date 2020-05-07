@@ -8,11 +8,14 @@ import {
   Grid,
   Typography,
   Divider,
+  Button
 } from '@material-ui/core'
 import PostList from './PostList'
 
 const useStyles = makeStyles((theme) => ({
-
+    title: {
+        flexGrow: 1
+    }
 }));
 
 const CommunityPage = () => {
@@ -20,7 +23,10 @@ const CommunityPage = () => {
 
     return(
         <Grid container direction="column">
-            <Typography variant="h4">패션케어커뮤니티</Typography>
+            <Grid item container>
+                <Typography className={classes.title} variant="h4">패션케어커뮤니티</Typography>
+                <Button>글쓰기</Button>
+            </Grid>
             <Divider />
             <PostList fetchurl="https://jsonplaceholder.typicode.com/posts" />
         </Grid>

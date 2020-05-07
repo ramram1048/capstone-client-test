@@ -7,6 +7,7 @@ module.exports = {
   entry: [
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',
+    'babel-polyfill',
     path.resolve('src/index.js'),
   ],
   output: {
