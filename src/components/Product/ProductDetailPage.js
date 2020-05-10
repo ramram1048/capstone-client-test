@@ -73,8 +73,6 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   const [data, setData] = useState(null);
   const [detail, setDetail] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [optionMenu, setOptionMenu] = useState("");
-  const [optionArray, setOptionArray] = useState([]);
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -89,52 +87,62 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
       setData(json.result[0]);
       if(json.detail.length === 0){
         setDetail([{
-          id: 1, productId: pid, color: "테스트용 기본", size: "기본", cnt: 100
+          selected: true, option: {id: 1, productId: pid, color: "테스트용 기본", size: "기본", cnt: 100}
         }])
       }
-      else{setDetail(json.detail)};
+      else{
+        setDetail(json.detail.map((option) => {
+          return {
+            selected: false, 
+            option: option
+          }
+        }))
+      };
       setReviews(json.rows);
     })
     .catch(error => {console.warn(error)}
   )}, [pid]);
 
-  const addList = (event) => {
-    const index = event.target.value;
-    setOptionMenu(""); // event.preventDefault();
-    if(!optionArray.includes(index)){ // check duplicate option
-      setOptionArray([...optionArray, index]); // push index into optionArray
-    }
+  // useEffect(() => {
+  //   console.log(detail)
+  // }, [detail])
+
+  const addList = (event, index) => {
+    const newList = [...detail]
+    // console.log(index, newList)
+    newList[index].selected = true
+    setDetail(newList);
   }
 
-  const removeList = (index) => {
-    const newList = [...optionArray];
-    newList.splice(index, 1);
-    setOptionArray(newList);
+  const removeList = (event, index) => {
+    const newList = [...detail];
+    newList[index].selected = false
+    setDetail(newList);
   }
 
   if(!pid || !data || !detail) return(<div>loading</div>)
-  console.log(data);
+  // console.log(data);
   //console.log(detail);
-  //console.log(optionArray)
+  // console.log(detail)
   const optionMenuItem = detail.map((option, index) => {
       return(
-        <MenuItem value={index}>{option.color} / {option.size}</MenuItem>
+        <MenuItem onClick={(event) => addList(event, index)}>{option.option.color} / {option.option.size}</MenuItem>
   )})
-  const optionRow = optionArray.map((optionIdx) => {
-    return(
-      <TableRow>
-        <TableCell>{detail[optionIdx].color} / {detail[optionIdx].size}</TableCell>
-        <TableCell size="small">개수</TableCell>
-        <TableCell size="small" align="right"><strong className={classes.price}>{data.price}</strong>원</TableCell>
-        <TableCell size="small"><Button variant="outlined">입혀보기</Button></TableCell>
-        <TableCell size="small"><IconButton 
-        aria-label="delete"
-        onClick={removeList}>
-            <DeleteIcon />
-          </IconButton></TableCell>
-      </TableRow>
-    )
-  })
+  // const optionRow = optionArray.map((optionIdx) => {
+  //   return(
+  //     <TableRow>
+  //       <TableCell>{detail[optionIdx].color} / {detail[optionIdx].size}</TableCell>
+  //       <TableCell size="small">개수</TableCell>
+  //       <TableCell size="small" align="right"><strong className={classes.price}>{data.price}</strong>원</TableCell>
+  //       <TableCell size="small"><Button variant="outlined">입혀보기</Button></TableCell>
+  //       <TableCell size="small"><IconButton 
+  //       aria-label="delete"
+  //       onClick={removeList}>
+  //           <DeleteIcon />
+  //         </IconButton></TableCell>
+  //     </TableRow>
+  //   )
+  // })
 
   const reviewList = reviews? reviews.map((review) => {
         return(
@@ -156,21 +164,46 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
               <Typography item gutterBottom>{review.content}</Typography>
           </Grid>
         )
-      }) : <div>ㅇㅅㅇ</div>
+  }) : <div>ㅇㅅㅇ</div>
   
+  const optionTableRow = detail.map((option, index) => {
+    if(option.selected === true) return(
+      <TableRow>
+        <TableCell>{option.option.color} / {option.option.size}</TableCell>
+        <TableCell size="small">개수</TableCell>
+        <TableCell size="small" align="right"><strong className={classes.price}>{data.price}</strong>원</TableCell>
+        <TableCell size="small"><Button variant="outlined">입혀보기</Button></TableCell>
+        <TableCell size="small"><IconButton 
+        aria-label="delete"
+        onClick={(event) => removeList(event, index)}
+        >
+            <DeleteIcon />
+          </IconButton></TableCell>
+      </TableRow>
+    )
+  })
   
   const purchaseThis = () => {
-    if(optionArray.length){  
-      cleanOrderList();
-      optionArray.map((optionIdx) => {
-        const option = detail[optionIdx];
-        pushToOrderList({pid: option.productId, pname: data.pname, color: option.color, size: option.size, cnt: 1, price: data.price, img: data.img});
-      })
-      push('/order');
-    }
-    else{
+    let optionCount = 0;
+    cleanOrderList();
+    detail.map((option) => {
+      if(option.selected === true) {
+        pushToOrderList({
+          pid: option.productId, 
+          pname: data.pname, 
+          color: option.color, 
+          size: option.size, 
+          cnt: 1, 
+          price: data.price, 
+          img: data.img
+        });
+        optionCount++;
+      }
+    })
+    if(!optionCount) {
       enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
     }
+    else{push('/order');}
   }
 
   return(
@@ -187,9 +220,9 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
             <Typography variant="subtitle2" gutterBottom><strong className={classes.price}>{data.price}</strong>원</Typography>
             <FormControl variant="outlined" className={classes.formControl}>
               <Select
-                value={optionMenu}
-                onChange={addList}
+                value=""
                 displayEmpty
+                onClick={addList}
                 className={classes.selectEmpty}
               >
                 <MenuItem value="" disabled>
@@ -200,10 +233,10 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
             </FormControl>
             <Table className={clsx({
               [classes.formControl]: true,
-              [classes.hide] : optionArray.length == 0
+              [classes.hide] : false
               })} aria-label="spanning table">
               <TableBody>
-                {optionRow}
+                {optionTableRow}
                 <TableRow>
                   <TableCell colSpan={3} align="right">총 합계금액</TableCell>
                   <TableCell colSpan={2} align="right"><strong className={classes.price}>얼마얼마</strong>원</TableCell>

@@ -60,19 +60,19 @@ const App = ({ history }) => {
   return (
     <ConnectedRouter history={history}>
       <ThemeProvider theme={theme}>
-            <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
         <div className={classes.root}>
           <CssBaseline />
               <Container maxWidth={false}>
+            <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
             <NavBar menus={menus}/>
                   <Container maxWidth="lg">
                     { routes }
                   </Container>
+            </SnackbarProvider>
 
               </Container>
               <SketchDrawer />
         </div>
-            </SnackbarProvider>
       </ThemeProvider>
     </ConnectedRouter>
   )
