@@ -1,6 +1,6 @@
 // https://velopert.com/1967
 import axios from 'axios'
-import yujinserver from '../restfulapi'
+import {yujinserver} from '../restfulapi'
 
 export const loginRequest = (email, password) => {
   console.log(email, password)
@@ -44,7 +44,9 @@ export const loginRequest = (email, password) => {
       method: "POST",
       mode: 'no-cors',
       headers: {
-        "Content-Type": "application/json"
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        'Cache': 'no-cache'
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -52,8 +54,9 @@ export const loginRequest = (email, password) => {
           password: password,
       })
     })
-    .then((response) => {
-      console.log(response);
+    .then(((res) => res.json()))
+    .then((data) => {
+      console.log(data);
       dispatch(loginSuccess(email));
     })
     .catch((err) => {

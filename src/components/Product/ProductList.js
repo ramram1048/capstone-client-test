@@ -27,7 +27,7 @@ const ProductList = ({fetchurl}) => {
         .catch(error => {
             console.warn("Error:", error)
         })
-    })}, []);
+    })}, [fetchurl]);
 
     if(!data) return (<div>loading</div>)
     const items = data.map((product) => (

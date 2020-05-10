@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core'
 
 import DesignList from './DesignList'
-import yujinserver from '../../restfulapi'
+import {yujinserver} from '../../restfulapi'
 
 const useStyles = makeStyles((theme) => ({
 

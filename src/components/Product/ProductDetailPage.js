@@ -10,6 +10,8 @@ import clsx from "clsx";
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
+  Avatar,
+  Box,
   Grid,
   Paper,
   Typography,
@@ -23,7 +25,8 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableRow
+  TableRow,
+  ButtonBase
 } from '@material-ui/core'
 import {
   orange
@@ -32,7 +35,7 @@ import {
   Delete as DeleteIcon, Store
 } from '@material-ui/icons'
 
-import sangminserver from '../../restfulapi';
+import {sangminserver} from '../../restfulapi';
 
 const useStyles = makeStyles((theme) => ({
   root:{
@@ -61,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
   },
   contentPanel: {
-    
+    flexGrow: 1,
   }
 }));
 
@@ -69,7 +72,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   const [pid, setPid] = useState(0);
   const [data, setData] = useState(null);
   const [detail, setDetail] = useState([]);
-  const [review, setReview] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [optionMenu, setOptionMenu] = useState("");
   const [optionArray, setOptionArray] = useState([]);
   const classes = useStyles();
@@ -90,10 +93,9 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
         }])
       }
       else{setDetail(json.detail)};
-      setReview(json.rows);
+      setReviews(json.rows);
     })
-    .catch(
-      error => {console.warn(error)}
+    .catch(error => {console.warn(error)}
   )}, [pid]);
 
   const addList = (event) => {
@@ -111,7 +113,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   }
 
   if(!pid || !data || !detail) return(<div>loading</div>)
-  // console.log(data);
+  console.log(data);
   //console.log(detail);
   //console.log(optionArray)
   const optionMenuItem = detail.map((option, index) => {
@@ -133,6 +135,29 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
       </TableRow>
     )
   })
+
+  const reviewList = reviews? reviews.map((review) => {
+        return(
+          <Grid container component={Paper} direction="column" elevation={0}>
+            <Grid item container>
+                <Avatar item>{review.userId}</Avatar>
+                <Box item direction="column" flexGrow={1}>
+                    <Typography>{review.userId}</Typography>
+                    <Typography variant="body2" color="textSecondary">언제 몇월 몇일 {review.email}</Typography>
+                </Box>
+                <Box item>
+                    <IconButton>ㅋ</IconButton>
+                    <IconButton>ㄴ</IconButton>
+                    <IconButton>ㅇ</IconButton>
+                    <IconButton>ㄷ</IconButton>
+                </Box>
+            </Grid>
+              <ButtonBase item><img src={review.img} /></ButtonBase>
+              <Typography item gutterBottom>{review.content}</Typography>
+          </Grid>
+        )
+      }) : <div>ㅇㅅㅇ</div>
+  
   
   const purchaseThis = () => {
     if(optionArray.length){  
@@ -192,13 +217,18 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
           </Grid>
         </Grid>
       </Grid>
-      <Grid container xs={12}>
-        <Paper className={classes.contentPanel} square>
-          <Typography variant="h6" align="center" gutterBottom>상품상세정보</Typography>
+      <Container>
+        <Paper item className={classes.contentPanel} square>
+          <Typography variant="h6" gutterBottom>상품상세정보</Typography>
           <Divider variant="middle"/>
-          <img src={data.description} />
+          <img src={data.description} alt={data.description} />
         </Paper>
-      </Grid>
+        <Paper item className={classes.contentPanel} square>
+          <Typography variant="h6" gutterBottom>리뷰</Typography>
+          <Divider variant="middle"/>
+          {reviewList}
+        </Paper>
+      </Container>
     </Grid>
   )
 }

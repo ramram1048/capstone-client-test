@@ -50,7 +50,14 @@ const ClosetList = ({fetchurl}) => {
     const [ closets, setClosets ] = useState([]);
     const classes = useStyles();
     useEffect(() => {
-        // fetch(fetchurl)
+        // fetch(fetchurl, {
+        //   headers: {
+        //     'Accept': 'application/json',
+        //     'Content-Type': 'application/json',
+        //     'Cache': 'no-cache'
+        //   },
+        //   credentials: 'include',
+        // })
         // .then(response => response.json())
         // .then(json => {
         //     console.log(json)

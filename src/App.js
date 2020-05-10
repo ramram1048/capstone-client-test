@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { ConnectedRouter } from 'connected-react-router'
 import routes from './routes'
 
-import NavBar from './components/NavBar'
+import NavBar from './components/Header/NavBar'
 import SketchDrawer from './components/SketchDrawer'
 import { SnackbarProvider } from 'notistack'
 
@@ -36,10 +36,6 @@ const useStyles = makeStyles((theme) => ({
   hide: {
     display: 'none',
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
   context: {
     paddingTop: theme.spacing(3),
   }
@@ -64,19 +60,19 @@ const App = ({ history }) => {
   return (
     <ConnectedRouter history={history}>
       <ThemeProvider theme={theme}>
+            <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
         <div className={classes.root}>
           <CssBaseline />
-          <Container className={classes.content} maxWidth="lg">
-            
-            <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-              <NavBar menus={menus}/>
-              <Container className={classes.context}>
-                { routes }
+              <Container maxWidth={false}>
+            <NavBar menus={menus}/>
+                  <Container maxWidth="lg">
+                    { routes }
+                  </Container>
+
               </Container>
-            </SnackbarProvider>
-          </Container>
-          <SketchDrawer />
+              <SketchDrawer />
         </div>
+            </SnackbarProvider>
       </ThemeProvider>
     </ConnectedRouter>
   )

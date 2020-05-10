@@ -46,7 +46,7 @@ const ProductCard = ({product}) => {
         </CardActionArea>
       </Link>
       <CardActions>
-        <Typography gutterBottom>{product.price}</Typography>
+        <Typography gutterBottom>{product.price}원</Typography>
         <Typography gutterBottom>{product.seller}</Typography>
       </CardActions>
     </Box>
