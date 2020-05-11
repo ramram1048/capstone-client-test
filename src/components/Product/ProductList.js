@@ -21,13 +21,14 @@ const ProductList = ({fetchurl}) => {
     useEffect(() => {
         axios.get(fetchurl)
         .then(response => {
-            console.log(response)
+            // console.log(response)
             setData(response.data.rows)
             setStatus(1)
+        })
         .catch(error => {
             console.warn("Error:", error)
         })
-    })}, [fetchurl]);
+    }, [fetchurl]);
 
     if(!data) return (<div>loading</div>)
     const items = data.map((product) => (

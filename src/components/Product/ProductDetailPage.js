@@ -1,5 +1,5 @@
 // "/product/:pid"에서 상품 상세정보 확인하는 페이지
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
@@ -26,23 +26,23 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  ButtonBase
+  ButtonBase,
+  TextField,
+  Icon,
 } from '@material-ui/core'
 import {
   orange
 } from '@material-ui/core/colors'
 import {
-  Delete as DeleteIcon, Store
+  Delete as DeleteIcon, Store, PhotoCamera, Cancel
 } from '@material-ui/icons'
 
+import ReviewCard from './ReviewCard';
 import {sangminserver} from '../../restfulapi';
 
 const useStyles = makeStyles((theme) => ({
   root:{
     flexGrow: 1,
-    '& > *': {
-      padding: theme.spacing(1),
-    },
   },
   thumbnail: {
     backgroundRepeat: 'no-repeat',
@@ -65,14 +65,36 @@ const useStyles = makeStyles((theme) => ({
   },
   contentPanel: {
     flexGrow: 1,
+  },
+  imageContainer: {
+    display: 'flex',
+  },
+  upImageButton: {
+      width: theme.spacing(20),
+      height: theme.spacing(20),
+  },
+  input: {
+      display: 'none',
+  },
+  previewImage: {
+      width: theme.spacing(20),
+      height: theme.spacing(20),
+  },
+  previewCancel: {
+    position: "absolute",
+    top: '0',
+    right: '0',
   }
 }));
 
 const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) => {
   const [pid, setPid] = useState(0);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [detail, setDetail] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [expanded, setExpanded] = useState(false);
+  const [ images, setImages ] = useState([]);
+
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -80,9 +102,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
     setPid(pathname.substring(pathname.lastIndexOf('/') + 1));
     //if(!pid.isInteger) return(<NoMatch/>);
     fetch(sangminserver+"/product/"+pid)
-    .then(res => res.json(),
-    error => {throw error},
-    )
+    .then(res => res.json())
     .then(json => {
       setData(json.result[0]);
       if(json.detail.length === 0){
@@ -120,7 +140,11 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
     setDetail(newList);
   }
 
-  if(!pid || !data || !detail) return(<div>loading</div>)
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  if(pid === 0 || !data || !detail) return(<div>loading</div>)
   // console.log(data);
   //console.log(detail);
   // console.log(detail)
@@ -128,57 +152,33 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
       return(
         <MenuItem onClick={(event) => addList(event, index)}>{option.option.color} / {option.option.size}</MenuItem>
   )})
-  // const optionRow = optionArray.map((optionIdx) => {
-  //   return(
-  //     <TableRow>
-  //       <TableCell>{detail[optionIdx].color} / {detail[optionIdx].size}</TableCell>
-  //       <TableCell size="small">개수</TableCell>
-  //       <TableCell size="small" align="right"><strong className={classes.price}>{data.price}</strong>원</TableCell>
-  //       <TableCell size="small"><Button variant="outlined">입혀보기</Button></TableCell>
-  //       <TableCell size="small"><IconButton 
-  //       aria-label="delete"
-  //       onClick={removeList}>
-  //           <DeleteIcon />
-  //         </IconButton></TableCell>
-  //     </TableRow>
-  //   )
-  // })
 
-  const reviewList = reviews? reviews.map((review) => {
+  const reviewList = reviews.length? reviews.map((review) => {
         return(
-          <Grid container component={Paper} direction="column" elevation={0}>
-            <Grid item container>
-                <Avatar item>{review.userId}</Avatar>
-                <Box item direction="column" flexGrow={1}>
-                    <Typography>{review.userId}</Typography>
-                    <Typography variant="body2" color="textSecondary">언제 몇월 몇일 {review.email}</Typography>
-                </Box>
-                <Box item>
-                    <IconButton>ㅋ</IconButton>
-                    <IconButton>ㄴ</IconButton>
-                    <IconButton>ㅇ</IconButton>
-                    <IconButton>ㄷ</IconButton>
-                </Box>
-            </Grid>
-              <ButtonBase item><img src={review.img} /></ButtonBase>
-              <Typography item gutterBottom>{review.content}</Typography>
-          </Grid>
+          <ReviewCard review={review} />
         )
-  }) : <div>ㅇㅅㅇ</div>
+  }) : <Typography variant="h4" alignment="center" gutterBottom>리뷰가 없어요</Typography>
   
   const optionTableRow = detail.map((option, index) => {
+    // console.log(option)
     if(option.selected === true) return(
       <TableRow>
-        <TableCell>{option.option.color} / {option.option.size}</TableCell>
-        <TableCell size="small">개수</TableCell>
-        <TableCell size="small" align="right"><strong className={classes.price}>{data.price}</strong>원</TableCell>
-        <TableCell size="small"><Button variant="outlined">입혀보기</Button></TableCell>
         <TableCell size="small"><IconButton 
         aria-label="delete"
         onClick={(event) => removeList(event, index)}
         >
-            <DeleteIcon />
-          </IconButton></TableCell>
+          <DeleteIcon />
+        </IconButton></TableCell>
+        <TableCell><Typography gutterBottom>{option.option.color} / {option.option.size}</Typography></TableCell>
+        <TableCell size="small"><Typography gutterBottom><TextField 
+          defaultValue={1}
+          type="number"
+          placeholder="개수"
+          inputProps={{ min: "1", max: "100", step: "1"}}
+        />개
+          </Typography></TableCell>
+        <TableCell size="small" align="right"><strong className={classes.price}>{data.price}</strong>원</TableCell>
+        <TableCell size="small"><Button variant="outlined">입혀보기</Button></TableCell>
       </TableRow>
     )
   })
@@ -186,14 +186,14 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   const purchaseThis = () => {
     let optionCount = 0;
     cleanOrderList();
-    detail.map((option) => {
+    detail.map((option, index) => {
       if(option.selected === true) {
         pushToOrderList({
-          pid: option.productId, 
+          pid: pid, 
           pname: data.pname, 
-          color: option.color, 
-          size: option.size, 
-          cnt: 1, 
+          color: option.option.color, 
+          size: option.option.size, 
+          quantity: 1,
           price: data.price, 
           img: data.img
         });
@@ -205,6 +205,70 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
     }
     else{push('/order');}
   }
+  const handleImageInput = (event) => {
+    if(images.length < 3){
+      if(event.target.files[0] !== undefined){
+        setImages([...images, event.target.files[0]]);
+      }
+    }
+  }
+  const removeImage = (index) => {
+    const newList = [...images];
+    newList.splice(index, 1);
+    setImages(newList);
+  }
+
+  const reviewWriteForm = 
+  <Box className={clsx({
+      [classes.hide]: !expanded
+    })}>
+      <form>
+        <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="content"
+            label="내용"
+            multiline
+            rows={12}
+            />
+        <Grid className={classes.imageContainer}>
+            {images.map((image, index) => {
+                return(
+                  <React.Fragment className={classes.previewImage}>
+                    <ButtonBase variant="rounded">
+                      <Avatar src={URL.createObjectURL(image)} 
+                          variant="rounded"
+                          className={classes.previewImage}
+                      />
+                    </ButtonBase>
+                    <ButtonBase onClick={(index) => removeImage(index)}>
+                      <Cancel className={classes.previewCancel}/>
+                    </ButtonBase>
+                  </React.Fragment>
+                )
+            })}
+            <input 
+                accpet="image/*"
+                className={classes.input}
+                id="icon-button-file"
+                multiple
+                type="file"
+                onChange={(event) => handleImageInput(event)}
+            />
+            <label htmlFor="icon-button-file">
+              <Avatar variant="rounded" className={clsx({
+                [classes.previewImage]: true,
+                [classes.hide]: images.length >= 3
+              })}>
+                  <PhotoCamera />
+              </Avatar>
+            </label>
+        </Grid>
+        <Button type="submit" fillWidth variant="contained" color="primary">Submit</Button>
+    </form>
+    </Box>
 
   return(
     <Grid container className={classes.root}>
@@ -222,7 +286,6 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
               <Select
                 value=""
                 displayEmpty
-                onClick={addList}
                 className={classes.selectEmpty}
               >
                 <MenuItem value="" disabled>
@@ -250,18 +313,24 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
           </Grid>
         </Grid>
       </Grid>
-      <Container>
+      <Grid xs={12}>
         <Paper item className={classes.contentPanel} square>
           <Typography variant="h6" gutterBottom>상품상세정보</Typography>
           <Divider variant="middle"/>
           <img src={data.description} alt={data.description} />
         </Paper>
         <Paper item className={classes.contentPanel} square>
-          <Typography variant="h6" gutterBottom>리뷰</Typography>
+          <Grid container>
+            <Typography flexGrow={1} variant="h6" gutterBottom>리뷰</Typography>
+            <Button onClick={handleExpandClick}>리뷰 쓰기</Button>
+          </Grid>
+          {reviewWriteForm}
           <Divider variant="middle"/>
-          {reviewList}
+          <Grid container>
+            {reviewList}
+          </Grid>
         </Paper>
-      </Container>
+      </Grid>
     </Grid>
   )
 }
@@ -280,7 +349,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  pushToOrderList : ({pid, pname, color, size, cnt, price, img}) => dispatch(pushToOrderList(pid, pname, color, size, cnt, price, img)),
+  pushToOrderList : (order) => dispatch(pushToOrderList(order)),
   cleanOrderList : () => dispatch(cleanOrderList()),
   push : (path, state) => dispatch(push(path, state)),
 })

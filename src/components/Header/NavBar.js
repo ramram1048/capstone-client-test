@@ -75,7 +75,7 @@ const NavBar = ({menus}) => {
 }
 
 NavBar.propTypes = {
-  menus: PropTypes.object,
+  menus: PropTypes.array,
 }
 
 export default NavBar

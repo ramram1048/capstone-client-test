@@ -31,8 +31,8 @@ const routes = (
         <Route path="/closet" component={ClosetPage} /> 
         <Route path="/test" component={PostTester} /> 
         <Route path="/design" component={DesignPage} /> 
+        <Route path="/community/write" component={PostWritePage}/> 
         <Route path="/community/post/" component={PostDetailPage}/> 
-        <Route path="/community/post/write" component={PostWritePage}/> 
         <Route path="/community" component={CommunityPage}/>
         <Route component={NoMatch} />
       </Switch>

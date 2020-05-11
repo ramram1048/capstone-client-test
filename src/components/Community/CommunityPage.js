@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { push } from 'connected-react-router'
+import { Link } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -28,7 +28,7 @@ const CommunityPage = () => {
         <Grid container direction="column">
             <Grid item container>
                 <Typography className={classes.title} variant="h4">패션케어커뮤니티</Typography>
-                <Button onClick={push('/community/write')}>글쓰기</Button>
+                <Button component={Link} to="/community/write">글쓰기</Button>
             </Grid>
             <Divider />
             <PostList fetchurl="https://jsonplaceholder.typicode.com/posts" />

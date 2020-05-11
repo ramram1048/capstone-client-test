@@ -45,21 +45,21 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const OrderList = ({orderList, edit}) => {
-  console.log(orderList)
+const OrderList = ({orders, edit}) => {
+  console.log(orders)
   const classes = useStyles();
 
 
   useEffect(() => {
     
-  }, [orderList]);
+  }, [orders]);
 
   // if(!orderList.length) return(<div>wait</div>)
-  const productListRows = !orderList.length?
+  const productListRows = !orders.length?
       <TableRow>
           <TableCell colSpan={4} align="center">상품을 선택하지 않았습니다!</TableCell>
       </TableRow>
-      :orderList.map((product) => {
+      :orders.map((product) => {
           return(
               <TableRow>
                 <TableCell>
@@ -70,7 +70,7 @@ const OrderList = ({orderList, edit}) => {
                       {product.pname}
                   </Grid></TableCell>
                 <TableCell>{product.color} / {product.size}</TableCell>
-                <TableCell>{product.cnt}</TableCell>
+                <TableCell>{product.quantity}</TableCell>
                 <TableCell>{product.price}원</TableCell>
               </TableRow>
           )
@@ -95,7 +95,7 @@ const OrderList = ({orderList, edit}) => {
 }
 
 const mapStateToProps = (state) => ({
-    orderList : state.orderList,
+    
 })
 
 const mapDispatchToProps = (dispatch) => ({

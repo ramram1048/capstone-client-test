@@ -9,7 +9,8 @@ import {
   Grid,
   Typography,
   Divider,
-  Button
+  Button,
+  Paper
 } from '@material-ui/core'
 
 import OrderList from './OrderList'
@@ -17,9 +18,6 @@ import OrderList from './OrderList'
 const useStyles = makeStyles((theme) => ({
     root:{
       flexGrow: 1,
-      '& > *': {
-        padding: theme.spacing(1),
-      },
     },
     thumbnail: {
       backgroundRepeat: 'no-repeat',
@@ -45,35 +43,47 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const OrderPage = () => {
+const OrderPage = ({orderList}) => {
   const classes = useStyles();
-
   useEffect(() => {
+    
+  }, [orderList]);
+  if(!orderList) return(<div />)
 
-  }, []);
-
+  let total = 0;
+  orderList.map((order) => {
+    total += order.price * order.cnt
+  })
   return(
     <Grid container className={classes.root} direction="column">
-      <Typography variant="h4" gutterBottom>주문상세내역</Typography>
-      <OrderList edit={false} />
-      <Typography variant="h6" gutterBottom>주문자 정보</Typography>
-      <Divider variant="middle"/>
-      <Typography variant="h6" gutterBottom>배송 정보</Typography>
-      <Divider variant="middle"/>
-      <Typography variant="h6" gutterBottom>결제 정보</Typography>
-      <Divider variant="middle"/>
-      <Typography variant="h6" gutterBottom>결제 금액: ㅁㄴㅇ원</Typography>
+      <Paper>
+        <Typography variant="h6" gutterBottom>주문상세내역</Typography>
+        <OrderList orders={orderList} edit={false} />
+      </Paper>
+      <Paper elevation={0}>
+        <Typography variant="h6" gutterBottom>주문자 정보</Typography>
+        <Divider variant="middle"/>
+      </Paper>
+      <Paper elevation={0}>
+        <Typography variant="h6" gutterBottom>배송 정보</Typography>
+        <Divider variant="middle"/>
+      </Paper>
+      <Paper elevation={0}>
+        <Typography variant="h6" gutterBottom>결제 정보</Typography>
+        <Divider variant="middle"/>
+      </Paper>
+      <Typography variant="h6" gutterBottom>결제 금액: {total}원</Typography>
       <Button variant="outlined">결제하기</Button>
     </Grid>
   )
 }
 
 const mapStateToProps = (state) => ({
-    
+  orderList : state.orderList
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    
+  
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderPage)

@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { goBack } from 'connected-react-router'
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -20,6 +18,8 @@ import {
 } from '@material-ui/core'
 import { PhotoCamera } from '@material-ui/icons';
 import { useForm, Controller } from 'react-hook-form'
+
+import ProductCard from './ProductCard'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,10 +46,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const PostWritePage = ({backButtonAction}) => {
-    const classes = useStyles();
+const ReviewWriteForm = ({product}) => {
+    const [pid, setPid] = useState(0);
     const [ images, setImages ] = useState([]);
     const { control, handleSubmit } = useForm();
+    const classes = useStyles();
+
+    useEffect(() => {
+    })
 
     const onSubmit = (data) => {
         const {title, content} = data;
@@ -64,11 +68,12 @@ const PostWritePage = ({backButtonAction}) => {
         <Container maxWidth="lg">
             <Grid container={Paper} className={classes.root}>
                 <Grid item container>
-                    <Typography className={classes.title} gutterBottom variant="h4">글쓰기</Typography>
-                    <Button onClick={backButtonAction}>돌아가</Button>
+                    <Typography className={classes.title} gutterBottom variant="h6">리뷰 작성</Typography>
+                    <Button>돌아가</Button>
                 </Grid>
                 <Divider />
-                <form>
+                <ProductCard product={product} />
+                <form flexGrow={1}>
                     <Controller as={<TextField
                         variant="outlined"
                         margin="normal"
@@ -133,7 +138,7 @@ const PostWritePage = ({backButtonAction}) => {
     )
 }
 
-PostWritePage.propTypes = {
+ReviewWriteForm.propTypes = {
     //pathname: PropTypes.string,
     //search: PropTypes.string,
     //hash: PropTypes.string,
@@ -141,13 +146,13 @@ PostWritePage.propTypes = {
 
 
 const mapStateToProps = state => ({
-    //pathname: state.router.location.pathname,
+    pathname: state.router.location.pathname,
     //search: state.router.location.search,
     //hash: state.router.location.hash,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    backButtonAction: () => dispatch(goBack())
+    
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostWritePage)
+export default connect(mapStateToProps, mapDispatchToProps)(ReviewWriteForm)

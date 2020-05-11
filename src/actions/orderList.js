@@ -1,6 +1,5 @@
-export const pushToOrderList = (pid, pname, color, size, cnt, price, img) => ({
-  type: 'PUSH_TO_ORDER_LIST',
-  pid, pname, color, size, cnt, price, img,
+export const pushToOrderList = (order) => ({
+  type: 'PUSH_TO_ORDER_LIST', order
 })
 
 export const cleanOrderList = () => ({
