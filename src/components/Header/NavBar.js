@@ -36,16 +36,20 @@ const NavBar = ({menus}) => {
     <AppBar position="sticky" className={classes.header} elevation={0}>
       <Toolbar className={classes.toolbar}>
         <Button size="small">Subscribe</Button>
-        <Typography
-          component="h2"
-          variant="h5"
-          color="inherit"
-          align="center"
-          noWrap
-          className={classes.toolbarTitle}
-        >
-        멋쟁이마당
-        </Typography>
+            <Link component={RouterLink} to="/"
+                color="inherit"
+                noWrap
+                className={classes.toolbarTitle}>
+                  
+              <Typography
+                component="h2"
+                variant="h5"
+                color="inherit"
+                align="center"
+              >
+              멋쟁이마당
+              </Typography>
+            </Link>
         <IconButton>
           <SearchIcon />
         </IconButton>
@@ -54,13 +58,6 @@ const NavBar = ({menus}) => {
         </Button>
       </Toolbar>
       <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
-            <Link component={RouterLink} to="/"
-                color="inherit"
-                noWrap
-                variant="body2"
-                className={classes.toolbarLink}>
-                메인
-            </Link>
             {menus.map(({component, path}) => (
                 <Link component={RouterLink} to={path}
                 color="inherit"

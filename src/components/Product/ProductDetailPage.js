@@ -44,12 +44,9 @@ const useStyles = makeStyles((theme) => ({
   root:{
     flexGrow: 1,
   },
-  thumbnail: {
-    backgroundRepeat: 'no-repeat',
-    backgroundColor:
-      theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
+  imageAvatar: {
+    width: 'auto',
+    height: 'auto',
   },
   price: {
     color: theme.palette.primary.main
@@ -91,6 +88,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   const [pid, setPid] = useState(0);
   const [data, setData] = useState([]);
   const [detail, setDetail] = useState([]);
+  const [total, setTotal] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [ images, setImages ] = useState([]);
@@ -218,8 +216,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
     setImages(newList);
   }
 
-  const reviewWriteForm = 
-  <Box className={clsx({
+  const reviewWriteForm = <Box className={clsx({
       [classes.hide]: !expanded
     })}>
       <form>
@@ -236,14 +233,14 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
         <Grid className={classes.imageContainer}>
             {images.map((image, index) => {
                 return(
-                  <React.Fragment className={classes.previewImage}>
+                  <React.Fragment>
                     <ButtonBase variant="rounded">
                       <Avatar src={URL.createObjectURL(image)} 
                           variant="rounded"
                           className={classes.previewImage}
                       />
                     </ButtonBase>
-                    <ButtonBase onClick={(index) => removeImage(index)}>
+                    <ButtonBase onClick={() => removeImage(index)}>
                       <Cancel className={classes.previewCancel}/>
                     </ButtonBase>
                   </React.Fragment>
@@ -272,10 +269,13 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
 
   return(
     <Grid container className={classes.root}>
-      <Grid item xs={12} sm={5} className={classes.thumbnail}>
-        <img src={data.img} style={{maxHeight: '500px'}}/>
+      <Grid item sm={12} md={5}>
+        <Avatar src={data.img} 
+          variant="square"
+          className={classes.imageAvatar}
+        />
       </Grid>
-      <Grid item xs={12} sm={7} container>
+      <Grid item sm={12} md={7} container>
         <Grid item container xs component={Paper} direction="column" spacing={1}>
           <Grid item xs>
             <Typography variant="subtitle1" gutterBottom>{data.seller}</Typography>
@@ -317,7 +317,11 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
         <Paper item className={classes.contentPanel} square>
           <Typography variant="h6" gutterBottom>상품상세정보</Typography>
           <Divider variant="middle"/>
-          <img src={data.description} alt={data.description} />
+          <Avatar src={data.description} 
+            variant="square"
+            className={classes.imageAvatar}
+            alt={data.description}
+          />
         </Paper>
         <Paper item className={classes.contentPanel} square>
           <Grid container>

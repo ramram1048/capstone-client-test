@@ -29,7 +29,8 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(1),
   },
   cardMedia: {
-      paddingTop: '100%',
+      width: 'auto',
+      height: 'auto'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -43,9 +44,6 @@ const useStyles = makeStyles((theme) => ({
   },
   product: {
     display: "flex",
-  },
-  productMedia: {
-      paddingTop: "100%",
   },
 }));
 
@@ -61,9 +59,9 @@ const ReviewCard = ({review}) => {
         title={review.userId}
         subheader={"언제 몇월 몇일"+review.email} />
       <CardActionArea>
-        <CardMedia
+        <Avatar src={review.img} 
+          variant="square"
           className={classes.cardMedia}
-          image={review.img}
         />
       </CardActionArea>
       <CardContent>

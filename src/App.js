@@ -49,9 +49,9 @@ const menus = [
   {component: "나의옷장", path: "/closet"},
   {component: "추천코디", path: "/design"},
   {component: "패션케어커뮤니티", path: "/community"},
-  {component: "Hello", path: "/hello"},
-  {component: "Counter", path: "/counter"},
-  {component: "Login", path: "/login"},
+  // {component: "Hello", path: "/hello"},
+  // {component: "Counter", path: "/counter"},
+  // {component: "Login", path: "/login"},
 ];
 
 const App = ({ history }) => {

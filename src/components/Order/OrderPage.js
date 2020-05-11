@@ -52,7 +52,7 @@ const OrderPage = ({orderList}) => {
 
   let total = 0;
   orderList.map((order) => {
-    total += order.price * order.cnt
+    total += order.price * order.quantity
   })
   return(
     <Grid container className={classes.root} direction="column">

@@ -3,7 +3,6 @@ import ProductList from './Product/ProductList';
 import {sangminserver} from '../restfulapi';
 
 const Home = () => {
-  console.log(sangminserver);
   return(
     <ProductList fetchurl={sangminserver+"/products"} />
   )

@@ -14,12 +14,14 @@ import {
   CardActions,
   Collapse,
   Chip,
-  Button, Typography, Avatar, IconButton, ThemeProvider 
+  Button, Typography, Avatar, IconButton, ThemeProvider ,
+  Popover, Fade,
 } from '@material-ui/core';
 import {
+  Delete,
   FavoriteBorder as FavoriteBorderIcon,
   Favorite as FavoriteIcon,
-  Share as ShareIcon,
+  Create,
   ExpandMore as ExpandMoreIcon,
   MoreVert as MoreVertIcon,
 } from '@material-ui/icons'
@@ -52,10 +54,19 @@ const useStyles = makeStyles((theme) => ({
 const ClosetCard = ({closet}) => {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
+  const [confirmPopoverAnchorEl, setConfirmPopoverAnchorEl] = useState(null);
+  const open = Boolean(confirmPopoverAnchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const handleDeleteIconClick = (event) => {
+    setConfirmPopoverAnchorEl(event.currentTarget)
+  }
+  const handleConfirmPopoverClose = () => {
+    setConfirmPopoverAnchorEl(null)
+  }
 
   return (
     <Box component={Card} width={1/2} className={classes.card} elevation={0}>
@@ -66,12 +77,23 @@ const ClosetCard = ({closet}) => {
         />
       </CardActionArea>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
+        <IconButton aria-label="delete" onClick={handleDeleteIconClick}>
+            <Delete />
           </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
-          </IconButton>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={confirmPopoverAnchorEl}
+            onClose={handleConfirmPopoverClose}
+            anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+            transformOrigirn={{vertical: 'top', horizontal: 'left'}}>
+              <Typography gutterBottom>진짜지울래?</Typography>
+              <Button onClick={handleConfirmPopoverClose}>ㅇㅇ</Button>
+              <Button onClick={handleConfirmPopoverClose}>ㄴㄴ</Button>
+            </Popover>
+          <Button aria-label="share">
+            <Create /> <Typography gutterBottom>추천코디에 공유하기</Typography>
+          </Button>
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,

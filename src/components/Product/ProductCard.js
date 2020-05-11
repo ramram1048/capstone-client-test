@@ -41,7 +41,7 @@ const ProductCard = ({product}) => {
             title={product.pname}
           />
           <CardContent className={classes.cardContent}>
-            <Typography gutterBottom>{product.pname}</Typography>
+            <Typography gutterBottom color="inherit">{product.pname}</Typography>
           </CardContent>
         </CardActionArea>
       </Link>
