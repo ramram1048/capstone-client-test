@@ -17,7 +17,7 @@ const authReducer = (state = init, action) => {
                     status: 'WAITING',
                 }
             }
-        case 'AUTH_LOGIN_SUCCESS':
+        case 'AUTH_LOGIN_SUCCESS':{
             return {
                 ...state,
                 login: {
@@ -29,6 +29,7 @@ const authReducer = (state = init, action) => {
                     currentUser: action.email,
                 }
             }
+        }
         case 'AUTH_LOGIN_FAILURE':
             return {
                 ...state,

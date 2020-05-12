@@ -24,6 +24,8 @@ import {
   MoreVert as MoreVertIcon,
 } from '@material-ui/icons'
 
+import {yujinserver} from '../../restfulapi'
+
 const useStyles = makeStyles((theme) => ({
   card: {
       padding: theme.spacing(1),
@@ -49,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 const DesignCard = ({design}) => {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
@@ -56,6 +59,20 @@ const DesignCard = ({design}) => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  
+  const handleLikeButton = () => {
+    // 보내야되는것: design id (:id) get /design/id
+    fetch(yujinserver+"/like/design/"+design.id, {
+      credentials: 'include',
+    })
+    .then(response => console.log(response.text()))
+    // .then(json => {
+    //     setDesigns(json)
+    // })
+    .catch(error => {
+    console.warn("Error:", error)})
+  }
 
   const hashtagChips = design.hashtags.map((tag) => {
     return <Chip
@@ -73,7 +90,7 @@ const DesignCard = ({design}) => {
         }
         action={
           <Box>
-            <IconButton aria-label="add to favorites">
+            <IconButton aria-label="add to favorites" onClick={handleLikeButton}>
               <FavoriteIcon />
             </IconButton>
             <IconButton aria-label="share">

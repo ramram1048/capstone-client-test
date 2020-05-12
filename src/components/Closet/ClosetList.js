@@ -50,23 +50,23 @@ const ClosetList = ({fetchurl}) => {
     const [ closets, setClosets ] = useState([]);
     const classes = useStyles();
     useEffect(() => {
-        // fetch(fetchurl, {
-        //   headers: {
-        //     'Accept': 'application/json',
-        //     'Content-Type': 'application/json',
-        //     'Cache': 'no-cache'
-        //   },
-        //   credentials: 'include',
-        // })
-        // .then(response => response.json())
-        // .then(json => {
-        //     console.log(json)
-        //     setClosets(json)
-        // })
-        // .catch(error => {
-        // console.warn("Error:", error)
+        fetch(fetchurl, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Cache': 'no-cache'
+          },
+          credentials: 'include',
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            setClosets(json)
+        })
+        .catch(error => {
+        console.warn("Error:", error)})
         // axios.get(fetchurl, {withCredentials: true})
-        setClosets(sampleCloset);
+        // setClosets(sampleCloset);
     }, [fetchurl]);
     if(!closets) return(<div>loading.</div>)
     // console.log(closets)

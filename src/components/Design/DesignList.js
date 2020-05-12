@@ -131,16 +131,16 @@ const DesignList = ({fetchurl}) => {
     const [ designs, setDesigns ] = useState([]);
     const classes = useStyles();
     useEffect(() => {
-        // fetch(fetchurl)
-        // .then(response => response.json())
-        // .then(json => {
-        //     setDesigns(json)
-        // })
-        // .catch(error => {
-        // console.warn("Error:", error)
-        setDesigns(sampleDesign);
+        fetch(fetchurl, {credentials: 'include',})
+        .then(response => response.json())
+        .then(json => {
+            setDesigns(json)
+        })
+        .catch(error => {
+        console.warn("Error:", error)})
+        // setDesigns(sampleDesign);
     }, [fetchurl]);
-    if(!designs) return(<div>loading.</div>)
+    if(!designs.length) return(<div>loading.</div>)
     // console.log(designs)
 
     const designCards = designs.map((data) => {

@@ -7,6 +7,7 @@ import { cleanOrderList, pushToOrderList } from '../../actions/orderList'
 import { useSnackbar } from 'notistack';
 
 import clsx from "clsx";
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
@@ -39,6 +40,7 @@ import {
 
 import ReviewCard from './ReviewCard';
 import {sangminserver} from '../../restfulapi';
+import { useForm, Controller } from 'react-hook-form'
 
 const useStyles = makeStyles((theme) => ({
   root:{
@@ -95,6 +97,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const { control, handleSubmit } = useForm();
 
   useEffect(() => {
     setPid(pathname.substring(pathname.lastIndexOf('/') + 1));
@@ -215,12 +218,24 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
     newList.splice(index, 1);
     setImages(newList);
   }
+  const reviewSubmit = (data) => {
+    // console.log(data.content, images)
+    let form = new FormData()
+    form.append("productid", pid)
+    form.append("content", data.content)
+    form.append("user", [{id: "3"}])
+    images.forEach((image) => {form.append("photo", image)})
+    console.log(form.keys())
+    axios.post(sangminserver+"/review",form)
+    .then(response => console.log(response))
+    .catch(error => console.error(error))
+  }
 
   const reviewWriteForm = <Box className={clsx({
       [classes.hide]: !expanded
     })}>
-      <form>
-        <TextField
+      <form onSubmit={handleSubmit(reviewSubmit)}>
+        <Controller as={<TextField
             variant="outlined"
             margin="normal"
             required
@@ -229,7 +244,21 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
             label="내용"
             multiline
             rows={12}
+            />}
+            name="content"
+            control={control}
             />
+        {/* <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="content"
+            name="content"
+            label="내용"
+            multiline
+            rows={12}
+            /> */}
         <Grid className={classes.imageContainer}>
             {images.map((image, index) => {
                 return(
@@ -250,6 +279,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
                 accpet="image/*"
                 className={classes.input}
                 id="icon-button-file"
+                name="photo"
                 multiple
                 type="file"
                 onChange={(event) => handleImageInput(event)}

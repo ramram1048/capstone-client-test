@@ -61,19 +61,20 @@ const ReviewCard = ({review}) => {
       <CardActionArea>
         <Avatar src={review.img} 
           variant="square"
-          className={classes.cardMedia}
+          // className={classes.cardMedia}
+          sizes="md"
         />
       </CardActionArea>
       <CardContent>
         {review.content}
       </CardContent>
-      <CardActions disableSpacing>
+      {/* <CardActions disableSpacing>
         <Typography gutterBottom>이 리뷰가 도움이 됐나요?</Typography>
         <Box item>
           <IconButton>따봉</IconButton>
           <IconButton>ㄴㄴ</IconButton>
         </Box>
-      </CardActions>
+      </CardActions> */}
     </Box>
   );
 }
