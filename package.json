@@ -25,6 +25,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.8",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.53",
     "axios": "^0.19.2",
     "babel-polyfill": "^6.26.0",
     "clsx": "^1.1.0",

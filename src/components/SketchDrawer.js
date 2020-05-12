@@ -1,12 +1,14 @@
 // https://material-ui.com/components/drawers/
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import { connect } from 'react-redux'
-import { handleDrawerOpen, handleDrawerClose } from '../actions/sketchDrawer'
+import { handleDrawer } from '../actions/sketchDrawer'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
-  Drawer,
+  Box,
+  SwipeableDrawer,
+  Button,
   List,
   Divider,
   IconButton,
@@ -25,65 +27,35 @@ import {
 const drawerWidth = 560;
 
 const useStyles = makeStyles((theme) => ({
-  drawer: {
+  root: {
+    flex: "0 0 auto",
     width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
+    transition: "all 0.2s ease-in-out",
   },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
-    },
-    toolbar: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      padding: theme.spacing(0, 1),
-      // necessary for content to be below app bar
-      ...theme.mixins.toolbar,
-    },
-  },
+  closed: {
+    marginRight: -(drawerWidth),
+    opacity: 0,
+  }
 }));
 
-const SketchDrawer = function({drawerOpen, handleDrawerOpen, handleDrawerClose}){
+const SketchDrawer = function({drawerOpen, handleDrawer}){
   const theme = useTheme();
   const classes = useStyles();
 
+  // useEffect(() => {
+  //   console.log(drawerOpen)
+  // }, [drawerOpen])
+
   return(
-    <Hidden smDown>
-      <Drawer
-        anchor="right"
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: drawerOpen,
-          [classes.drawerClose]: !drawerOpen,
-        })}
-        classes={{
-          paper: clsx({
-            [classes.drawerOpen]: drawerOpen,
-            [classes.drawerClose]: !drawerOpen,
-          }),
-        }}
-      >
-        <div className={classes.toolbar}>
-          {drawerOpen?<IconButton onClick={handleDrawerClose}><ChevronRightIcon /></IconButton>
-          : <IconButton onClick={handleDrawerOpen}><ChevronLeftIcon /></IconButton>}
-        </div>
-      </Drawer>
-    </Hidden>
+    <Box className={clsx({
+      [classes.root]: true,
+      [classes.closed]: !drawerOpen
+    })}>
+        <Box flex="1 1 auto">
+          <Button onClick={handleDrawer}>ㅇㅅㅇ</Button>
+
+        </Box>
+    </Box>
   )
 }
 
@@ -96,8 +68,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  handleDrawerOpen: () => dispatch(handleDrawerOpen()),
-  handleDrawerClose: () => dispatch(handleDrawerClose()),
+  handleDrawer: () => dispatch(handleDrawer()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SketchDrawer)

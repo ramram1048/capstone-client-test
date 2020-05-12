@@ -40,9 +40,8 @@ export const loginRequest = (email, password) => {
     // .catch((err) => {
     //   dispatch(loginFailure());
     // });
-    return fetch(yujinserver+'/auth/login', {
+    return fetch(yujinserver+"/auth/login", {
       method: "POST",
-      mode: 'no-cors',
       headers: {
         'Accept': 'application/json',
         "Content-Type": "application/json",
@@ -54,7 +53,7 @@ export const loginRequest = (email, password) => {
           password: password,
       })
     })
-    .then(((res) => res.json()))
+    .then(res => res.json())
     .then((data) => {
       console.log(data);
       dispatch(loginSuccess(email));

@@ -1,7 +1,11 @@
-export const handleDrawerOpen = () => ({
-  type: 'HANDLE_DRAWER_OPEN',
+export const handleDrawer = () => ({
+  type: 'HANDLE_DRAWER',
 })
 
-export const handleDrawerClose = () => ({
-  type: 'HANDLE_DRAWER_CLOSE',
-})
+// export const handleDrawerOpen = () => ({
+//   type: 'HANDLE_DRAWER_OPEN',
+// })
+
+// export const handleDrawerClose = () => ({
+//   type: 'HANDLE_DRAWER_CLOSE',
+// })

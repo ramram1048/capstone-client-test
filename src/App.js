@@ -2,14 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { ConnectedRouter } from 'connected-react-router'
 import routes from './routes'
+import { connect } from 'react-redux'
 
 import NavBar from './components/Header/NavBar'
 import SketchDrawer from './components/SketchDrawer'
 import { SnackbarProvider } from 'notistack'
 
-import { CssBaseline, Container } from '@material-ui/core'
+import { CssBaseline, Grid, Container, Box, Button } from '@material-ui/core'
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles'
 import { red, amber } from '@material-ui/core/colors'
+import { handleDrawerOpen } from './actions/sketchDrawer'
 
 // A custom theme for this app
 const theme = createMuiTheme({
@@ -32,12 +34,23 @@ const theme = createMuiTheme({
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    flexFlow: 'row nowrap',
+    height: '100vh',
+    alignItems: 'stretch',
+    overflow: "hidden",
   },
-  hide: {
-    display: 'none',
+  main: {
+    display: 'flex',
+    flex: "1 1 auto",
+    flexDirection: "column"
   },
   context: {
-    paddingTop: theme.spacing(3),
+    padding: theme.spacing(1),
+    overflowY: "auto",
+    height: 0,
+  },
+  drawer: {
+    flex: "0 0 auto"
   }
 }));
 
@@ -54,25 +67,26 @@ const menus = [
   // {component: "Login", path: "/login"},
 ];
 
-const App = ({ history }) => {
+const App = ({ history, handleDrawerOpen }) => {
   const classes = useStyles();
 
   return (
-    <ConnectedRouter history={history}>
+    <ConnectedRouter history={history} noInitialPop>
       <ThemeProvider theme={theme}>
-        <div className={classes.root}>
+        <Grid container className={classes.root}>
           <CssBaseline />
-              <Container maxWidth={false}>
-            <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+          <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+          <Grid container item className={classes.main}>
             <NavBar menus={menus}/>
-                  <Container maxWidth="lg">
-                    { routes }
-                  </Container>
-            </SnackbarProvider>
-
-              </Container>
-              <SketchDrawer />
-        </div>
+            <Box flex="1 1 auto" className={classes.context}>
+              { routes }
+            </Box>
+          </Grid>
+          <Grid item className={classes.drawer}>
+            <SketchDrawer />
+          </Grid>
+          </SnackbarProvider>
+        </Grid>
       </ThemeProvider>
     </ConnectedRouter>
   )
@@ -81,5 +95,11 @@ const App = ({ history }) => {
 App.propTypes = {
   history: PropTypes.object,
 }
+const mapStateToProps = state => ({
+})
 
-export default App
+const mapDispatchToProps = dispatch => ({
+  
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
