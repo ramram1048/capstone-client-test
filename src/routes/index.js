@@ -13,17 +13,17 @@ import PostWritePage from '../components/Community/PostWritePage'
 import CommunityPage from '../components/Community/CommunityPage'
 import PostDetailPage from '../components/Community/PostDetailPage'
 import NoMatch from '../components/NoMatch'
-import LoginPage from '../components/Login/LoginPage'
-import AuthPage from '../components/AuthPage'
+// import LoginPage from '../components/Login/LoginPage'
+import AuthPage from '../components/Auth/AuthPage'
 
-import LoginTest from '../components/LoginTest'
-import PostTester from '../components/PostTester'
+// import LoginTest from '../components/LoginTest'
+// import PostTester from '../components/PostTester'
 
 const routes = (
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/login" component={LoginPage} />
-        <Route path="/logintest" component={LoginTest} />
+        {/* <Route path="/login" component={LoginPage} />
+        <Route path="/logintest" component={LoginTest} /> */}
         <Route path="/auth" component={AuthPage} />
         <Route path="/hello" component={Hello} />
         <Route path="/counter" component={Counter} />  
@@ -31,7 +31,7 @@ const routes = (
         <Route path="/product" component={ProductDetailPage} /> 
         <Route path="/order" component={OrderPage} /> 
         <Route path="/closet" component={ClosetPage} /> 
-        <Route path="/test" component={PostTester} /> 
+        {/* <Route path="/test" component={PostTester} />  */}
         <Route path="/design" component={DesignPage} /> 
         <Route path="/community/write" component={PostWritePage}/> 
         <Route path="/community/post/" component={PostDetailPage}/> 

@@ -1,4 +1,4 @@
-// 헤더
+// "/cart"에서 확인하는 장바구니페이지
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -12,15 +12,15 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const CartPage = (post) => {
+const LoginView = ({}) => {
     const classes = useStyles();
 
     return(
-        <div />
+        <div></div>
     )
 }
 
-CartPage.propTypes = {
+LoginView.propTypes = {
     //pathname: PropTypes.string,
     //search: PropTypes.string,
     //hash: PropTypes.string,
@@ -37,4 +37,4 @@ const mapDispatchToProps = (dispatch) => ({
     
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CartPage)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginView)
