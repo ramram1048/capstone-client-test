@@ -17,7 +17,8 @@ import {
   Link,
   Grid,
   TextField,
-  Button
+  Button,
+  Paper
 } from '@material-ui/core'
 import {
   TabContext,
@@ -39,18 +40,17 @@ import {
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+  paper: {
+    padding: theme.spacing(2)
+  },
+  text: {
+    margin: theme.spacing(2),
+    // backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -161,11 +161,12 @@ const AuthPage = ({redirectTo, fetchLoginStatus, loginResult, getLoginStatus, di
 
   return(
     <Container className={classes.root} maxWidth="xs">
-      <Avatar className={classes.avatar}>
-        <LockOutlined />
-      </Avatar>
-      <Typography component="h1" variant="h5">
-        로그인
+      <Paper className={classes.paper}>
+      <Typography className={classes.text} align="center" gutterBottom component="h1" variant="h5">
+        멋쟁이마당
+      </Typography>
+      <Typography className={classes.text} align="center" gutterBottom variant="body2">
+        👓멋쟁이들의 패션 라운지
       </Typography>
       <TabContext value={tabValue} >
         <TabList onChange={handleTabChange} variant="fullWidth" aria-label="simple tabs">
@@ -175,6 +176,7 @@ const AuthPage = ({redirectTo, fetchLoginStatus, loginResult, getLoginStatus, di
         <TabPanel value="1">{loginView}</TabPanel>
         <TabPanel value="2">{registerView}</TabPanel>
       </TabContext>
+      </Paper>
     </Container>
   )
 }

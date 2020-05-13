@@ -59,13 +59,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const menus = [
-  {component: "상의", path: "/productList?category=1"},
-  {component: "하의", path: "/productList?category=2"},
-  {component: "신발", path: "/productList?category=3"},
-  {component: "패션잡화", path: "/productList?category=4"},
-  {component: "나의옷장", path: "/closet"},
-  {component: "추천코디", path: "/design"},
-  {component: "패션케어커뮤니티", path: "/community"},
+  {component: "👔상의", path: "/productList?category=1"},
+  {component: "👖하의", path: "/productList?category=2"},
+  {component: "🥾신발", path: "/productList?category=3"},
+  {component: "🎀패션잡화", path: "/productList?category=4"},
+  {component: "✨나의옷장", path: "/closet"},
+  {component: "💎추천코디", path: "/design"},
+  {component: "👀패션케어커뮤니티", path: "/community"},
   // {component: "Hello", path: "/hello"},
   // {component: "Counter", path: "/counter"},
   // {component: "Login", path: "/login"},
@@ -95,15 +95,20 @@ const App = ({ history, pathname, loginFetching, loginSession, fetchLoginStatus,
         <Grid container className={classes.root}>
           <CssBaseline />
           <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-          <Grid container item className={classes.main}>
-            <NavBar menus={menus}/>
-            <Box flex="1 1 auto" className={classes.context}>
-              { loginSession?routes:<AuthPage /> }
-            </Box>
-          </Grid>
-          <Grid item className={classes.drawer}>
-            <SketchDrawer />
-          </Grid>
+          { loginSession?
+            <React.Fragment>
+              <Grid container item className={classes.main}>
+                <NavBar menus={menus}/>
+                <Box flex="1 1 auto" className={classes.context}>
+                  { routes }
+                </Box>
+              </Grid>
+              <Grid item className={classes.drawer}>
+                <SketchDrawer />
+              </Grid>
+            </React.Fragment>
+            : <AuthPage />
+          }
           </SnackbarProvider>
         </Grid>
       </ThemeProvider>
