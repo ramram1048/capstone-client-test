@@ -1,11 +1,9 @@
+import Cookies from 'js-cookie'
+
 const init = {
-    login: {
-        status: 'INIT',
-    },
-    status: {
-        isLoggedIn: false,
-        currentUser: '',
-    },
+    fetching: 'INIT',
+    session: false,
+    currentUser: '',
 }
 
 const authReducer = (state = init, action) => {
@@ -13,34 +11,19 @@ const authReducer = (state = init, action) => {
         case 'AUTH_LOGIN':
             return {
                 ...state,
-                login: {
-                    status: 'WAITING',
-                }
+                fetching: 'FETCHING',
             }
-        case 'AUTH_LOGIN_SUCCESS':{
+        case 'AUTH_LOGIN_SUCCESS':
             return {
-                ...state,
-                login: {
-                    status: 'SUCCESS',
-                },
-                status: {
-                    ...state.status,
-                    isLoggedIn: true,
-                    currentUser: action.email,
-                }
+                fetching: 'SUCCESS',
+                session: true,
+                currentUser: action.email,
             }
-        }
         case 'AUTH_LOGIN_FAILURE':
             return {
-                ...state,
-                login: {
-                    status: 'FAILURE',
-                },
-                // status: {
-                //     ...state.status,
-                //     isLoggedIn: true,
-                //     currentUser: action.username,
-                // }
+                fetching: 'FAILURE',
+                session: false,
+                currentUser: '',
             }
         default:
             return state

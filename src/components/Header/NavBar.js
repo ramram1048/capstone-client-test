@@ -11,7 +11,9 @@ import { Menu as MenuIcon,
   ExpandMore as ExpandMoreIcon,
   Search as SearchIcon
 } from '@material-ui/icons'
+import { requestLogout } from '../../actions/auth'
 import { handleDrawer } from '../../actions/sketchDrawer';
+import {yujinserver} from '../../restfulapi'
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -29,12 +31,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = ({menus, handleDrawer}) => {
+const NavBar = ({menus, handleDrawer, requestLogout}) => {
   const classes = useStyles();
+
+
+  const handleLogout = () => {
+    requestLogout()
+  }
+
   return(
     <AppBar position="sticky" color="transparent" elevation={0}>
       <Toolbar className={classes.toolbar}>
-        <Button size="small">Subscribe</Button>
+        <Button onClick={handleLogout}>로그아웃</Button>
         <Link component={RouterLink} to="/"
             color="inherit"
             noWrap>
@@ -79,6 +87,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   handleDrawer: () => dispatch(handleDrawer()),
+  requestLogout: () => dispatch(requestLogout())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar)

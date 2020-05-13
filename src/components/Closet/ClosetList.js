@@ -68,7 +68,7 @@ const ClosetList = ({fetchurl}) => {
         // axios.get(fetchurl, {withCredentials: true})
         // setClosets(sampleCloset);
     }, [fetchurl]);
-    if(!closets) return(<div>loading.</div>)
+    if(!closets.length) return(<div>loading.</div>)
     // console.log(closets)
 
     const closetCards = closets.map((data) => {

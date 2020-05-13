@@ -28,12 +28,13 @@ import {
   LockOutlined
 } from '@material-ui/icons'
 
+import Cookies from 'js-cookie'
 
-import { loginRequest as loginRequestAction } from '../../actions/auth';
-
-import { useForm, Controller } from 'react-hook-form'
-import { yujinserver } from '../../restfulapi'
-
+import { 
+  requestLogin,
+  fetchLoginStatus,
+  getLoginStatus
+ } from '../../actions/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,23 +57,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AuthPage = ({isLoggedIn, loginResult, dispatchBack, dispatchPush, loginRequest}) => {
+const AuthPage = ({redirectTo, fetchLoginStatus, loginResult, getLoginStatus, dispatchBack, dispatchPush, requestLogin}) => {
   const [ tabValue, setTabValue ] = useState("1");
   const [ email, setEmail ] = useState("");
   const [ password, setPassword ] = useState("");
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    if(isLoggedIn){
-      redirect();
-    }
-  }, [])
+  // useEffect(() => {
+  //   fetchLoginStatus()
+  // }, [])
 
-  const redirect = () => {
-    if(history.length > 1){ dispatchBack() }
-    else{ dispatchPush("") }
-  }
+  // useEffect(() => {
+  //     console.log(loginResult)
+  //     if(loginResult === "SUCCESS"){
+  //       dispatchPush(redirectTo)
+  //     }
+  // }, [loginResult])
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue)
@@ -81,15 +82,7 @@ const AuthPage = ({isLoggedIn, loginResult, dispatchBack, dispatchPush, loginReq
   const loginSubmit = (event) => {
     event.preventDefault()
     // console.log(email, password)
-    loginRequest(email, password)
-    .then(() => {
-      if(loginResult === "SUCCESS"){
-        redirect();
-      }
-      else{
-        enqueueSnackbar("로그인 실패요",{"variant": "error"});
-      }
-    })
+    requestLogin(email, password)
   }
 
   const loginView =
@@ -164,8 +157,7 @@ const AuthPage = ({isLoggedIn, loginResult, dispatchBack, dispatchPush, loginReq
         가입
       </Button>
     </form>
-    
-  
+
 
   return(
     <Container className={classes.root} maxWidth="xs">
@@ -195,14 +187,15 @@ AuthPage.propTypes = {
 
 
 const mapStateToProps = state => ({
-    isLoggedIn: state.auth.status.isLoggedIn,
-    loginResult: state.auth.login.status,
+    loginResult: state.auth.fetching,
 })
 
 const mapDispatchToProps = (dispatch) => ({
     dispatchBack: () => dispatch(goBack()),
     dispatchPush: (url) => dispatch(push(url)),
-    loginRequest: (email, password) => dispatch(loginRequestAction(email, password))
+    requestLogin: (email, password) => dispatch(requestLogin(email, password)),
+    fetchLoginStatus: () => dispatch(fetchLoginStatus()),
+    getLoginStatus: () => dispatch(getLoginStatus())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthPage)

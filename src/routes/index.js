@@ -14,7 +14,7 @@ import CommunityPage from '../components/Community/CommunityPage'
 import PostDetailPage from '../components/Community/PostDetailPage'
 import NoMatch from '../components/NoMatch'
 // import LoginPage from '../components/Login/LoginPage'
-import AuthPage from '../components/Auth/AuthPage'
+// import AuthPage from '../components/Auth/AuthPage'
 
 // import LoginTest from '../components/LoginTest'
 // import PostTester from '../components/PostTester'
@@ -24,7 +24,7 @@ const routes = (
         <Route exact path="/" component={Home} />
         {/* <Route path="/login" component={LoginPage} />
         <Route path="/logintest" component={LoginTest} /> */}
-        <Route path="/auth" component={AuthPage} />
+        {/* <Route path="/auth" component={AuthPage} /> */}
         <Route path="/hello" component={Hello} />
         <Route path="/counter" component={Counter} />  
         <Route path="/productList" component={ProductCategoryPage} /> 

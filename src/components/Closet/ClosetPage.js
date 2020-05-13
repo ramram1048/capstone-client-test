@@ -19,14 +19,23 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const ClosetPage = ({isLoggedIn, dispatchPush}) => {
+const ClosetPage = () => {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
 
-    if(!isLoggedIn){
-        enqueueSnackbar("로그인이 필요해요.");
-        dispatchPush("/auth")
-    }
+    // useEffect(() => {
+    //     checkLoginStatus()
+    //     .then(() => {})
+    //     .then(() => {
+    //         console.log(loginResult)
+    //         if(loginResult !== "SUCCESS"){
+    //             dispatchPush("/auth")
+    //             return (<div>좀기다리셈</div>)
+    //         }
+    //     })
+    // }, [])
+
+    
 
     return(
         <Grid container direction="column">
@@ -45,14 +54,13 @@ ClosetPage.propTypes = {
 
 
 const mapStateToProps = state => ({
-    isLoggedIn: state.auth.status.isLoggedIn,
+    loginResult: state.auth.fetching,
     //pathname: state.router.location.pathname,
     //search: state.router.location.search,
     //hash: state.router.location.hash,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    dispatchPush: (url) => dispatch(push(url)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClosetPage)
