@@ -91,10 +91,7 @@ const ClosetCard = ({closet}) => {
               <Button onClick={handleConfirmPopoverClose}>ㅇㅇ</Button>
               <Button onClick={handleConfirmPopoverClose}>ㄴㄴ</Button>
             </Popover>
-          <Button aria-label="share">
-            <Create /> <Typography gutterBottom>추천코디에 공유하기</Typography>
-          </Button>
-          <IconButton
+          <Button
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
             })}
@@ -102,8 +99,8 @@ const ClosetCard = ({closet}) => {
             aria-expanded={expanded}
             aria-label="show more"
           >
-            <ExpandMoreIcon />
-          </IconButton>
+            {expanded? "":"사용한 아이템"}<ExpandMoreIcon />
+          </Button>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>

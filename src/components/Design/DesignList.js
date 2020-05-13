@@ -127,20 +127,8 @@ const sampleDesign = () => {
     return temp;
 }
 
-const DesignList = ({fetchurl}) => {
-    const [ designs, setDesigns ] = useState([]);
-    const classes = useStyles();
-    useEffect(() => {
-        fetch(fetchurl, {credentials: 'include',})
-        .then(response => response.json())
-        .then(json => {
-            setDesigns(json)
-        })
-        .catch(error => {
-        console.warn("Error:", error)})
-        // setDesigns(sampleDesign);
-    }, [fetchurl]);
-    if(!designs.length) return(<div>loading.</div>)
+const DesignList = ({designs}) => {
+    if(!designs.length) return(<div>불러온 디자인이 없어요</div>)
     // console.log(designs)
 
     const designCards = designs.map((data) => {

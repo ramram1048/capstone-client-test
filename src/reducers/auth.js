@@ -1,5 +1,3 @@
-import Cookies from 'js-cookie'
-
 const init = {
     fetching: 'INIT',
     session: false,
@@ -25,6 +23,8 @@ const authReducer = (state = init, action) => {
                 session: false,
                 currentUser: '',
             }
+        case 'AUTH_LOGOUT_FAILURE':
+            return init
         default:
             return state
     }

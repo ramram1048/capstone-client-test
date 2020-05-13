@@ -2,32 +2,72 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid,
   Typography,
   Divider,
+  Button
 } from '@material-ui/core'
 
 import DesignList from './DesignList'
+import DesignWrite from './DesignWrite'
 import {yujinserver} from '../../restfulapi'
 
-const useStyles = makeStyles((theme) => ({
+import { designSetLikeList } from '../../actions/design'
 
+
+const useStyles = makeStyles((theme) => ({
+    title: {
+        flexGrow: 1
+    }
 }));
 
-const DesignPage = () => {
+const DesignPage = ({ designSetLikeList }) => {
     const classes = useStyles();
+    const [ loading, setLoading ] = useState(true);
+    const [ fullDesigns, setFullDesigns ] = useState([]);
+    const [ bestDesigns, setBestDesigns ] = useState([]);
+    const [ writeDialogOpened, setWriteDialogOpened] = useState(false)
+    useEffect(() => {
+        // design & 
+        fetch(yujinserver+"/design/best", {credentials: 'include',})
+        .then(response => response.json(),
+            error => console.error(error))
+        .then(json => {
+            setBestDesigns(json)
+        })
+        fetch(yujinserver+"/page/design", {credentials: 'include',})
+        .then(response => response.json(),
+            error => console.error(error))
+        .then(json => {
+            setFullDesigns(json.designs)
+            const likeList = json.likeInfo.map((like) => {
+                return like.designId
+            })
+            designSetLikeList(likeList)
+        })
+        setLoading(false)
+    }, []);
 
-    return(
+    const handleWriteButton = () => {
+        setWriteDialogOpened(true)
+    }
+
+    if(loading) return(<div>로딩중요</div>)
+    else return(
         <Grid container direction="column">
-            <Typography variant="h4">추천코디</Typography>
+            <Grid item container>
+                <Typography className={classes.title} variant="h4">BEST 코디</Typography>
+                <DesignWrite />
+            </Grid>
             <Divider />
-            <DesignList fetchurl={yujinserver+"/page/bestdesign"} />
+            <DesignList designs={bestDesigns} />
             <Typography variant="h4">모두가 올린 코디</Typography>
             <Divider />
-            <DesignList fetchurl={yujinserver+"/page/design"} />
+            <DesignList designs={fullDesigns} />
         </Grid>
     )
 }
@@ -46,7 +86,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    
+    designSetLikeList: (designs) => dispatch(designSetLikeList(designs))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DesignPage)
