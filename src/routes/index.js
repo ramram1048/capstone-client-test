@@ -8,7 +8,14 @@ import ProductCategoryPage from '../components/Product/ProductCategoryPage'
 import ProductDetailPage from '../components/Product/ProductDetailPage'
 import OrderPage from '../components/Order/OrderPage'
 import ClosetPage from '../components/Closet/ClosetPage'
-import DesignPage from '../components/Design/DesignPage'
+
+// designs
+import DesignRecentPage from '../components/Design/DesignRecentPage'
+import DesignBestPage from '../components/Design/DesignBestPage'
+import DesignMypage from '../components/Design/DesignMypage'
+import DesignLikepage from '../components/Design/DesignLikepage'
+import DesignFollowPage from '../components/Design/DesignFollowPage'
+
 import PostWritePage from '../components/Community/PostWritePage'
 import CommunityPage from '../components/Community/CommunityPage'
 import PostDetailPage from '../components/Community/PostDetailPage'
@@ -32,7 +39,15 @@ const routes = (
         <Route path="/order" component={OrderPage} /> 
         <Route path="/closet" component={ClosetPage} /> 
         {/* <Route path="/test" component={PostTester} />  */}
-        <Route path="/design" component={DesignPage} /> 
+
+        <Route path="/design/recent" component={DesignRecentPage} /> 
+        <Route path="/design/best" component={DesignBestPage} /> 
+        <Route path="/design/mydesign" component={DesignMypage} /> 
+        <Route path="/design/like" component={DesignLikepage} />
+        <Route path="/design/follow" component={DesignFollowPage} /> 
+        <Route path="/design/hashtag" component={DesignBestPage} /> 
+        <Route path="/design/" component={DesignRecentPage} /> 
+
         <Route path="/community/write" component={PostWritePage}/> 
         <Route path="/community/post/" component={PostDetailPage}/> 
         <Route path="/community" component={CommunityPage}/>

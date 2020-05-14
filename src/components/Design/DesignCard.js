@@ -15,7 +15,9 @@ import {
   CardActions,
   Collapse,
   Chip,
-  Button, Typography, Avatar, IconButton, ThemeProvider, Tooltip 
+  Button, Typography, Avatar, IconButton, ThemeProvider, Tooltip ,
+  withWidth,
+  Popover,
 } from '@material-ui/core';
 import {
   FavoriteBorder as FavoriteBorderIcon,
@@ -25,19 +27,29 @@ import {
   MoreVert as MoreVertIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Person as PersonIcon,
+  PersonAdd as FollowIcon,
+  PersonAddDisabled as UnfollowIcon,
 } from '@material-ui/icons'
 
 import {yujinserver} from '../../restfulapi'
 import { connect } from 'react-redux';
 import { requestDesignLikes, requestDesignLikesCancel } from '../../actions/design'
+import { requestUnfollow, requestFollow } from '../../actions/follow';
 
 
 const useStyles = makeStyles((theme) => ({
   card: {
       padding: theme.spacing(1),
   },
+  chips: {
+    margin: "1px",
+  },
   headerAction: {
     
+  },
+  popover: {
+    pointerEvents: 'none',
   },
   cardMedia: {
     width: '100%',
@@ -62,15 +74,30 @@ const useStyles = makeStyles((theme) => ({
   likes: {
     color: 'red',
   },
+  follow: {
+    color: theme.palette.info.main,
+  }
 }));
 
 
-const DesignCard = ({design, designStore, requestDesignLikes, requestDesignLikesCancel}) => {
+const DesignCard = ({width, design, designStore, followStore, requestDesignLikes, requestDesignLikesCancel, requestFollow, requestUnfollow}) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const initialLikes = designStore.likeDesign.some((designId) => (designId === design.id));
+  // const initialLikes = designStore.likeDesign.some((designId) => (designId === design.id));
+  // const initialFollows = followStore.follow.some((userId) => (userId === design.user.id));
   const [expanded, setExpanded] = useState(false);
-  const [likes, setLikes] = useState(initialLikes);
+  const [likes, setLikes] = useState(false);
+  const [follows, setFollows] = useState(false);
+  const [cardSize, setCardSize] = useState(1)
+  const [followButtonHover, setFollowButtonHover] = useState(false)
+  // const [ userPopoverAnchor, setUserPopoverAnchor ] = useState(null)
+
+  const handleFollowHover = () => {
+    setFollowButtonHover(true)
+  }
+  const handleFollowUnhover = () => {
+    setFollowButtonHover(false)
+  }
 
   useEffect(() => {
     if(designStore.fetching !== "FAILURE"){
@@ -78,9 +105,34 @@ const DesignCard = ({design, designStore, requestDesignLikes, requestDesignLikes
       else setLikes(false)
     }
     else{
-      enqueueSnackbar("실패따리",{"variant": "error"});
+      enqueueSnackbar("좋아요처리 실패",{"variant": "error"});
     }
   }, [designStore])
+
+  useEffect(() => {
+    if(followStore.fetching === "SUCCESS") {
+      if(followStore.follow.some((userId) => (userId === design.user.id))){
+        // enqueueSnackbar(design.user.name+"님을 팔로우했어요.",{"variant": "success"});
+        setFollows(true)
+      }
+      else{
+        // enqueueSnackbar(design.user.name+"님을 언팔로우했어요.",{"variant": "success"});
+        setFollows(false)
+      }
+    }
+  }, [followStore])
+
+  useEffect(() => {
+    setCardSize(cardSizeLookup[width])
+  }, [width])
+
+  const cardSizeLookup = {
+    xs: 1,
+    sm: 1,
+    md: 1/2,
+    lg: 1/2,
+    xl: 1/4,
+  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -94,22 +146,83 @@ const DesignCard = ({design, designStore, requestDesignLikes, requestDesignLikes
       requestDesignLikes(design.id)
     }
   }
+  const handleFollow = () => {
+    if(follows){
+      requestUnfollow(design.user.id)
+      .then(() => {
+        if(followStore.fetching === "FAILURE"){
+          enqueueSnackbar("팔로우처리 실패",{"variant": "error"});
+        }
+        else if(followStore.fetching === "SUCCESS"){
+          enqueueSnackbar(design.user.name+"님을 언팔로우했어요.🖐",{"variant": "success"});
+          setFollows(false)
+        }
+      })
+    }
+    else{
+      requestFollow(design.user.id)
+      .then(() => {
+        if(followStore.fetching === "FAILURE"){
+          enqueueSnackbar("팔로우처리 실패",{"variant": "error"});
+        }
+        else if(followStore.fetching === "SUCCESS"){
+          enqueueSnackbar(design.user.name+"님을 팔로우했어요.🤝",{"variant": "success"});
+          setFollows(true)
+        }
+      })
+    }
+  }
 
   const hashtagChips = design.hashtags.map((tag) => {
     return <Chip
+      className={classes.chips}
       avatar={<Avatar>#</Avatar>}
       label={tag.title}
       clickable
     />
   })
-  // console.log(design)
 
   return (
-    <Box container={Card} width={1/2} className={classes.card} variant="outlined">
+    <Box container={Card} width={cardSize} className={classes.card} variant="outlined">
       <Grid container direction="row">
         <Grid item container xs={12} md={8}>
-          <Grid item>
+          <Grid item
+            // onMouseEnter={handlePopoverOpen}
+            // onMouseLeave={handlePopoverClose}
+            >
             <Avatar>{design.user.name}</Avatar>
+            {/* <Popover
+              className={classes.popover}
+              open={userPopoverOpened}
+              anchorEl={userPopoverAnchor}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              onClose={handlePopoverClose}
+
+              disableRestoreFocus
+              >
+              <Box
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}>
+                <Typography>{design.user.name}</Typography>
+                <Tooltip 
+                  placement="top" 
+                  title={follows?"언팔로우":"팔로우"}
+                  >
+                  <IconButton aria-label="follow" color="primary" centerRipple onClick={handleFollow}>
+                    {follows?
+                      <UnfollowIcon  />
+                    :<FollowIcon  />}
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Popover> */}
           </Grid>
           <Box>
             <Typography>{design.user.name}</Typography>
@@ -117,6 +230,29 @@ const DesignCard = ({design, designStore, requestDesignLikes, requestDesignLikes
           </Box>
         </Grid>
         <Grid item container xs={12} md={4} direction="row" justify="flex-end" alignItems="center">
+          <Tooltip 
+            placement="top" 
+            title={follows?"언팔로우":"팔로우"}
+            >
+            <IconButton aria-label="follow" centerRipple onClick={handleFollow}
+              onClick={handleFollow}
+              onMouseEnter={handleFollowHover}
+              onMouseLeave={handleFollowUnhover}>
+              {follows? (followButtonHover?
+                <UnfollowIcon />
+                : <PersonIcon className={classes.follow} />
+              )
+              : <FollowIcon />}
+              {/* {!followButtonHover?
+                <PersonIcon className={clsx({
+                  [classes.icon]: true,
+                  [classes.follows]: follows
+                })}/>:
+              (follows?
+               <UnfollowIcon className={classes.icon} />
+              :<FollowIcon className={classes.icon} />)} */}
+            </IconButton>
+          </Tooltip>
           <Tooltip placement="top" title={likes?"좋아요 취소":"좋아요"}>
             <IconButton aria-label="like" onClick={handleLikes}>
               {likes?<FavoriteIcon className={classes.likes}/>:<FavoriteBorderIcon />}
@@ -193,6 +329,7 @@ DesignCard.propTypes = {
   
 const mapStateToProps = state => ({
   designStore: state.design,
+  followStore: state.follow,
   //pathname: state.router.location.pathname,
   //search: state.router.location.search,
   //hash: state.router.location.hash,
@@ -201,6 +338,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch) => ({
   requestDesignLikes: (designId) => dispatch(requestDesignLikes(designId)),
   requestDesignLikesCancel: (designId) => dispatch(requestDesignLikesCancel(designId)),
+  requestFollow: (userId) => dispatch(requestFollow(userId)),
+  requestUnfollow: (userId) => dispatch(requestUnfollow(userId)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(DesignCard)
+export default connect(mapStateToProps, mapDispatchToProps)(withWidth()(DesignCard))

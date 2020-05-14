@@ -11,7 +11,7 @@ import { SnackbarProvider } from 'notistack'
 
 import { CssBaseline, Grid, Container, Box, Button } from '@material-ui/core'
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles'
-import { red, amber } from '@material-ui/core/colors'
+import { red, purple } from '@material-ui/core/colors'
 import { handleDrawerOpen } from './actions/sketchDrawer'
 import { 
   fetchLoginStatus,
@@ -21,10 +21,10 @@ import {
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: amber[500],
+      main: purple[500],
     },
     secondary: {
-      main: amber.A700,
+      main: purple['A400'],
     },
     error: {
       main: red.A400,

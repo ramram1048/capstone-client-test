@@ -1,6 +1,7 @@
 // https://velopert.com/1967
 import {yujinserver} from '../restfulapi'
 import { designInitialization } from './design'
+import { followInitialization } from './follow'
 
 export const requestLogin = (email, password) => {
   return (dispatch) => {
@@ -25,6 +26,7 @@ export const requestLogin = (email, password) => {
     .then((data) => {
       if(data.loginStatus) {
         dispatch(designInitialization())
+        dispatch(followInitialization())
         dispatch(loginSuccess(data.name))
       }
       else dispatch(loginFailure());
@@ -62,6 +64,7 @@ export const requestLogout = () => {
     .then(json => {
       if(json.loginStatus){
         dispatch(designInitialization())
+        dispatch(followInitialization())
         dispatch(logoutSuccess())
       }
       else dispatch(loginFailure())

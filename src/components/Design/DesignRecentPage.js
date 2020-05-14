@@ -14,6 +14,7 @@ import {
 
 import DesignList from './DesignList'
 import DesignWrite from './DesignWrite'
+import DesignSubheader from './DesignSubheader'
 import {yujinserver} from '../../restfulapi'
 
 import { designSetLikeList } from '../../actions/design'
@@ -25,29 +26,29 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const DesignPage = ({ designSetLikeList }) => {
+const fetchurl = yujinserver+"/page/design";
+
+const DesignRecentPage = ({ designSetLikeList }) => {
     const classes = useStyles();
     const [ loading, setLoading ] = useState(true);
     const [ fullDesigns, setFullDesigns ] = useState([]);
-    const [ bestDesigns, setBestDesigns ] = useState([]);
+    // const [ bestDesigns, setBestDesigns ] = useState([]);
     const [ writeDialogOpened, setWriteDialogOpened] = useState(false)
     useEffect(() => {
         // design & 
-        fetch(yujinserver+"/design/best", {credentials: 'include',})
-        .then(response => response.json(),
-            error => console.error(error))
-        .then(json => {
-            setBestDesigns(json)
-        })
-        fetch(yujinserver+"/page/design", {credentials: 'include',})
+        // fetch(yujinserver+"/design/best", {credentials: 'include',})
+        // .then(response => response.json(),
+        //     error => console.error(error))
+        // .then(json => {
+        //     setBestDesigns(json.designs)
+        // })
+        fetch(fetchurl, {credentials: 'include',})
         .then(response => response.json(),
             error => console.error(error))
         .then(json => {
             setFullDesigns(json.designs)
-            const likeList = json.likeInfo.map((like) => {
-                return like.designId
-            })
-            designSetLikeList(likeList)
+            console.log(json.likeInfo)
+            designSetLikeList(json.likeInfo)
         })
         setLoading(false)
     }, []);
@@ -59,20 +60,17 @@ const DesignPage = ({ designSetLikeList }) => {
     if(loading) return(<div>로딩중요</div>)
     else return(
         <Grid container direction="column">
+            <DesignSubheader />
             <Grid item container>
-                <Typography className={classes.title} variant="h4">BEST 코디</Typography>
-                <DesignWrite />
+                <Typography variant="h4">최신 코디</Typography>
             </Grid>
-            <Divider />
-            <DesignList designs={bestDesigns} />
-            <Typography variant="h4">모두가 올린 코디</Typography>
             <Divider />
             <DesignList designs={fullDesigns} />
         </Grid>
     )
 }
 
-DesignPage.propTypes = {
+DesignRecentPage.propTypes = {
     //pathname: PropTypes.string,
     //search: PropTypes.string,
     //hash: PropTypes.string,
@@ -89,4 +87,4 @@ const mapDispatchToProps = (dispatch) => ({
     designSetLikeList: (designs) => dispatch(designSetLikeList(designs))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(DesignPage)
+export default connect(mapStateToProps, mapDispatchToProps)(DesignRecentPage)

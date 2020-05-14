@@ -138,7 +138,9 @@ const DesignWrite = ({}) => {
   if(loading) return <Button disabled>옷장 공유하기</Button>
   else return(
     <React.Fragment>
-      <Button onClick={handleClickOpen}>옷장 공유하기</Button>
+      <Button
+            color="inherit"
+            onClick={handleClickOpen}>💬옷장 공유하기</Button>
       <Dialog 
         fullWidth
         maxWidth="sm"
