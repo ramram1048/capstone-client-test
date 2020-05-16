@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core'
 import PostList from './PostList'
 
-import yujinserver from '../../restfulapi'
+import {yujinserver} from '../../restfulapi'
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -31,7 +31,7 @@ const CommunityPage = () => {
                 <Button component={Link} to="/community/write">글쓰기</Button>
             </Grid>
             <Divider />
-            <PostList fetchurl="https://jsonplaceholder.typicode.com/posts" />
+            <PostList fetchurl={yujinserver+"/page/post"} />
         </Grid>
     )
 }

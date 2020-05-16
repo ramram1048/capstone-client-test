@@ -47,7 +47,7 @@ const ProductCategoryPage = ({search}) => {
         <Container maxWidth="lg">
             <Typography variant="h4" gutterBottom>{category.title}</Typography>
             <Divider />
-            <ProductList fetchurl={sangminserver+"/productList/"+category.id} />
+            <ProductList fetchurl={sangminserver+"/product/category/"+category.id} />
         </Container>
     )
 }

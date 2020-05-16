@@ -14,6 +14,7 @@ import { Menu as MenuIcon,
 import { requestLogout } from '../../actions/auth'
 import { handleDrawer } from '../../actions/sketchDrawer';
 import {yujinserver} from '../../restfulapi'
+import { push } from 'connected-react-router';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -31,12 +32,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = ({menus, handleDrawer, requestLogout}) => {
+const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
   const classes = useStyles();
 
 
   const handleLogout = () => {
     requestLogout()
+    push("/")
   }
 
   return(
@@ -87,7 +89,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   handleDrawer: () => dispatch(handleDrawer()),
-  requestLogout: () => dispatch(requestLogout())
+  requestLogout: () => dispatch(requestLogout()),
+  push: (url) => dispatch(push(url))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar)

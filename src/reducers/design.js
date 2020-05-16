@@ -10,6 +10,7 @@ const designReducer = (state = init, action) => {
         case 'DESIGN_SET_LIKE_LIST': 
             return {
                 ...state,
+                fetching: "SUCCESS",
                 likeDesign: action.designs
             }
         case 'DESIGN_LIKE_SUCCESS':

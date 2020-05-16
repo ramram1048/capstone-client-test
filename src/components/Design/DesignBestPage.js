@@ -40,9 +40,7 @@ const DesignBestPage = ({ designSetLikeList, followSetList }) => {
         .then(response => response.json(),
             error => console.error(error))
         .then(json => {
-            setDesigns(json.designs)
-            designSetLikeList(json.likeInfo)
-            followSetList(json.followingInfo)
+            setDesigns(json)
         })
         .then(
             setLoading(false)

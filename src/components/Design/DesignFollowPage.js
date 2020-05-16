@@ -38,9 +38,7 @@ const DesignFollowPage = ({ designSetLikeList }) => {
         .then(response => response.json(),
             error => console.error(error))
         .then(json => {
-            setDesigns(json.designs)
-            console.log(json.likeInfo)
-            designSetLikeList(json.likeInfo)
+            setDesigns(json)
         })
         setLoading(false)
     }, []);

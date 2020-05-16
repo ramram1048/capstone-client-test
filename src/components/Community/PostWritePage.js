@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { goBack } from 'connected-react-router'
+import { goBack, push } from 'connected-react-router'
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -17,9 +17,14 @@ import {
   TextField,
   ButtonBase,
   Avatar,
+  GridList,
+  GridListTile,
 } from '@material-ui/core'
-import { PhotoCamera } from '@material-ui/icons';
+import { PhotoCamera, Cancel, Check } from '@material-ui/icons';
 import { useForm, Controller } from 'react-hook-form'
+import clsx from 'clsx'
+import { useSnackbar } from 'notistack'
+import { yujinserver } from '../../restfulapi'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,37 +35,218 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
     },
-    content: {
-        height: "100px",
+    imageContainer: {
+      display: 'flex',
     },
     upImageButton: {
-        width: theme.spacing(7),
-        height: theme.spacing(7),
+        width: theme.spacing(20),
+        height: theme.spacing(20),
     },
-    input: {
+    hide: {
         display: 'none',
     },
+    gridList: {
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
+      },
     previewImage: {
-        width: theme.spacing(7),
-        height: theme.spacing(7),
-    }
+        width: theme.spacing(20),
+        height: theme.spacing(20),
+    },
+    previewCancel: {
+      border: "1px solid white",
+      backgroundColor: "white",
+      borderRadius: "50%",
+      position: "absolute",
+      top: '1px',
+      right: '1px',
+    },
+    
+  checked: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, .5)'
+  }
 }));
 
-const PostWritePage = ({backButtonAction}) => {
+const PostWritePage = ({backButtonAction, dispatchPush}) => {
     const classes = useStyles();
+    const { enqueueSnackbar } = useSnackbar();
+    const [ loading, setLoading ] = useState(true);
     const [ images, setImages ] = useState([]);
+    const [ closetData, setClosetData ] = useState([]);
     const { control, handleSubmit } = useForm();
+    useEffect(() => {
+        if(loading){
+          fetch(yujinserver+"/page/closet", { credentials: 'include', })
+          .then(
+            response => response.json(),
+            error => console.log(error)
+          )
+          .then(json => {
+            console.log(json)
+            setClosetData(json.map((closet) => ({
+                selected: false,
+                closet: closet
+            })))
+            setLoading(false)
+          })
+        }
+      }, [loading])
 
-    const onSubmit = (data) => {
-        const {title, content} = data;
-    }
     const handleImageInput = (event) => {
-        setImages([...images, event.target.files[0]]);
+        if(images.length < 3){
+          if(event.target.files[0] !== undefined){
+            setImages([...images, event.target.files[0]]);
+          }
+        }
+      }
+      const removeImage = (index) => {
+        const newList = [...images];
+        newList.splice(index, 1);
+        setImages(newList);
+      }
+      const postSubmit = (data) => {
+        // console.log(data.content, images)
+        const selectedClosetIds = closetData.filter((closet) => closet.selected).map((closet) => closet.closet.id)
+        console.log(selectedClosetIds)
+        let form = new FormData()
+        // form.append("title", data.title)
+        // form.append("content", data.content)
+        // form.append("closet", selectedClosetIds)
+        images.forEach((image) => {form.append("img", image)})
+        // console.log(form.keys())
+        
+        // fetch(yujinserver+"/post", {
+        //     method: "POST",
+        //     body: form,
+        //     credentials: 'include',
+        //   })
+        //   .then(
+        //     response => response.text(),
+        //     error => console.log(error)
+        //   )
+        //   .then((text) => {
+        //       if(text === "success"){
+        //         enqueueSnackbar("성공이요",{"variant": "success"});
+        //         setOpen(false)
+        //         dispatchPush("/design/recent")
+        //       }
+        //       else{
+        //         enqueueSnackbar("실패따리",{"variant": "error"});
+        //       }
+        //   })
+
+        fetch(yujinserver+"/post/img",{
+            method: "POST",
+            body: form,
+            credentials: 'include',
+          })
+          .then(
+            response => response.json(),
+            error => console.log(error)
+          )
+          .then((json) => {
+            const images = json;
+            fetch(yujinserver+"/post",{
+                method: "POST",
+                headers: {
+                  'Accept': 'application/json',
+                  "Content-Type": "application/json",
+                  'Cache': 'no-cache'
+                },
+                body: JSON.stringify({
+                    title: data.title,
+                    content: data.content,
+                    imgs: images,
+                    closet: selectedClosetIds,
+                }),
+                credentials: 'include',
+            })
+            .then(
+              response => response.text(),
+              error => console.log(error)
+            )
+            .then((text) => {
+                if(text === "success"){
+                    enqueueSnackbar("성공이요",{"variant": "success"});
+                    dispatchPush("/community/")
+                }
+                else{
+                    enqueueSnackbar("실패따리",{"variant": "error"});
+                }
+            })
+          })
     }
 
-    
+    const imageUpload = <Grid className={classes.imageContainer}>
+        {images.map((image, index) => {
+            return(
+            <React.Fragment>
+                <ButtonBase variant="rounded">
+                <Avatar src={URL.createObjectURL(image)} 
+                    variant="rounded"
+                    className={classes.previewImage}
+                />
+                </ButtonBase>
+                <ButtonBase onClick={() => removeImage(index)}>
+                <Cancel className={classes.previewCancel}/>
+                </ButtonBase>
+            </React.Fragment>
+            )
+        })}
+        <input 
+            accpet="image/*"
+            className={classes.hide}
+            id="icon-button-file"
+            name="photo"
+            multiple
+            type="file"
+            onChange={(event) => handleImageInput(event)}
+        />
+        <label htmlFor="icon-button-file">
+        <Avatar variant="rounded" className={clsx({
+            [classes.previewImage]: true,
+            [classes.hide]: images.length >= 3
+        })}>
+            <PhotoCamera />
+        </Avatar>
+        </label>
+    </Grid>
 
-    return(
+    const handleClosetInput = (index) => {
+        const newList = [...closetData]
+        newList[index].selected = !newList[index].selected
+        setClosetData(newList)
+    }
+
+    const closetComponentList = closetData.map((closet, index) => {
+        return(
+            <GridListTile key={closet.closet.id}>
+                <ButtonBase disableRipple onClick={() => handleClosetInput(index)}>
+                    <Avatar 
+                        src={closet.closet.img} 
+                        variant="rounded"
+                        className={classes.previewImage}
+                    />
+                    <Avatar 
+                        variant="rounded"
+                        className={clsx({
+                            [classes.hide]: !closet.selected,
+                            [classes.checked]: closet.selected
+                        })}
+                    >
+                        <Check />
+                    </Avatar>
+                </ButtonBase>
+            </GridListTile>
+        )
+    })
+
+    if(loading) return <Button disabled>옷장 공유하기</Button>
+  else return(
         <Container maxWidth="lg">
             <Grid container={Paper} className={classes.root}>
                 <Grid item container>
@@ -68,7 +254,7 @@ const PostWritePage = ({backButtonAction}) => {
                     <Button onClick={backButtonAction}>돌아가</Button>
                 </Grid>
                 <Divider />
-                <form>
+                <form onSubmit={handleSubmit(postSubmit)}>
                     <Controller as={<TextField
                         variant="outlined"
                         margin="normal"
@@ -95,37 +281,10 @@ const PostWritePage = ({backButtonAction}) => {
                         name="content"
                         control={control}
                     />
-                    <Grid>
-                        {images.map((image) => {
-                            return(
-                                // <ButtonBase className={classes.image}
-                                //     style={{width: "100%"}}>
-                                // <span 
-                                // style={{background: URL.createObjectURL(image)}} />
-                                // </ButtonBase>
-                                <Avatar src={URL.createObjectURL(image)} 
-                                    variant="rounded"
-                                    className={classes.previewImage}
-                                />
-                            )
-                        })}
-                        <input 
-                            accpet="image/*"
-                            className={classes.input}
-                            id="icon-button-file"
-                            multiple
-                            type="file"
-                            onChange={handleImageInput}
-                        />
-                        <ButtonBase htmlFor="icon-button-file">
-                            {/* <Button component="span" color="primary" variant="outlined" className={classes.upImageButton}>
-                                <PhotoCamera />
-                            </Button> */}
-                            <Avatar variant="rounded" className={classes.previewImage}>
-                                <PhotoCamera />
-                            </Avatar>
-                        </ButtonBase>
-                    </Grid>
+                    {imageUpload}
+                    <GridList className={classes.gridList} cols={2.5}>
+        {closetComponentList}
+    </GridList>
                     <Button type="submit" fillWidth variant="contained" color="primary">Submit</Button>
                 </form>
             </Grid>
@@ -147,7 +306,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    backButtonAction: () => dispatch(goBack())
+    backButtonAction: () => dispatch(goBack()),
+    dispatchPush: (url) => dispatch(push(url))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostWritePage)

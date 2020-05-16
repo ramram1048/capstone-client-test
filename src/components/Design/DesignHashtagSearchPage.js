@@ -18,6 +18,7 @@ import DesignSubheader from './DesignSubheader'
 import {yujinserver} from '../../restfulapi'
 
 import { designSetLikeList } from '../../actions/design'
+import { followSetList } from '../../actions/follow';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,49 +27,50 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const fetchurl = yujinserver+"/page/design";
+const fetchurl = yujinserver+"/design/hashtag";
 
-const DesignRecentPage = ({ designSetLikeList }) => {
+const DesignHashtagSearchPage = ({ pathname, designSetLikeList, followSetList }) => {
     const classes = useStyles();
     const [ loading, setLoading ] = useState(true);
-    const [ fullDesigns, setFullDesigns ] = useState([]);
-    // const [ bestDesigns, setBestDesigns ] = useState([]);
-    const [ writeDialogOpened, setWriteDialogOpened] = useState(false)
+    const [ designs, setDesigns ] = useState([]);
+    
+    const currentTag = pathname.substring(pathname.lastIndexOf('/') + 1)
+
     useEffect(() => {
-        // design & 
-        // fetch(yujinserver+"/design/best", {credentials: 'include',})
-        // .then(response => response.json(),
-        //     error => console.error(error))
-        // .then(json => {
-        //     setBestDesigns(json.designs)
-        // })
-        fetch(fetchurl, {credentials: 'include',})
+        fetch(fetchurl, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              "Content-Type": "application/json",
+              'Cache': 'no-cache'
+            },
+            body: JSON.stringify({
+                hashtag: currentTag,
+            }),
+            credentials: 'include',
+        })
         .then(response => response.json(),
             error => console.error(error))
         .then(json => {
-            setFullDesigns(json)
+            setDesigns(json)
         })
         setLoading(false)
     }, []);
-
-    const handleWriteButton = () => {
-        setWriteDialogOpened(true)
-    }
 
     if(loading) return(<div>로딩중요</div>)
     else return(
         <Grid container direction="column">
             <DesignSubheader />
             <Grid item container>
-                <Typography variant="h4">모두의 최신 코디</Typography>
+    <Typography variant="h4">#{currentTag}으로 검색</Typography>
             </Grid>
             <Divider />
-            <DesignList designs={fullDesigns} />
+            <DesignList designs={designs} />
         </Grid>
     )
 }
 
-DesignRecentPage.propTypes = {
+DesignHashtagSearchPage.propTypes = {
     //pathname: PropTypes.string,
     //search: PropTypes.string,
     //hash: PropTypes.string,
@@ -76,13 +78,15 @@ DesignRecentPage.propTypes = {
 
 
 const mapStateToProps = state => ({
-    //pathname: state.router.location.pathname,
-    //search: state.router.location.search,
+    pathname: state.router.location.pathname,
+    // search: state.router.location.search,
     //hash: state.router.location.hash,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    designSetLikeList: (designs) => dispatch(designSetLikeList(designs))
+    designSetLikeList: (designs) => dispatch(designSetLikeList(designs)),
+    followSetList: (users) => dispatch(followSetList(users)),
+
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(DesignRecentPage)
+export default connect(mapStateToProps, mapDispatchToProps)(DesignHashtagSearchPage)

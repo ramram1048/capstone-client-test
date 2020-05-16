@@ -25,6 +25,7 @@ import { Check } from '@material-ui/icons';
 import {yujinserver} from '../../restfulapi'
 import clsx from 'clsx';
 import ChipInput from 'material-ui-chip-input'
+import { push } from 'connected-react-router';
 
 const useStyles = makeStyles((theme) => ({
   gridList: {
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const DesignWrite = ({}) => {
+const DesignWrite = ({ dispatchPush }) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [ loading, setLoading ] = useState(true);
@@ -127,6 +128,7 @@ const DesignWrite = ({}) => {
               if(text === "success"){
                 enqueueSnackbar("성공이요",{"variant": "success"});
                 setOpen(false)
+                dispatchPush("/design/recent")
               }
               else{
                 enqueueSnackbar("실패따리",{"variant": "error"});
@@ -183,7 +185,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  
+  dispatchPush: (url) => dispatch(push(url))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DesignWrite)

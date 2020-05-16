@@ -15,6 +15,7 @@ import DesignBestPage from '../components/Design/DesignBestPage'
 import DesignMypage from '../components/Design/DesignMypage'
 import DesignLikepage from '../components/Design/DesignLikepage'
 import DesignFollowPage from '../components/Design/DesignFollowPage'
+import DesignHashtagSearchPage from '../components/Design/DesignHashtagSearchPage'
 
 import PostWritePage from '../components/Community/PostWritePage'
 import CommunityPage from '../components/Community/CommunityPage'
@@ -45,8 +46,8 @@ const routes = (
         <Route path="/design/mydesign" component={DesignMypage} /> 
         <Route path="/design/like" component={DesignLikepage} />
         <Route path="/design/follow" component={DesignFollowPage} /> 
-        <Route path="/design/hashtag" component={DesignBestPage} /> 
-        <Route path="/design/" component={DesignRecentPage} /> 
+        <Route path="/design/hashtag" component={DesignHashtagSearchPage} /> 
+        <Route path="/design/" component={DesignBestPage} /> 
 
         <Route path="/community/write" component={PostWritePage}/> 
         <Route path="/community/post/" component={PostDetailPage}/> 

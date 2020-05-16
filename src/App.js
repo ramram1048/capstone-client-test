@@ -71,7 +71,7 @@ const menus = [
   // {component: "Login", path: "/login"},
 ];
 
-const App = ({ history, pathname, loginFetching, loginSession, fetchLoginStatus, dispatchPush }) => {
+const App = ({ history, pathname, authStore, fetchLoginStatus, dispatchPush }) => {
   const classes = useStyles();
 //   useEffect(() => {
 //     fetchLoginStatus().then(() => {
@@ -83,8 +83,8 @@ const App = ({ history, pathname, loginFetching, loginSession, fetchLoginStatus,
 //     })
 // }, [])
   useEffect(() => {
-    while(loginFetching !== 'FETCHING'){
-      fetchLoginStatus()
+    while (authStore.fetching !== 'FETCHING'){
+      fetchLoginStatus(authStore.currentId)
       break
     }
   }, [pathname])
@@ -95,11 +95,11 @@ const App = ({ history, pathname, loginFetching, loginSession, fetchLoginStatus,
         <Grid container className={classes.root}>
           <CssBaseline />
           <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-          { loginSession?
-            <React.Fragment>
+          { authStore.session?
+            <React.Fragment key={authStore.currentId}>
               <Grid container item className={classes.main}>
                 <NavBar menus={menus}/>
-                <Box flex="1 1 auto" className={classes.context}>
+                <Box flex="1 1 auto" className={classes.context} key={authStore.currentId}>
                   { routes }
                 </Box>
               </Grid>
@@ -121,13 +121,12 @@ App.propTypes = {
 }
 const mapStateToProps = state => ({
   pathname: state.router.location.pathname,
-  loginFetching: state.auth.fetching,
-  loginSession: state.auth.session,
+  authStore: state.auth,
 })
 
 const mapDispatchToProps = dispatch => ({
   dispatchPush: (url) => dispatch(push(url)),
-  fetchLoginStatus: () => dispatch(fetchLoginStatus()),
+  fetchLoginStatus: (id) => dispatch(fetchLoginStatus(id)),
   getLoginStatus: () => dispatch(getLoginStatus())
 })
 

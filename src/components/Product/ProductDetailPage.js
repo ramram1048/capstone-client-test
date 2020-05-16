@@ -102,10 +102,12 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   useEffect(() => {
     setPid(pathname.substring(pathname.lastIndexOf('/') + 1));
     //if(!pid.isInteger) return(<NoMatch/>);
-    fetch(sangminserver+"/product/"+pid)
+    fetch(sangminserver+"/product/"+pid, {
+      credentials: 'include',
+    })
     .then(res => res.json())
     .then(json => {
-      setData(json.result[0]);
+      setData(json.selected_product[0]);
       if(json.detail.length === 0){
         setDetail([{
           selected: true, option: {id: 1, productId: pid, color: "테스트용 기본", size: "기본", cnt: 100}
@@ -119,7 +121,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
           }
         }))
       };
-      setReviews(json.rows);
+      setReviews(json.reviews);
     })
     .catch(error => {console.warn(error)}
   )}, [pid]);

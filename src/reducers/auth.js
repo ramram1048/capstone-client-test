@@ -2,6 +2,7 @@ const init = {
     fetching: 'INIT',
     session: false,
     currentUser: '',
+    currentId: -1,
 }
 
 const authReducer = (state = init, action) => {
@@ -16,15 +17,29 @@ const authReducer = (state = init, action) => {
                 fetching: 'SUCCESS',
                 session: true,
                 currentUser: action.email,
+                currentId: action.id,
             }
         case 'AUTH_LOGIN_FAILURE':
             return {
                 fetching: 'FAILURE',
                 session: false,
                 currentUser: '',
+                currentId: -1,
             }
-        case 'AUTH_LOGOUT_FAILURE':
-            return init
+        case 'AUTH_LOGIN_STATUS_NOT_FOUND':
+            return {
+                fetching: 'NOTFOUND',
+                session: false,
+                currentUser: '',
+                currentId: -1,
+            }
+        case 'AUTH_LOGOUT':
+            return {
+                fetching: 'SUCCESS',
+                session: false,
+                currentUser: '',
+                currentId: -1,
+            }
         default:
             return state
     }

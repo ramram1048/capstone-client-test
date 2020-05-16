@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1
     },
     media: {
-        padding: 100, // 16:9
+        width: '100%',
+        height: '100%',
     },
 }));
 
@@ -43,14 +44,23 @@ const PostCard = ({post}) => {
     const classes = useStyles();
 
     const id = post.id
-    const uname = post.userId
+    const uname = post.user.name
     const title = post.title
-    const body = post.body
-    const summary = body.length>100?body.substring(0,100) + "...":body
+    const content = post.content
+    const summary = content.length>100?content.substring(0,100) + "...":content
+    const thumbnail = post.Pimgs.length?post.Pimgs[0].img : ""
 
-    return(
-        <Card className={classes.card} elevation={0} square>
-            <div className={classes.cardContent}>
+    console.log(thumbnail)
+
+    const updatedAt = post.updatedAt
+    const updated = (post.createdAt !== post.updatedAt)
+    const commentcount = post.commentcount
+
+    if(!post) return <div>ㅇㅅㅇ</div>
+    else return(
+        <Box component={Card} className={classes.card} elevation={0} square>
+            <Grid container>
+            <Grid item xs={12} sm={8} md={10} className={classes.cardContent}>
                 <CardActionArea component={Link} to={"/community/post/"+id}>
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
@@ -65,20 +75,25 @@ const PostCard = ({post}) => {
                     <Box className={classes.actionBox} flexGrow={1}>
                         <Typography gutterBottom>{uname}</Typography>
                         <Typography gutterBottom variant="body2" color="textSecondary">
-                            ー 몇월몇일 몇시 몇분
+                            ー {updatedAt} {updated?"(수정됨)":""}
                         </Typography>
                     </Box>
                     <Box>
-                    <Typography gutterBottom>댓글 몇개</Typography>
+    <Typography gutterBottom>댓글 {commentcount}개</Typography>
                     </Box>
                 </CardActions>
-            </div>
-            <CardMedia component={Link} to={"/community/post/"+id}
+            </Grid>
+            <Grid item xs={12} sm={4} md={2}>
+            <Avatar component={Link} to={"/community/post/"+id}
                 className={classes.media}
-                image="https://picsum.photos/500"
-                title={title}
+                src={thumbnail}
+                variant="rounded"
             />
-        </Card>
+            </Grid>
+
+            </Grid>
+            
+        </Box>
     )
 }
 

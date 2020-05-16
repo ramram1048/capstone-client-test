@@ -40,7 +40,7 @@ const DesignMypage = ({ designSetLikeList }) => {
             error => console.error(error))
         .then(json => {
             // design만오고있다!!
-            setDesigns(json.designs)
+            setDesigns(json)
             // console.log(json.likeInfo)
             // designSetLikeList(json.likeInfo)
         })

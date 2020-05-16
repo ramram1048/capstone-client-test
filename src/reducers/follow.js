@@ -11,6 +11,7 @@ const followReducer = (state = init, action) => {
         case 'FOLLOW_SET_LIST': 
             return {
                 ...state,
+                fetching: "SUCCESS",
                 follow: action.users
             }
         case 'FOLLOW_FETCHING':

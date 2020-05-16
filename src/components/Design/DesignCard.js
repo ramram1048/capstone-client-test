@@ -36,6 +36,8 @@ import {yujinserver} from '../../restfulapi'
 import { connect } from 'react-redux';
 import { requestDesignLikes, requestDesignLikesCancel } from '../../actions/design'
 import { requestUnfollow, requestFollow } from '../../actions/follow';
+import { push } from 'connected-react-router';
+import ChipInput from 'material-ui-chip-input';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -80,14 +82,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const DesignCard = ({width, design, designStore, followStore, requestDesignLikes, requestDesignLikesCancel, requestFollow, requestUnfollow}) => {
+const DesignCard = ({sessionId, width, design, designStore, followStore, requestDesignLikes, requestDesignLikesCancel, requestFollow, requestUnfollow, dispatchPush}) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  // const initialLikes = designStore.likeDesign.some((designId) => (designId === design.id));
-  // const initialFollows = followStore.follow.some((userId) => (userId === design.user.id));
+  const initialLikes = designStore.likeDesign.some((designId) => (designId === design.id));
+  const initialFollows = followStore.follow.some((userId) => (userId === design.user.id));
   const [expanded, setExpanded] = useState(false);
-  const [likes, setLikes] = useState(false);
-  const [follows, setFollows] = useState(false);
+  const [likes, setLikes] = useState(initialLikes);
+  const [follows, setFollows] = useState(initialFollows);
+  const [hashtags, setHashtags] = useState(design.hashtags.map((tag) => tag.title))
+  const [hashtagEdit, setHashtagEdit] = useState(false)
+  const [hashtagFormValue, setHashtagFormValue] =useState([])
   const [cardSize, setCardSize] = useState(1)
   const [followButtonHover, setFollowButtonHover] = useState(false)
   // const [ userPopoverAnchor, setUserPopoverAnchor ] = useState(null)
@@ -173,14 +178,56 @@ const DesignCard = ({width, design, designStore, followStore, requestDesignLikes
     }
   }
 
-  const hashtagChips = design.hashtags.map((tag) => {
+  const hashtagChips = hashtags.map((tag) => {
     return <Chip
       className={classes.chips}
       avatar={<Avatar>#</Avatar>}
-      label={tag.title}
+      label={tag}
       clickable
+      onClick={() => dispatchPush("/design/hashtag/"+tag)}
     />
   })
+
+  const handleHashtagEdit = () => {
+    if(sessionId !== design.user.id){
+      enqueueSnackbar("자기 글만 수정합시다",{"variant": "error"});
+    }
+    else setHashtagEdit(!hashtagEdit)
+  }
+
+  const hashtagEditForm = <ChipInput 
+    label="태그 수정"
+    fullWidth
+    defaultValue={hashtags}
+    onChange={(chips) => setHashtagFormValue(chips)}
+  />
+  const submitHashtagEdit = () => {
+    if(sessionId !== design.user.id){
+      enqueueSnackbar("자기 글만 수정합시다",{"variant": "error"});
+    }
+    fetch(yujinserver+"/design/"+design.id, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        'Cache': 'no-cache'
+      },
+      body: JSON.stringify({
+          content: hashtagFormValue,
+      }),
+      credentials: 'include',
+  })
+  .then(response => response.text(),
+      error => console.error(error))
+  .then(text => {
+      if(text === 'success'){
+        enqueueSnackbar("수정완료요",{"variant": "success"});
+        setHashtags(hashtagFormValue)
+      }
+      else enqueueSnackbar("실패요",{"variant": "error"});
+      setHashtagEdit(false)
+  })
+  }
 
   return (
     <Box container={Card} width={cardSize} className={classes.card} variant="outlined">
@@ -274,13 +321,18 @@ const DesignCard = ({width, design, designStore, followStore, requestDesignLikes
       </CardActionArea>
       <CardActions disableSpacing>
         <Box flexGrow={1}>
-          {hashtagChips}
+          {hashtagEdit? hashtagEditForm:hashtagChips}
         </Box>
         <Tooltip title="수정">
-            <IconButton>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
+          <IconButton onClick={submitHashtagEdit}>
+            
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="수정">
+          <IconButton onClick={handleHashtagEdit}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title="삭제">
           <IconButton>
             <DeleteIcon />
@@ -328,6 +380,7 @@ DesignCard.propTypes = {
 }
   
 const mapStateToProps = state => ({
+  sessionId: state.auth.currentId,
   designStore: state.design,
   followStore: state.follow,
   //pathname: state.router.location.pathname,
@@ -340,6 +393,7 @@ const mapDispatchToProps = (dispatch) => ({
   requestDesignLikesCancel: (designId) => dispatch(requestDesignLikesCancel(designId)),
   requestFollow: (userId) => dispatch(requestFollow(userId)),
   requestUnfollow: (userId) => dispatch(requestUnfollow(userId)),
+  dispatchPush: (url) => dispatch(push(url))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withWidth()(DesignCard))

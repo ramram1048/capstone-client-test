@@ -19,12 +19,14 @@ const ProductList = ({fetchurl}) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        axios.get(fetchurl)
+        fetch(fetchurl, {
+            credentials: 'include',
+        })
         .then(response => {
             // console.log(response)
-            setData(response.data.rows)
-            setStatus(1)
+            return response.json()
         })
+        .then((json) => setData(json.productRows))
         .catch(error => {
             console.warn("Error:", error)
         })

@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AuthPage = ({redirectTo, fetchLoginStatus, loginResult, getLoginStatus, dispatchBack, dispatchPush, requestLogin}) => {
+const AuthPage = ({authStore, dispatchBack, dispatchPush, requestLogin}) => {
   const [ tabValue, setTabValue ] = useState("1");
   const [ email, setEmail ] = useState("");
   const [ password, setPassword ] = useState("");
@@ -65,15 +65,15 @@ const AuthPage = ({redirectTo, fetchLoginStatus, loginResult, getLoginStatus, di
   const { enqueueSnackbar } = useSnackbar();
 
   // useEffect(() => {
-  //   fetchLoginStatus()
+  //   if(authStore.fetching === 'SUCCESS'){
+  //     if(authStore.session) enqueueSnackbar("어서오세요 "+authStore.name+"님.",{"variant": "success"});
+  //     else enqueueSnackbar("안전하게 로그아웃되었습니다.",{"variant": "success"});
+  //   }
+  //   else if(authStore.fetching === 'FAILURE'){
+  //     console.log(authStore)
+  //     enqueueSnackbar("에러요",{"variant": "error"});
+  //   }
   // }, [])
-
-  // useEffect(() => {
-  //     console.log(loginResult)
-  //     if(loginResult === "SUCCESS"){
-  //       dispatchPush(redirectTo)
-  //     }
-  // }, [loginResult])
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue)
@@ -189,7 +189,7 @@ AuthPage.propTypes = {
 
 
 const mapStateToProps = state => ({
-    loginResult: state.auth.fetching,
+    authStore: state.auth,
 })
 
 const mapDispatchToProps = (dispatch) => ({

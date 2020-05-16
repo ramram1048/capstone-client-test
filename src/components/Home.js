@@ -18,12 +18,12 @@ const Home = () => {
 
   return(
     <Grid container direction="column">
-      <Grid item container>
+      {/* <Grid item container>
         <Typography className={classes.title} variant="h4">최신상품~</Typography>
         <Button component={Link} to="">더보기</Button>
       </Grid>
       <Divider />
-      <ProductList fetchurl={sangminserver+"/products"} />
+      <ProductList fetchurl={sangminserver+"/products"} /> */}
     </Grid>
   )
 }

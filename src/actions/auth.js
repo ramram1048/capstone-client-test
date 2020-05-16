@@ -1,7 +1,7 @@
 // https://velopert.com/1967
 import {yujinserver} from '../restfulapi'
-import { designInitialization } from './design'
-import { followInitialization } from './follow'
+import { designInitialization, designSetLikeList } from './design'
+import { followInitialization, followSetList } from './follow'
 
 export const requestLogin = (email, password) => {
   return (dispatch) => {
@@ -21,20 +21,20 @@ export const requestLogin = (email, password) => {
     })
     .then(
       res => res.json(),
-      err => {console.log(err); dispatch(loginFailure())}
+      err => {console.error(err); return dispatch(loginFailure())}
     )
     .then((data) => {
       if(data.loginStatus) {
-        dispatch(designInitialization())
-        dispatch(followInitialization())
-        dispatch(loginSuccess(data.name))
+        dispatch(designSetLikeList(data.designLike))
+        dispatch(followSetList(data.followingInfo))
+        return dispatch(loginSuccess(data.name, data.id))
       }
-      else dispatch(loginFailure());
+      else return dispatch(loginFailure());
     })
   }
 }
 
-export const fetchLoginStatus = () => {
+export const fetchLoginStatus = (initialId) => {
   return (dispatch) => {
     dispatch(login());
     return fetch(yujinserver+"/auth/status", {
@@ -42,11 +42,18 @@ export const fetchLoginStatus = () => {
     })
     .then(
       res => res.json(),
-      err => {console.log(err); dispatch(loginFailure())}
+      err => {console.error(err);}
     )
-    .then(json => {
-      if(json.loginStatus) dispatch(loginSuccess(json.name))
-      else dispatch(loginFailure())
+    .then(data => {
+      if(data.loginStatus){
+        dispatch(designSetLikeList(data.designLike))
+        dispatch(followSetList(data.followingInfo))
+        return dispatch(loginSuccess(data.name, data.id))
+      }
+      else if(initialId !== -1){
+        return dispatch(loginFailure())
+      }
+      else return dispatch(loginStatusNotFound())
     })
   }
 }
@@ -59,15 +66,15 @@ export const requestLogout = () => {
     })
     .then(
       res => res.json(),
-      err => {console.log(err); dispatch(loginFailure())}
+      err => {console.error(err); return dispatch(loginFailure())}
     )
-    .then(json => {
-      if(json.loginStatus){
+    .then(data => {
+      if(data.loginStatus){
         dispatch(designInitialization())
         dispatch(followInitialization())
-        dispatch(logoutSuccess())
+        return dispatch(logoutSuccess())
       }
-      else dispatch(loginFailure())
+      else return dispatch(loginFailure())
     })
   }
 }
@@ -80,14 +87,18 @@ export const login = () => ({
   type: 'AUTH_LOGIN',
 })
 
-export const loginSuccess = (name) => ({
-  type: 'AUTH_LOGIN_SUCCESS', name
+export const loginSuccess = (name, id) => ({
+  type: 'AUTH_LOGIN_SUCCESS', name, id
 })
 
 export const loginFailure = () => ({
   type: 'AUTH_LOGIN_FAILURE',
 })
 
+export const loginStatusNotFound = () => ({
+  type: 'AUTH_LOGIN_STATUS_NOT_FOUND'
+})
+
 export const logoutSuccess = () => ({
-  type: 'AUTH_LOGOUT_FAILURE',
+  type: 'AUTH_LOGOUT',
 })

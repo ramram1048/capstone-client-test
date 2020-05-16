@@ -8,7 +8,7 @@ const menus = [
     {component: "💭내 디자인", path: "/design/mydesign"},
     {component: "💗좋아요 누른 디자인", path: "/design/like"},
     {component: "📣팔로우한 디자인", path: "/design/follow"},
-    {component: "🔥인기 태그", path: "/design/hashtag"},
+    // {component: "🔥인기 태그", path: "/design/hashtag"},
 ];
 
 const DesignSubheader = () => (

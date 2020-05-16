@@ -19,19 +19,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PostList = ({fetchurl}) => {
+    const [ loading, setloading ] = useState(true);
     const [ posts, setPosts ] = useState([]);
     const classes = useStyles();
 
     useEffect(() => {
-        fetch(fetchurl)
-        .then(response => response.json())
-        .then(json => {
-            setPosts(json)
-        })
-        .catch(error => {
-        console.warn("Error:", error)
-    })}, [fetchurl]);
-    if(!posts) return(<div>loading.</div>)
+        if(loading){
+            fetch(fetchurl, {
+                credentials: 'include',})
+            .then(response => response.json())
+            .then(json => {
+                setPosts(json)
+                console.log(posts)
+                // json.likeInfo
+                // json.followingInfo
+                setloading(false)
+            })
+        }
+    }, [loading]);
+    if(loading) return(<div>loading.</div>)
 
     const postCards = posts.map((post) => {
         return <PostCard post={post} />
