@@ -6,7 +6,10 @@ import Hello from '../components/Hello'
 import Counter from '../components/Counter'
 import ProductCategoryPage from '../components/Product/ProductCategoryPage'
 import ProductDetailPage from '../components/Product/ProductDetailPage'
-import OrderPage from '../components/Order/OrderPage'
+
+import OrderPlacePage from '../components/Order/OrderPlacePage'
+import OrderMypage from '../components/Order/OrderMypage'
+
 import ClosetPage from '../components/Closet/ClosetPage'
 
 // designs
@@ -37,7 +40,10 @@ const routes = (
         <Route path="/counter" component={Counter} />  
         <Route path="/productList" component={ProductCategoryPage} /> 
         <Route path="/product" component={ProductDetailPage} /> 
-        <Route path="/order" component={OrderPage} /> 
+
+        <Route path="/order/placeorder" component={OrderPlacePage} /> 
+        <Route path="/order/myorder" component={OrderMypage} /> 
+
         <Route path="/closet" component={ClosetPage} /> 
         {/* <Route path="/test" component={PostTester} />  */}
 

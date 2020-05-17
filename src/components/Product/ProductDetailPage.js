@@ -206,7 +206,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
     if(!optionCount) {
       enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
     }
-    else{push('/order');}
+    else{push('/order/placeorder');}
   }
   const handleImageInput = (event) => {
     if(images.length < 3){
@@ -223,12 +223,11 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   const reviewSubmit = (data) => {
     // console.log(data.content, images)
     let form = new FormData()
-    form.append("productid", pid)
     form.append("content", data.content)
     form.append("user", [{id: "3"}])
     images.forEach((image) => {form.append("photo", image)})
     console.log(form.keys())
-    axios.post(sangminserver+"/review",form)
+    axios.post(sangminserver+"/review/"+pid,form)
     .then(response => console.log(response))
     .catch(error => console.error(error))
   }
@@ -301,11 +300,13 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
 
   return(
     <Grid container className={classes.root}>
-      <Grid item sm={12} md={5}>
+      <Grid item sm={12} md={5} justify="center">
+        <ButtonBase>
         <Avatar src={data.img} 
           variant="square"
           className={classes.imageAvatar}
         />
+        </ButtonBase>
       </Grid>
       <Grid item sm={12} md={7} container>
         <Grid item container xs component={Paper} direction="column" spacing={1}>
