@@ -16,6 +16,7 @@ import {
   CardMedia,
   CardActions,
 } from '@material-ui/core'
+import FollowButton from './FollowButton';
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -27,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     actionBox: {
-        display: 'flex'
+        display: 'flex',
+        alignItems: 'center'
     },
     cardContent: {
         display: 'flex',
@@ -73,7 +75,8 @@ const PostCard = ({post}) => {
                 </CardActionArea>
                 <CardActions>
                     <Box className={classes.actionBox} flexGrow={1}>
-                        <Typography gutterBottom>{uname}</Typography>
+                        <Avatar>{uname}</Avatar>
+                        <FollowButton targetuserid={post.user.id} />
                         <Typography gutterBottom variant="body2" color="textSecondary">
                             ー {updatedAt} {updated?"(수정됨)":""}
                         </Typography>

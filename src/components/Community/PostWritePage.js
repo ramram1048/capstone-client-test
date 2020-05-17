@@ -19,12 +19,14 @@ import {
   Avatar,
   GridList,
   GridListTile,
+  Box,
 } from '@material-ui/core'
 import { PhotoCamera, Cancel, Check } from '@material-ui/icons';
 import { useForm, Controller } from 'react-hook-form'
 import clsx from 'clsx'
 import { useSnackbar } from 'notistack'
 import { yujinserver } from '../../restfulapi'
+import CommentWrite from './CommentWrite'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -77,7 +79,7 @@ const PostWritePage = ({backButtonAction, dispatchPush}) => {
     const [ loading, setLoading ] = useState(true);
     const [ images, setImages ] = useState([]);
     const [ closetData, setClosetData ] = useState([]);
-    const { control, handleSubmit } = useForm();
+    const { register, control, handleSubmit } = useForm();
     useEffect(() => {
         if(loading){
           fetch(yujinserver+"/page/closet", { credentials: 'include', })
@@ -86,7 +88,6 @@ const PostWritePage = ({backButtonAction, dispatchPush}) => {
             error => console.log(error)
           )
           .then(json => {
-            console.log(json)
             setClosetData(json.map((closet) => ({
                 selected: false,
                 closet: closet
@@ -282,9 +283,12 @@ const PostWritePage = ({backButtonAction, dispatchPush}) => {
                         control={control}
                     />
                     {imageUpload}
-                    <GridList className={classes.gridList} cols={2.5}>
-        {closetComponentList}
-    </GridList>
+                    <Box>
+                    <GridList className={classes.gridList} cols={5}>
+                        {closetComponentList}
+                    </GridList>
+
+                    </Box>
                     <Button type="submit" fillWidth variant="contained" color="primary">Submit</Button>
                 </form>
             </Grid>

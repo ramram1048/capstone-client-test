@@ -20,6 +20,8 @@ import {
 
 import PostTitle from './PostTitle'
 import { yujinserver } from '../../restfulapi';
+import CommentWrite from './CommentWrite';
+import FollowButton from './FollowButton';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
     image: {
         width: '100%',
         height: '100%'
+    },
+    commentImage: {
+        width: theme.spacing(10),
+        height: theme.spacing(10)
     }
 }));
 
@@ -58,37 +64,20 @@ const PostDetailPage = ({pathname}) => {
     
 
     const classes = useStyles();
-    // const commentDoms = comments.map((comment) => {
-    //     return(
-    //         <Grid container component={Paper} direction="column" elevation={3}>
-    //             <ButtonBase item><img src="https://picsum.photos/200" /></ButtonBase>
-    //             <Typography item gutterBottom>{comment.body}</Typography>
-    //             <Grid item container>
-    //                 <Avatar item>{comment.name}</Avatar>
-    //                 <Box item direction="column" flexGrow={1}>
-    //                     <Typography>{comment.name}</Typography>
-    //                     <Typography variant="body2" color="textSecondary">언제 몇월 몇일 {comment.email}</Typography>
-    //                 </Box>
-    //                 <Box item>
-    //                     <IconButton>ㅋ</IconButton>
-    //                     <IconButton>ㄴ</IconButton>
-    //                     <IconButton>ㅇ</IconButton>
-    //                     <IconButton>ㄷ</IconButton>
-    //                 </Box>
-    //             </Grid>
-    //         </Grid>
-    //     )
-    // })
+    
 
     
 
     if(loading || !post) return(<div>loading~</div>)
     else {
+        const closetAction = (json) => {
+            alert(JSON.stringify(json))
+        }
         const images = post.Pimgs.map((image) => {
             if(image.closet){
                 // closet
                 return <Box>
-                    <ButtonBase>
+                    <ButtonBase onClick={() => closetAction(image.closet)}>
                     <Avatar variant="rounded" src={image.img} className={classes.image} />
                     </ButtonBase>
                     </Box>
@@ -101,6 +90,41 @@ const PostDetailPage = ({pathname}) => {
                 </ButtonBase>
                 </Box>
             }
+        })
+        const commentDoms = post.postComments.map((comment) => {
+            return(
+                <Grid container direction="row" alignItems="center">
+                    <Box p={2}>
+                        <Avatar>
+                            {comment.user.name}
+                        </Avatar>
+                        <FollowButton targetuserid={comment.user.id} />
+                    </Box>
+                    <Box flexDirection="column" flexGrow={1} component={Paper}>
+                        <Grid container direction="row">
+                            {comment.Cimgs.map((image) => {
+                                if(image.closet){
+                                    // closet
+                                    return <Box>
+                                        <ButtonBase onClick={() => closetAction(image.closet)}>
+                                        <Avatar variant="rounded" src={image.img} className={classes.commentImage} />
+                                        </ButtonBase>
+                                        </Box>
+                                }
+                                else{
+                                    // image only
+                                    return <Box>
+                                    <ButtonBase>
+                                    <Avatar variant="rounded" src={image.img} className={classes.commentImage} />
+                                    </ButtonBase>
+                                    </Box>
+                                }
+                            })}
+                        </Grid>
+                        <Typography item gutterBottom>{comment.content}</Typography>
+                    </Box>
+                </Grid>
+            )
         })
 
         return(
@@ -116,18 +140,28 @@ const PostDetailPage = ({pathname}) => {
                             </Typography>
                         </Box>
                         <Box item>
-                            <Button>팔로우</Button>
-                            <Button>좋아요</Button>
+                            <FollowButton targetuserid={post.user.id} />
+                            <Button>작성글보기</Button>
+                            <Button>코디 보기</Button>
                         </Box>
                     </Grid>
                     <Grid>
                         {images}
                     </Grid>
-                    <Typography item gutterBottom>{post.content}</Typography>
-                    
+                    <Typography paragraph gutterBottom>{post.content}</Typography>
+                    <Container maxWidth="xs">
+                        <Box component={Paper} flexGrow={1} variant="outlined" justifyContent="center">
+                            <Button>좋아요</Button>
+                            <Button>공유</Button>
+                        </Box>
+                    </Container>
                 </Grid>
-                {/* <Typography gutterBottom variant="h6">댓글 {comments.length}개</Typography> */}
-                {/* {commentDoms} */}
+                <Grid container direction="column">
+                    <Typography flexGrow={1} gutterBottom variant="h6">댓글 {post.commentcount}개</Typography>
+                    <Divider />
+                    <CommentWrite postid={post.id} reload={() => setLoading(true)} />
+                    {commentDoms}
+                </Grid>
             </Container>
         )
     }
