@@ -9,6 +9,7 @@ import ProductDetailPage from '../components/Product/ProductDetailPage'
 
 import OrderPlacePage from '../components/Order/OrderPlacePage'
 import OrderMypage from '../components/Order/OrderMypage'
+import OrderCartPage from '../components/Order/OrderCartPage'
 
 import ClosetPage from '../components/Closet/ClosetPage'
 
@@ -43,6 +44,7 @@ const routes = (
 
         <Route path="/order/placeorder" component={OrderPlacePage} /> 
         <Route path="/order/myorder" component={OrderMypage} /> 
+        <Route path="/order/cart" component={OrderCartPage} /> 
 
         <Route path="/closet" component={ClosetPage} /> 
         {/* <Route path="/test" component={PostTester} />  */}

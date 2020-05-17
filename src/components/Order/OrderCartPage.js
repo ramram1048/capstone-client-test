@@ -7,20 +7,37 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid,
 } from '@material-ui/core'
+import { yujinserver } from '../../restfulapi';
 
 const useStyles = makeStyles((theme) => ({
 
 }));
 
-const CartPage = (post) => {
+const OrderCartPage = ({}) => {
     const classes = useStyles();
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        if(loading){
+            fetch(yujinserver+"/cart",{
+                credentials: "include"
+            })
+            .then(
+                (res) => res.json(),
+                (err) => console.error(err)
+            )
+            .then((json) => {
+                console.log(json)
+            })
+        }
+    }, [loading])
 
     return(
         <div></div>
     )
 }
 
-CartPage.propTypes = {
+OrderCartPage.propTypes = {
     pathname: PropTypes.string,
     //search: PropTypes.string,
     //hash: PropTypes.string,
@@ -37,4 +54,4 @@ const mapDispatchToProps = (dispatch) => ({
     
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CartPage)
+export default connect(mapStateToProps, mapDispatchToProps)(OrderCartPage)

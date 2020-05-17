@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const OrderMypage = ({post}) => {
+const OrderMypage = ({}) => {
     const classes = useStyles();
     const [ loading, setLoading ] = useState(true)
     const [ orders, setOrders ] = useState([])

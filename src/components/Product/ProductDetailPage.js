@@ -39,7 +39,7 @@ import {
 } from '@material-ui/icons'
 
 import ReviewCard from './ReviewCard';
-import {sangminserver} from '../../restfulapi';
+import {sangminserver, yujinserver} from '../../restfulapi';
 import { useForm, Controller } from 'react-hook-form'
 
 const useStyles = makeStyles((theme) => ({
@@ -47,8 +47,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   imageAvatar: {
-    width: 'auto',
-    height: 'auto',
+    width: '100%',
+    height: '100%',
   },
   price: {
     color: theme.palette.primary.main
@@ -97,7 +97,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { control, handleSubmit } = useForm();
+  const { register, control, handleSubmit } = useForm();
 
   useEffect(() => {
     setPid(pathname.substring(pathname.lastIndexOf('/') + 1));
@@ -177,6 +177,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
           defaultValue={1}
           type="number"
           placeholder="개수"
+          inputRef={register({required: true})}
           inputProps={{ min: "1", max: "100", step: "1"}}
         />개
           </Typography></TableCell>
@@ -187,27 +188,66 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   })
   
   const purchaseThis = () => {
-    let optionCount = 0;
-    cleanOrderList();
-    detail.map((option, index) => {
-      if(option.selected === true) {
-        pushToOrderList({
-          pid: pid, 
-          pname: data.pname, 
-          color: option.option.color, 
-          size: option.option.size, 
-          quantity: 1,
-          price: data.price, 
-          img: data.img
-        });
-        optionCount++;
-      }
-    })
-    if(!optionCount) {
+    if(!detail.some((option) => option.selected)){
       enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
     }
-    else{push('/order/placeorder');}
+    else{
+      cleanOrderList();
+      detail.map((option, index) => {
+        if(option.selected === true) {
+          pushToOrderList({
+            pid: pid, 
+            pname: data.pname, 
+            color: option.option.color, 
+            size: option.option.size, 
+            quantity: 1,
+            price: data.price, 
+            img: data.img
+          });
+        }
+      })
+      push('/order/placeorder');
+    }
   }
+  const putItemIntoCart = () => {
+    if(!detail.some((option) => option.selected)){
+      enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
+    }
+    else{
+      let cartCount = 0;
+      let error = false;
+      detail.forEach((option, index) => {
+        if(option.selected){
+          fetch(yujinserver+"/cart/"+pid, {
+            method: "POST",
+            body: JSON.stringify({
+              cnt: 1,
+              size: option.option.size,
+              color: option.option.color,
+            }),
+            credentials: 'include',
+          })
+          .then(
+            res => res.text(),
+            err => {console.error(err);}
+          )
+          .then(text => {
+            if(text === 'success') cartCount++;
+            else error = true;
+          })
+        }
+        if(index === detail.length-1){
+          if(cartCount>0){
+            enqueueSnackbar(cartCount+"개 옵션을 장바구니에 담았어요.",{"variant": "success"});
+          }
+          else if(error){
+            enqueueSnackbar("장바구니 담기 에러요",{"variant": "error"});
+          }
+        }
+      })
+    }
+  }
+
   const handleImageInput = (event) => {
     if(images.length < 3){
       if(event.target.files[0] !== undefined){
@@ -341,7 +381,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
             </Table>
             <Divider variant="middle"/>
             <Button variant="outlined">입혀보기</Button>
-            <Button variant="outlined">장바구니</Button>
+            <Button variant="outlined" onClick={putItemIntoCart}>장바구니</Button>
             <Button variant="outlined" onClick={purchaseThis}>바로구매</Button>
           </Grid>
         </Grid>
