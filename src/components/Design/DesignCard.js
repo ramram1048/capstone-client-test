@@ -38,6 +38,7 @@ import { requestDesignLikes, requestDesignLikesCancel } from '../../actions/desi
 import { requestUnfollow, requestFollow } from '../../actions/follow';
 import { push } from 'connected-react-router';
 import ChipInput from 'material-ui-chip-input';
+import FollowButton from '../Community/FollowButton';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -277,29 +278,7 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
           </Box>
         </Grid>
         <Grid item container xs={12} md={4} direction="row" justify="flex-end" alignItems="center">
-          <Tooltip 
-            placement="top" 
-            title={follows?"언팔로우":"팔로우"}
-            >
-            <IconButton aria-label="follow" centerRipple onClick={handleFollow}
-              onClick={handleFollow}
-              onMouseEnter={handleFollowHover}
-              onMouseLeave={handleFollowUnhover}>
-              {follows? (followButtonHover?
-                <UnfollowIcon />
-                : <PersonIcon className={classes.follow} />
-              )
-              : <FollowIcon />}
-              {/* {!followButtonHover?
-                <PersonIcon className={clsx({
-                  [classes.icon]: true,
-                  [classes.follows]: follows
-                })}/>:
-              (follows?
-               <UnfollowIcon className={classes.icon} />
-              :<FollowIcon className={classes.icon} />)} */}
-            </IconButton>
-          </Tooltip>
+          <FollowButton targetuserid={design.user.id} />
           <Tooltip placement="top" title={likes?"좋아요 취소":"좋아요"}>
             <IconButton aria-label="like" onClick={handleLikes}>
               {likes?<FavoriteIcon className={classes.likes}/>:<FavoriteBorderIcon />}
