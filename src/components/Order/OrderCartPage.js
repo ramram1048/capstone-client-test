@@ -1,4 +1,4 @@
-// "/cart"에서 확인하는 장바구니페이지
+// "/order/cart"에서 확인하는 장바구니페이지
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme) => ({
 const OrderCartPage = ({}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(true)
+    const [cart, setCart] = useState([])
+    const [productOptionTable, setProductOptionTable] = useState([])
 
     useEffect(() => {
         if(loading){
@@ -27,14 +29,17 @@ const OrderCartPage = ({}) => {
                 (err) => console.error(err)
             )
             .then((json) => {
-                console.log(json)
+                setCart(json.cartsByUid)
+                setProductOptionTable(json.result2)
+                setLoading(false)
             })
         }
     }, [loading])
 
-    return(
-        <div></div>
-    )
+    if(loading) return (<div>로딩중이요</div>)
+    else{
+        return (<div>로딩완료요</div>)
+    }
 }
 
 OrderCartPage.propTypes = {

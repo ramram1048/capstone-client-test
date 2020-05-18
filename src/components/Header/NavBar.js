@@ -17,6 +17,11 @@ import {yujinserver} from '../../restfulapi'
 import { push } from 'connected-react-router';
 
 const useStyles = makeStyles((theme) => ({
+  topbar: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
   toolbar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
     display: 'flex',
@@ -31,6 +36,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     flexShrink: 0,
   },
+  actionBox: {
+    '& > *': {
+      padding: theme.spacing(1)
+    }
+  }
 }));
 
 const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
@@ -44,11 +54,11 @@ const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
 
   return(
     <AppBar position="sticky" color="transparent" elevation={0}>
-      <Toolbar className={classes.toolbar}>
-        <Box>
-        <Link onClick={handleLogout} color="inherit">로그아웃</Link>
-        <Button onClick={() => {console.log("아직이요")}}>장바구니</Button>
-        <Button onClick={() => {push("/order/myorder")}}>마이페이지</Button>
+      <Box className={classes.topbar} alignItems="center">
+        <Box className={classes.actionBox}>
+        <Link onClick={handleLogout} color="inherit" >로그아웃</Link>
+        <Link onClick={() => push("/order/cart")} color="inherit" >장바구니</Link>
+        <Link onClick={() => {push("/order/myorder")}} color="inherit" >마이페이지</Link>
 
         </Box>
         <Box>
@@ -59,7 +69,7 @@ const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
             툴바열어요
           </Button>
         </Box>
-      </Toolbar>
+      </Box>
       <Toolbar className={classes.toolbar}>  
         <Link component={RouterLink} to="/"
               color="inherit"

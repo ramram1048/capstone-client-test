@@ -220,6 +220,11 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
         if(option.selected){
           fetch(yujinserver+"/cart/"+pid, {
             method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              "Content-Type": "application/json",
+              'Cache': 'no-cache'
+            },
             body: JSON.stringify({
               cnt: 1,
               size: option.option.size,

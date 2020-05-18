@@ -26,7 +26,7 @@ import { useForm, Controller } from 'react-hook-form'
 import clsx from 'clsx'
 import { useSnackbar } from 'notistack'
 import { yujinserver } from '../../restfulapi'
-import CommentWrite from './CommentWrite'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
