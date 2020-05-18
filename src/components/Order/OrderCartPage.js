@@ -8,6 +8,7 @@ import {
   Grid,
 } from '@material-ui/core'
 import { yujinserver } from '../../restfulapi';
+import OrderList from './OrderList'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -36,9 +37,18 @@ const OrderCartPage = ({}) => {
         }
     }, [loading])
 
-    if(loading) return (<div>로딩중이요</div>)
+    if(loading || !cart.length) return (<div>로딩중이요</div>)
     else{
-        return (<div>로딩완료요</div>)
+        return (
+          <OrderList orders={cart.map((option) => ({
+              img: option.img,
+              pname: option.pname,
+              color: option.color,
+              size: option.size,
+              quantity: option.cnt,
+              price: 333,
+          }))} edit={true}/>
+        )
     }
 }
 

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { goBack, push } from 'connected-react-router'
 import { useSnackbar } from 'notistack';
+import { useForm, Controller } from 'react-hook-form'
 
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -36,6 +37,7 @@ import {
   fetchLoginStatus,
   getLoginStatus
  } from '../../actions/auth';
+import { yujinserver } from '../../restfulapi';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,6 +65,7 @@ const AuthPage = ({authStore, dispatchBack, dispatchPush, requestLogin}) => {
   const [ password, setPassword ] = useState("");
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const { register, control, handleSubmit } = useForm();
 
   // useEffect(() => {
   //   if(authStore.fetching === 'SUCCESS'){
@@ -158,6 +161,102 @@ const AuthPage = ({authStore, dispatchBack, dispatchPush, requestLogin}) => {
       </Button>
     </form>
 
+const shopRegisterSubmit = (data) => {
+  console.log(data)
+  fetch(yujinserver+"/auth/shop",{
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        'Cache': 'no-cache'
+      },
+      body: JSON.stringify(data),
+      credentials: 'include',
+  })
+  .then(
+    response => response.text(),
+    error => console.log(error)
+  )
+  .then((text) => {
+      if(text === "success"){
+          enqueueSnackbar("성공이요",{"variant": "success"});
+          dispatchPush("/community/")
+      }
+      else{
+          enqueueSnackbar("실패따리",{"variant": "error"});
+      }
+      console.log(text)
+  })
+}
+const shopRegisterView = (
+  <form
+    className={classes.form}
+    onSubmit={handleSubmit(shopRegisterSubmit)}
+  >
+    <TextField
+      inputRef={register({required: true})}
+      variant="outlined"
+      margin="normal"
+      required
+      fullWidth
+      id="shopname"
+      name="shopname"
+      label="쇼핑몰이름"
+      autoFocus
+    />
+    <TextField
+      inputRef={register({})}
+      variant="outlined"
+      margin="normal"
+      fullWidth
+      id="shopurl"
+      name="shopurl"
+      label="쇼핑몰홈페이지"
+    />
+    <TextField
+      inputRef={register({required: true})}
+      variant="outlined"
+      margin="normal"
+      required
+      fullWidth
+      id="email"
+      name="email"
+      label="이메일"
+    />
+    <TextField
+      inputRef={register({required: true})}
+      variant="outlined"
+      margin="normal"
+      required
+      fullWidth
+      id="password"
+      name="password"
+      type="password"
+      label="비밀번호"
+    />
+    <TextField
+      inputRef={register({required: true})}
+      variant="outlined"
+      margin="normal"
+      required
+      fullWidth
+      type="number"
+      id="phone"
+      name="phone"
+      label="대표번호"
+    />
+    <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      color="primary"
+      className={classes.submit}
+    >
+      가입
+    </Button>
+  </form>
+)
+
 
   return(
     <Container className={classes.root} maxWidth="xs">
@@ -172,9 +271,11 @@ const AuthPage = ({authStore, dispatchBack, dispatchPush, requestLogin}) => {
         <TabList onChange={handleTabChange} variant="fullWidth" aria-label="simple tabs">
           <Tab label="로그인" value="1" />
           <Tab label="회원가입" value="2" />
+          <Tab label="관리자임시" value="3" />
         </TabList>
         <TabPanel value="1">{loginView}</TabPanel>
         <TabPanel value="2">{registerView}</TabPanel>
+        <TabPanel value="3">{shopRegisterView}</TabPanel>
       </TabContext>
       </Paper>
     </Container>
