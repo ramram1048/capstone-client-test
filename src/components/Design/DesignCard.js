@@ -87,23 +87,15 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const initialLikes = designStore.likeDesign.some((designId) => (designId === design.id));
-  const initialFollows = followStore.follow.some((userId) => (userId === design.user.id));
   const [expanded, setExpanded] = useState(false);
   const [likes, setLikes] = useState(initialLikes);
-  const [follows, setFollows] = useState(initialFollows);
   const [hashtags, setHashtags] = useState(design.hashtags.map((tag) => tag.title))
   const [hashtagEdit, setHashtagEdit] = useState(false)
   const [hashtagFormValue, setHashtagFormValue] =useState([])
   const [cardSize, setCardSize] = useState(1)
-  const [followButtonHover, setFollowButtonHover] = useState(false)
   // const [ userPopoverAnchor, setUserPopoverAnchor ] = useState(null)
 
-  const handleFollowHover = () => {
-    setFollowButtonHover(true)
-  }
-  const handleFollowUnhover = () => {
-    setFollowButtonHover(false)
-  }
+  
 
   useEffect(() => {
     if(designStore.fetching !== "FAILURE"){
@@ -114,19 +106,6 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
       enqueueSnackbar("좋아요처리 실패",{"variant": "error"});
     }
   }, [designStore])
-
-  useEffect(() => {
-    if(followStore.fetching === "SUCCESS") {
-      if(followStore.follow.some((userId) => (userId === design.user.id))){
-        // enqueueSnackbar(design.user.name+"님을 팔로우했어요.",{"variant": "success"});
-        setFollows(true)
-      }
-      else{
-        // enqueueSnackbar(design.user.name+"님을 언팔로우했어요.",{"variant": "success"});
-        setFollows(false)
-      }
-    }
-  }, [followStore])
 
   useEffect(() => {
     setCardSize(cardSizeLookup[width])
@@ -152,32 +131,8 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
       requestDesignLikes(design.id)
     }
   }
-  const handleFollow = () => {
-    if(follows){
-      requestUnfollow(design.user.id)
-      .then(() => {
-        if(followStore.fetching === "FAILURE"){
-          enqueueSnackbar("팔로우처리 실패",{"variant": "error"});
-        }
-        else if(followStore.fetching === "SUCCESS"){
-          enqueueSnackbar(design.user.name+"님을 언팔로우했어요.🖐",{"variant": "success"});
-          setFollows(false)
-        }
-      })
-    }
-    else{
-      requestFollow(design.user.id)
-      .then(() => {
-        if(followStore.fetching === "FAILURE"){
-          enqueueSnackbar("팔로우처리 실패",{"variant": "error"});
-        }
-        else if(followStore.fetching === "SUCCESS"){
-          enqueueSnackbar(design.user.name+"님을 팔로우했어요.🤝",{"variant": "success"});
-          setFollows(true)
-        }
-      })
-    }
-  }
+  
+  
 
   const hashtagChips = hashtags.map((tag) => {
     return <Chip

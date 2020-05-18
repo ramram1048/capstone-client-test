@@ -22,6 +22,7 @@ import PostTitle from './PostTitle'
 import { yujinserver } from '../../restfulapi';
 import CommentWrite from './CommentWrite';
 import FollowButton from './FollowButton';
+import PostLikeButton from './PostLikeButton';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -145,13 +146,14 @@ const PostDetailPage = ({pathname}) => {
                             <Button>코디 보기</Button>
                         </Box>
                     </Grid>
+                    <Divider />
                     <Grid>
                         {images}
                     </Grid>
                     <Typography paragraph gutterBottom>{post.content}</Typography>
                     <Container maxWidth="xs">
                         <Box component={Paper} flexGrow={1} variant="outlined" justifyContent="center">
-                            <Button>좋아요</Button>
+                            <PostLikeButton targetpostid={post.id} initialLike={post.likecount} />
                             <Button>공유</Button>
                         </Box>
                     </Container>

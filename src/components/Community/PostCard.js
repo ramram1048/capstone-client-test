@@ -73,18 +73,18 @@ const PostCard = ({post}) => {
                         </Typography>
                     </CardContent>
                 </CardActionArea>
-                <CardActions>
+                <Box p={2} display="flex" height="100%" alignItems="flex-end">
                     <Box className={classes.actionBox} flexGrow={1}>
-                        <Avatar>{uname}</Avatar>
-                        <FollowButton targetuserid={post.user.id} />
-                        <Typography gutterBottom variant="body2" color="textSecondary">
-                            ー {updatedAt} {updated?"(수정됨)":""}
-                        </Typography>
+                        <Box className={classes.actionBox} flexGrow={1}>
+                            <Avatar>{uname}</Avatar>
+                            <FollowButton targetuserid={post.user.id} />
+                            <Typography gutterBottom variant="body2" color="textSecondary">
+                                ー {updatedAt} {updated?"(수정됨)":""}
+                            </Typography>
+                        </Box>
+                        <Typography gutterBottom>💬{commentcount} 💗{post.likecount}</Typography>
                     </Box>
-                    <Box>
-    <Typography gutterBottom>댓글 {commentcount}개</Typography>
-                    </Box>
-                </CardActions>
+                </Box>
             </Grid>
             <Grid item xs={12} sm={4} md={2}>
             <Avatar component={Link} to={"/community/post/"+id}

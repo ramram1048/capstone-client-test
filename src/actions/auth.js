@@ -2,6 +2,7 @@
 import {yujinserver} from '../restfulapi'
 import { designInitialization, designSetLikeList } from './design'
 import { followInitialization, followSetList } from './follow'
+import { postSetLikeList } from './postlike'
 
 export const requestLogin = (email, password) => {
   return (dispatch) => {
@@ -26,6 +27,7 @@ export const requestLogin = (email, password) => {
     .then((data) => {
       if(data.loginStatus) {
         dispatch(designSetLikeList(data.designLike))
+        dispatch(postSetLikeList(data.postLike))
         dispatch(followSetList(data.followingInfo))
         return dispatch(loginSuccess(data.name, data.id))
       }
@@ -47,6 +49,7 @@ export const fetchLoginStatus = (initialId) => {
     .then(data => {
       if(data.loginStatus){
         dispatch(designSetLikeList(data.designLike))
+        dispatch(postSetLikeList(data.postLike))
         dispatch(followSetList(data.followingInfo))
         return dispatch(loginSuccess(data.name, data.id))
       }
