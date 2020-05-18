@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between'
   },
   toolbarSecondary: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
     justifyContent: 'space-between',
     overflowX: 'auto',
   },
@@ -44,19 +45,12 @@ const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
   return(
     <AppBar position="sticky" color="transparent" elevation={0}>
       <Toolbar className={classes.toolbar}>
-        <Button onClick={handleLogout}>로그아웃</Button>
-        <Link component={RouterLink} to="/"
-            color="inherit"
-            noWrap>
-          <Typography
-            component="h2"
-            variant="h5"
-            color="inherit"
-            align="center"
-          >
-          멋쟁이마당
-          </Typography>
-        </Link>
+        <Box>
+        <Link onClick={handleLogout} color="inherit">로그아웃</Link>
+        <Button onClick={() => {console.log("아직이요")}}>장바구니</Button>
+        <Button onClick={() => {push("/order/myorder")}}>마이페이지</Button>
+
+        </Box>
         <Box>
           <IconButton>
             <SearchIcon />
@@ -65,6 +59,20 @@ const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
             툴바열어요
           </Button>
         </Box>
+      </Toolbar>
+      <Toolbar className={classes.toolbar}>  
+        <Link component={RouterLink} to="/"
+              color="inherit"
+              noWrap >
+            <Typography
+              component="h2"
+              variant="h5"
+              color="inherit"
+              align="center"
+            >
+            멋쟁이마당
+            </Typography>
+          </Link>
       </Toolbar>
       <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
             {menus.map(({component, path}) => (

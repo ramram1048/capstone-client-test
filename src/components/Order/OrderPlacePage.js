@@ -24,6 +24,7 @@ import {
 import OrderList from './OrderList'
 import { useSnackbar } from 'notistack';
 import { yujinserver } from '../../restfulapi';
+import { push } from 'connected-react-router';
 
 const useStyles = makeStyles((theme) => ({
     root:{
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const OrderPlacePage = ({orderList, authStore}) => {
+const OrderPlacePage = ({orderList, authStore, push}) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const { register, handleSubmit, errors } = useForm();
@@ -94,6 +95,7 @@ const OrderPlacePage = ({orderList, authStore}) => {
     .then((text) => {
         if(text === "success"){
             enqueueSnackbar("샀어요",{"variant": "success"});
+            push("/order/myorder")
         }
         else{
             enqueueSnackbar("못샀어요",{"variant": "error"});
@@ -236,7 +238,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  
+  push: (url) => dispatch(push(url))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderPlacePage)
