@@ -42,6 +42,7 @@ import ReviewCard from './ReviewCard';
 import {sangminserver, yujinserver} from '../../restfulapi';
 import { useForm, Controller } from 'react-hook-form'
 import TryButton from './TryButton'
+import ReviewWrite from './ReviewWrite'
 
 const useStyles = makeStyles((theme) => ({
   root:{
@@ -407,9 +408,8 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
         <Paper item className={classes.contentPanel} square>
           <Grid container>
             <Typography flexGrow={1} variant="h6" gutterBottom>리뷰</Typography>
-            <Button onClick={handleExpandClick}>리뷰 쓰기</Button>
+            <ReviewWrite pid={pid} reload={() => setLoading(false)} />
           </Grid>
-          {reviewWriteForm}
           <Divider variant="middle"/>
           <Grid container>
             {reviewList}
