@@ -10,6 +10,7 @@ import {
   Grid,
   Typography,
   Divider,
+  Button,
 } from '@material-ui/core'
 import {sangminserver} from '../../restfulapi';
 
@@ -26,18 +27,27 @@ const categoryLookup = [
 const ProductCategoryPage = ({pathname, search}) => {
     const classes = useStyles();
     const [ loading, setLoading ] = useState(true)
-    const [ productList, setProductList ] = useState(null)
+    const [initialProducts, setInitialProducts] = useState([])
+    const [products, setProducts] = useState([])
+    const [previews, setPreviews] = useState([])
+    const [ productListComponent, setProductListComponent ] = useState(null)
     const [ category, setCategory ] = useState("")
 
     useEffect(() => {
-        console.log(search)
+        // console.log(search)
         if(!loading) setLoading(true)
     }, [search])
 
     useEffect(() => {
+        setProductListComponent(
+            <ProductList products={products} previews={previews} />
+        )
+    }, [products])
+
+    useEffect(() => {
         if(loading){
             const categoryId = queryString.parse(search).category
-            console.log(categoryId)
+            // console.log(categoryId)
             setCategory(
                 categoryLookup[categoryId]
             )
@@ -51,9 +61,9 @@ const ProductCategoryPage = ({pathname, search}) => {
                 )
                 .then((json) => {
                     console.log()
-                    setProductList(
-                        <ProductList products={json.productRows} previews={json.imgArr} />
-                    )
+                    setPreviews(json.imgArr)
+                    setInitialProducts(json.productRows)
+                    setProducts(json.productRows)
                     setLoading(false)
                 })
                 break;
@@ -61,11 +71,46 @@ const ProductCategoryPage = ({pathname, search}) => {
         }
     }, [loading])
 
+    const genderLookup = [
+        "U", "M", "W"
+    ]
+    const filterGender = (gender) => {
+        console.log(gender)
+        if(gender === "U") setProducts(initialProducts)
+        else{
+            const newArray = initialProducts.filter((product) => product.gender === gender)
+            setProducts(newArray)
+        }
+    }
+    const sortUpdatedAscending = () => {
+        const newArray = products.sort((a,b) => Math.max(new Date(a.createdAt), new Date(a.updatedAt)) - Math.max(new Date(b.createdAt), new Date(b.updatedAt))).slice()
+        setProducts(newArray)
+    }
+    const sortUpdatedDescending = () => {
+        const newArray = products.sort((a,b) => Math.max(new Date(b.createdAt), new Date(b.updatedAt)) - Math.max(new Date(a.createdAt), new Date(a.updatedAt))).slice()
+        setProducts(newArray)
+    }
+    const sortPriceAscending = () => {
+        const newArray = products.sort((a,b) => a.price - b.price).slice()
+        setProducts(newArray)
+    }
+    const sortPriceDescending = () => {
+        const newArray = products.sort((a,b) => b.price - a.price).slice()
+        setProducts(newArray)
+    }
+
     return(
         <Container maxWidth="lg">
             <Typography variant="h4" gutterBottom>{category}</Typography>
             <Divider />
-            {productList}
+            {genderLookup.map((gender) => (
+                <Button onClick={() => filterGender(gender)}>{gender}</Button>
+            ))}
+            <Button onClick={() => sortUpdatedAscending()}>최신오름</Button>
+            <Button onClick={() => sortUpdatedDescending()}>최신내림</Button>
+            <Button onClick={() => sortPriceAscending()}>가격오름</Button>
+            <Button onClick={() => sortPriceDescending()}>가격내림</Button>
+            {productListComponent}
         </Container>
     )
     
