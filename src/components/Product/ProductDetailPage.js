@@ -41,6 +41,7 @@ import {
 import ReviewCard from './ReviewCard';
 import {sangminserver, yujinserver} from '../../restfulapi';
 import { useForm, Controller } from 'react-hook-form'
+import TryButton from './TryButton'
 
 const useStyles = makeStyles((theme) => ({
   root:{
@@ -92,6 +93,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
   const [detail, setDetail] = useState([]);
   const [total, setTotal] = useState(0);
   const [reviews, setReviews] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [ images, setImages ] = useState([]);
 
@@ -122,6 +124,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
         }))
       };
       setReviews(json.reviews);
+      setPreviews(json.colors);
     })
     .catch(error => {console.warn(error)}
   )}, [pid]);
@@ -385,7 +388,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
               </TableBody>
             </Table>
             <Divider variant="middle"/>
-            <Button variant="outlined">입혀보기</Button>
+            <TryButton previews={previews} />
             <Button variant="outlined" onClick={putItemIntoCart}>장바구니</Button>
             <Button variant="outlined" onClick={purchaseThis}>바로구매</Button>
           </Grid>

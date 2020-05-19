@@ -19,37 +19,56 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const categoryMatches = [
-    {
-        "id": 1,
-        "title": "상의",
-    },
-    {
-        "id": 2,
-        "title": "하의",
-    },
-    {
-        "id": 3,
-        "title": "악세서리",
-    },
-    {
-        "id": 4,
-        "title": "신발",
-    },
+const categoryLookup = [
+    "", "상의", "하의", "패션잡화", "신발"
 ]
 
-const ProductCategoryPage = ({search}) => {
+const ProductCategoryPage = ({pathname, search}) => {
     const classes = useStyles();
-    const parsed = JSON.parse(queryString.parse(search).category)
-    const category = (categoryMatches.find((data) => {return(data.id == parsed)}))
+    const [ loading, setLoading ] = useState(true)
+    const [ productList, setProductList ] = useState(null)
+    const [ category, setCategory ] = useState("")
+
+    useEffect(() => {
+        console.log(search)
+        if(!loading) setLoading(true)
+    }, [search])
+
+    useEffect(() => {
+        if(loading){
+            const categoryId = queryString.parse(search).category
+            console.log(categoryId)
+            setCategory(
+                categoryLookup[categoryId]
+            )
+            while(categoryId !== 0){
+                fetch(sangminserver+"/product/category/"+categoryId, {
+                    credentials: 'include',
+                })
+                .then(
+                    (res) => res.json(),
+                    (err) => { console.error(err) }
+                )
+                .then((json) => {
+                    console.log()
+                    setProductList(
+                        <ProductList products={json.productRows} previews={json.imgArr} />
+                    )
+                    setLoading(false)
+                })
+                break;
+            }
+        }
+    }, [loading])
 
     return(
         <Container maxWidth="lg">
-            <Typography variant="h4" gutterBottom>{category.title}</Typography>
+            <Typography variant="h4" gutterBottom>{category}</Typography>
             <Divider />
-            <ProductList fetchurl={sangminserver+"/product/category/"+category.id} />
+            {productList}
         </Container>
     )
+    
 }
 
 ProductCategoryPage.propTypes = {

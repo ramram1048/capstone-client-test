@@ -13,29 +13,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ProductList = ({fetchurl}) => {
+const ProductList = ({products, previews}) => {
     const classes = useStyles();
-    const [status, setStatus] = useState(0) // 0: loading, 1: success, -1: fetch error
-    const [data, setData] = useState([]);
+    const preview = previews !== undefined? previews.reduce((result = {}, item) => {
+        const id = item.productId
+        if(!result[id]) result[id] = []
+        result[id] = [...result[id], {color: item.color, img: item.img}]
+        return result
+    }, {})
+    : []
 
-    useEffect(() => {
-        fetch(fetchurl, {
-            credentials: 'include',
-        })
-        .then(response => {
-            // console.log(response)
-            return response.json()
-        })
-        .then((json) => setData(json.productRows))
-        .catch(error => {
-            console.warn("Error:", error)
-        })
-    }, [fetchurl]);
-
-    if(!data) return (<div>loading</div>)
-    const items = data.map((product) => (
-        <ProductCard product={product} key={product.id}/>
-    ));
+    const items = products.map((product) => {
+        
+        return (
+            <ProductCard product={product} preview={preview[product.id]} key={product.id}/>
+        )
+    });
     // console.log(data);
 
     return (

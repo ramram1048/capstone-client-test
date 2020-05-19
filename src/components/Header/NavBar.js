@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 import { Box,
   AppBar, Toolbar, IconButton, Link, Typography,
   Button,
+  TextField,
+  InputAdornment,
 } from '@material-ui/core'
 import { Menu as MenuIcon,
   ExpandMore as ExpandMoreIcon,
@@ -15,6 +17,7 @@ import { requestLogout } from '../../actions/auth'
 import { handleDrawer } from '../../actions/sketchDrawer';
 import {yujinserver} from '../../restfulapi'
 import { push } from 'connected-react-router';
+import ProductSearchBar from '../Product/ProductSearchBar';
 
 const useStyles = makeStyles((theme) => ({
   topbar: {
@@ -25,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    color: theme.palette.primary.light
   },
   toolbarSecondary: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -61,10 +65,8 @@ const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
         <Link onClick={() => {push("/order/myorder")}} color="inherit" >마이페이지</Link>
 
         </Box>
-        <Box>
-          <IconButton>
-            <SearchIcon />
-          </IconButton>
+        <Box display="flex" flexDirection="row">
+          <ProductSearchBar />
           <Button variant="outlined" size="small" onClick={handleDrawer}>
             툴바열어요
           </Button>

@@ -6,6 +6,7 @@ import Hello from '../components/Hello'
 import Counter from '../components/Counter'
 import ProductCategoryPage from '../components/Product/ProductCategoryPage'
 import ProductDetailPage from '../components/Product/ProductDetailPage'
+import ProductSearchPage from '../components/Product/ProductSearchPage'
 
 import OrderPlacePage from '../components/Order/OrderPlacePage'
 import OrderMypage from '../components/Order/OrderMypage'
@@ -40,7 +41,8 @@ const routes = (
         {/* <Route path="/auth" component={AuthPage} /> */}
         <Route path="/hello" component={Hello} />
         <Route path="/counter" component={Counter} />  
-        <Route path="/productList" component={ProductCategoryPage} /> 
+        <Route path="/productList/category" component={ProductCategoryPage} /> 
+        <Route path="/productList/search" component={ProductSearchPage} /> 
         <Route path="/product" component={ProductDetailPage} /> 
 
         <Route path="/order/placeorder" component={OrderPlacePage} /> 

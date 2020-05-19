@@ -11,6 +11,7 @@ import {
     Person as PersonIcon,
     PersonAdd as FollowIcon,
     PersonAddDisabled as UnfollowIcon,
+    HowToReg,
   } from '@material-ui/icons'
 import { requestFollow, requestUnfollow } from '../../actions/follow';
 import { useSnackbar } from 'notistack';
@@ -89,10 +90,12 @@ const FollowButton = ({targetuserid, sessionId, followStore, requestFollow, requ
         onMouseEnter={handleFollowHover}
         onMouseLeave={handleFollowUnhover}>
         {follows? (hover?
-        <UnfollowIcon className={classes.unfollow} />
-        : <PersonIcon className={classes.follow} />
+          <UnfollowIcon className={classes.unfollow} />
+        : <HowToReg className={classes.follow} />
         )
-        : <FollowIcon />}
+        : (hover?
+          <FollowIcon />
+        : <PersonIcon />)}
     </IconButton>
     </Tooltip>
   )

@@ -155,7 +155,7 @@ const AdminProductUpload = ({backButtonAction, dispatchPush}) => {
         //     //   }
         //   })
 
-        fetch("http://localhost:3000"+"/img",{
+        fetch("http://172.16.100.109:8001"+"/shop/img",{
             method: "POST",
             body: form,
             credentials: 'include',
@@ -181,7 +181,7 @@ const AdminProductUpload = ({backButtonAction, dispatchPush}) => {
                 XL: [data.XL]
             })
             console.log(sending)
-            fetch("http://localhost:3000"+"/addproduct",{
+            fetch("http://172.16.100.109:8001"+"/shop/addproduct",{
                 method: "POST",
                 headers: {
                   'Accept': 'application/json',
