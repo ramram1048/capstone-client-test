@@ -42,21 +42,6 @@ const ReviewWrite = ({ pid, reload }) => {
   const [ open, setOpen ] = useState(false)
   const { register, handleSubmit } = useForm();
 
-  // useEffect(() => {
-  //   if(loading){
-  //     fetch(yujinserver+"/page/closet", { credentials: 'include', })
-  //     .then(
-  //       response => response.json(),
-  //       error => console.log(error)
-  //     )
-  //     .then(json => {
-  //       console.log(json)
-  //       setClosetData(json)
-  //       setLoading(false)
-  //     })
-  //   }
-  // }, [loading])
-
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -65,89 +50,54 @@ const ReviewWrite = ({ pid, reload }) => {
     setOpen(false)
   }
 
-  // const closetComponentList = closetData.map((closet) => {
-  //   return(
-  //       <GridListTile key={closet.id}>
-  //           <ButtonBase onClick={() => setSelectedClosetId(closet.id)}>
-  //               <Avatar 
-  //                   src={closet.img} 
-  //                   variant="rounded"
-  //                   className={classes.previewImage}
-  //               />
-  //               <Avatar 
-  //                   variant="rounded"
-  //                   className={clsx({
-  //                       [classes.hide]: selectedClosetId !== closet.id,
-  //                       [classes.checked]: selectedClosetId === closet.id
-  //                   })}
-  //               >
-  //                   <Check />
-  //               </Avatar>
-  //           </ButtonBase>
-  //       </GridListTile>
-  //   )
-  // })
-
-  const submitReview = () => {
-    // if(selectedClosetId === -1){
-    //     enqueueSnackbar("공유할 옷장을 선택해야되요",{"variant": "error"});
-    // }
-    // else{
-    //     fetch(yujinserver+"/design/"+selectedClosetId, {
-    //         method: "POST",
-    //         headers: {
-    //           'Accept': 'application/json',
-    //           "Content-Type": "application/json",
-    //           'Cache': 'no-cache'
-    //         },
-    //         body: JSON.stringify({
-    //           content: tags
-    //         }),
-    //         credentials: 'include',
-    //       })
-    //       .then(
-    //         response => response.text(),
-    //         error => console.log(error)
-    //       )
-    //       .then((text) => {
-    //           if(text === "success"){
-    //             enqueueSnackbar("성공이요",{"variant": "success"});
-    //             setOpen(false)
-    //             dispatchPush("/design/recent")
-    //           }
-    //           else{
-    //             enqueueSnackbar("실패따리",{"variant": "error"});
-    //           }
-    //       })
-    // }
-  }
-
   const reviewSubmit = (data) => {
     // console.log(data)
     let form = new FormData()
-    form.append("content", data.content)
-    images.forEach((image) => {form.append("photo", image)})
+    // form.append("content", data.content)
+    images.forEach((image) => {form.append("img", image)})
     console.log(form.keys())
-    fetch(sangminserver+"/review/"+pid,{
+    fetch(sangminserver+"/review/img",{
       method: "POST",
       body: form,
       credentials: 'include',
     })
     .then(
-      response => response.text(),
+      response => response.json(),
       error => console.log(error)
     )
-    .then((text) => {
-        // if(text === "success"){
-        //     enqueueSnackbar("성공이요",{"variant": "success"});
-        //     dispatchPush("/community/")
-        // }
-        // else{
-        //     enqueueSnackbar("실패따리",{"variant": "error"});
-        // }
-        console.log(text)
-    })
+    .then((json) => {
+      console.log(json)
+      const images = json
+      fetch(sangminserver+"/review/"+pid,{
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          "Content-Type": "application/json",
+          'Cache': 'no-cache'
+        },
+        body: JSON.stringify({
+          content: data.content,
+          imgs: json
+        }),
+        credentials: 'include',
+      })
+      .then(
+        response => response.text(),
+        error => console.log(error)
+      )
+      .then((text) => {
+          if(text === "OK"){
+              enqueueSnackbar("성공이요",{"variant": "success"});
+              reload()
+          }
+          else{
+              enqueueSnackbar("실패따리",{"variant": "error"});
+          }
+          console.log(text)
+      })
     handleClose()
+    }
+    )
   }
   return(
     <React.Fragment>

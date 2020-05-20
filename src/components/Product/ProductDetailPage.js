@@ -89,12 +89,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) => {
+  const [ loading, setLoading ] = useState(false)
   const [pid, setPid] = useState(0);
   const [data, setData] = useState([]);
   const [detail, setDetail] = useState([]);
   const [total, setTotal] = useState(0);
   const [reviews, setReviews] = useState([]);
-  const [previews, setPreviews] = useState([]);
+  const [tryButtonComponent, setTryButtonComponent] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [ images, setImages ] = useState([]);
 
@@ -104,35 +105,49 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
 
   useEffect(() => {
     setPid(pathname.substring(pathname.lastIndexOf('/') + 1));
-    //if(!pid.isInteger) return(<NoMatch/>);
-    fetch(sangminserver+"/product/"+pid, {
-      credentials: 'include',
-    })
-    .then(res => res.json())
-    .then(json => {
-      setData(json.selected_product[0]);
-      if(json.detail.length === 0){
-        setDetail([{
-          selected: true, option: {id: 1, productId: pid, color: "테스트용 기본", size: "기본", cnt: 100}
-        }])
-      }
-      else{
-        setDetail(json.detail.map((option) => {
-          return {
-            selected: false, 
-            option: option
-          }
-        }))
-      };
-      setReviews(json.reviews);
-      setPreviews(json.colors);
-    })
-    .catch(error => {console.warn(error)}
-  )}, [pid]);
+  }, [pathname]);
 
-  // useEffect(() => {
-  //   console.log(detail)
-  // }, [detail])
+  useEffect(() => {
+    setLoading(true)
+  }, [pid])
+
+  useEffect(() => {
+    if(loading){
+      fetch(sangminserver+"/product/"+pid, {
+        credentials: 'include',
+      })
+      .then(
+        res => res.json(),
+        error => console.error(error)
+      )
+      .then(json => {
+        setData(json.selected_product[0]);
+        if(json.detail.length === 0){
+          setDetail([{
+            selected: true, option: {id: 1, productId: pid, color: "테스트용 기본", size: "기본", cnt: 100}
+          }])
+          setTryButtonComponent(
+            <TryButton previews={[{
+              color: "테스트용 기본",
+              img: json.selected_product[0].img
+            }]} />
+          );
+        }
+        else{
+          setDetail(json.detail.map((option) => {
+            return {
+              selected: false, 
+              option: option
+            }
+          }))
+          setTryButtonComponent(<TryButton previews={json.colors} />);
+        };
+        setReviews(json.reviews);
+        setLoading(false)
+      })
+    }
+  }, [loading])
+
 
   const addList = (event, index) => {
     const newList = [...detail]
@@ -389,7 +404,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
               </TableBody>
             </Table>
             <Divider variant="middle"/>
-            <TryButton previews={previews} />
+            {tryButtonComponent}
             <Button variant="outlined" onClick={putItemIntoCart}>장바구니</Button>
             <Button variant="outlined" onClick={purchaseThis}>바로구매</Button>
           </Grid>
@@ -408,7 +423,7 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
         <Paper item className={classes.contentPanel} square>
           <Grid container>
             <Typography flexGrow={1} variant="h6" gutterBottom>리뷰</Typography>
-            <ReviewWrite pid={pid} reload={() => setLoading(false)} />
+            <ReviewWrite pid={pid} reload={() => setLoading(true)} />
           </Grid>
           <Divider variant="middle"/>
           <Grid container>
