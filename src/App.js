@@ -12,7 +12,7 @@ import { SnackbarProvider } from 'notistack'
 import { CssBaseline, Grid, Container, Box, Button } from '@material-ui/core'
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles'
 import { red, purple } from '@material-ui/core/colors'
-import { handleDrawerOpen } from './actions/sketchDrawer'
+// import { handleDrawerOpen } from './actions/sketch'
 import { 
   fetchLoginStatus,
   getLoginStatus } from './actions/auth'

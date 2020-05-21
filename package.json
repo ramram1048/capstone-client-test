@@ -31,6 +31,8 @@
     "clsx": "^1.1.0",
     "connected-react-router": "^6.0.0",
     "cors": "^2.8.5",
+    "fabric": "^3.6.3",
+    "fabric-webpack": "^1.6.0-rc.1",
     "formik": "^2.1.4",
     "formik-material-ui": "^2.0.0-beta.1",
     "history": "^4.7.2",

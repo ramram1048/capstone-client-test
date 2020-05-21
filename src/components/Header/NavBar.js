@@ -14,7 +14,7 @@ import { Menu as MenuIcon,
   Search as SearchIcon
 } from '@material-ui/icons'
 import { requestLogout } from '../../actions/auth'
-import { handleDrawer } from '../../actions/sketchDrawer';
+import { handleDrawer } from '../../actions/sketch';
 import {yujinserver} from '../../restfulapi'
 import { push } from 'connected-react-router';
 import ProductSearchBar from '../Product/ProductSearchBar';
@@ -67,7 +67,7 @@ const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
         </Box>
         <Box display="flex" flexDirection="row">
           <ProductSearchBar />
-          <Button variant="outlined" size="small" onClick={handleDrawer}>
+          <Button variant="outlined" size="small" onClick={() => handleDrawer()}>
             툴바열어요
           </Button>
         </Box>

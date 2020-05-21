@@ -4,6 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import configureStore, { history } from './configureStore'
+// import 'fabric-webpack'
 
 const store = configureStore()
 const render = () => {

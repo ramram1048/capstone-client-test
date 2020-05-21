@@ -16,6 +16,7 @@ import {
   } from '@material-ui/icons'
 import { requestFollow, requestUnfollow } from '../../actions/follow';
 import { useSnackbar } from 'notistack';
+import { sketchAddItem, handleDrawerOpen } from '../../actions/sketch';
 
 const useStyles = makeStyles((theme) => ({
     follow: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const TryButton = ({previews}) => {
+const TryButton = ({previews, addItem, openDrawer}) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
@@ -39,8 +40,9 @@ const TryButton = ({previews}) => {
   };
 
   const handleTry = (img) => {
-    console.log(img)
-    enqueueSnackbar(img+"미리보기~",{variant:"success"})
+    addItem(img)
+    // console.log(img)
+    // enqueueSnackbar(img+"미리보기~",{variant:"success"})
     handleClose()
   }
 
@@ -93,6 +95,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  addItem: (img) => dispatch(sketchAddItem(img)),
+  openDrawer: () => dispatch(handleDrawerOpen())
 //   requestFollow: (userId) => dispatch(requestFollow(userId)),
 //   requestUnfollow: (userId) => dispatch(requestUnfollow(userId)),
 })

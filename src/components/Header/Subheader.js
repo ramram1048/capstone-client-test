@@ -12,7 +12,7 @@ import { Menu as MenuIcon,
   Search as SearchIcon
 } from '@material-ui/icons'
 import { requestLogout } from '../../actions/auth'
-import { handleDrawer } from '../../actions/sketchDrawer';
+import { handleDrawer } from '../../actions/sketch';
 import {yujinserver} from '../../restfulapi'
 
 const useStyles = makeStyles((theme) => ({

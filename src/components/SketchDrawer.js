@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import { connect } from 'react-redux'
-import { handleDrawer } from '../actions/sketchDrawer'
+// import { handleDrawer } from '../actions/sketch'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
   Box,
@@ -23,6 +23,7 @@ import {
   MoveToInbox as InboxIcon,
   Mail as MailIcon,
 } from '@material-ui/icons'
+import SketchComponent from './Sketch/SketchComponent'
 
 const drawerWidth = 560;
 
@@ -52,7 +53,7 @@ const SketchDrawer = function({drawerOpen, handleDrawer}){
       [classes.closed]: !drawerOpen
     })}>
         <Box flex="1 1 auto">
-          <Button onClick={handleDrawer}>ㅇㅅㅇ</Button>
+          <SketchComponent />
 
         </Box>
     </Box>
@@ -64,7 +65,7 @@ SketchDrawer.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  drawerOpen: state.drawerOpen,
+  drawerOpen: state.sketch.opened,
 })
 
 const mapDispatchToProps = dispatch => ({
