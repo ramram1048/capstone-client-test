@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import { connect } from 'react-redux'
 // import { handleDrawer } from '../actions/sketch'
+import Scatch from './Scatch'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
   Box,
@@ -53,8 +54,8 @@ const SketchDrawer = function({drawerOpen, handleDrawer}){
       [classes.closed]: !drawerOpen
     })}>
         <Box flex="1 1 auto">
-          <SketchComponent />
-
+          {/* <SketchComponent /> */}
+          <Scatch />
         </Box>
     </Box>
   )

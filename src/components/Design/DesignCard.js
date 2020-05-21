@@ -290,7 +290,7 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
           {design.closet.products.map((product) => {
             return(
               <Box component={Card} width={1} elevation={0} className={classes.product}>
-                <Link component={CardActionArea} to={"./product/"+product.id} style={{width: "25%"}}>
+                <Link component={CardActionArea} to={"/product/"+product.id} style={{width: "25%"}}>
                   <CardMedia
                     className={classes.productMedia}
                     image={product.img}

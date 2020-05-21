@@ -3,6 +3,13 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'development',
+  devServer: {         //이부부도 옷입히기의 권한문제 해결부분에 동원!!!!!!!!!!!!!
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    }
+  },
   devtool: 'eval-source-map',
   entry: [
     'react-hot-loader/patch',
