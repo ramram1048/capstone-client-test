@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductList = ({products, previews}) => {
     const classes = useStyles();
-    const preview = previews !== undefined? previews.reduce((result = {}, item) => {
+    const parsedPreviews = previews !== undefined? previews.reduce((result = {}, item) => {
         const id = item.productId
         if(!result[id]) result[id] = []
         result[id] = [...result[id], {color: item.color, img: item.img}]
@@ -26,7 +26,7 @@ const ProductList = ({products, previews}) => {
     const items = products.map((product) => {
         
         return (
-            <ProductCard product={product} preview={preview[product.id]} key={product.id}/>
+            <ProductCard product={product} preview={parsedPreviews[product.id]} key={product.id}/>
         )
     });
     // console.log(data);
