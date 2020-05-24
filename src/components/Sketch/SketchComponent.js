@@ -27,9 +27,11 @@ const SketchComponent = ({ sketchItems, sketchResetItems }) => {
 
   useEffect(() => {
     if(canvasRef !== null){  
-    //   const fabricCanvas = new fabric.Canvas(canvasRef)
+      // console.log(canvasRef.current.outerHTML)
+      const fabricCanvas = new fabric.Canvas(canvasRef.current.outerHTML,{backgroundColor:"#fff"})
     //   fabricCanvas.
-    //   setCanvas(fabricCanvas)
+      // setCanvas(fabricCanvas)
+      console.log(fabricCanvas)
     }
   }, [canvasRef])
 

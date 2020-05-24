@@ -40,7 +40,8 @@ const TryButton = ({previews, addItem, openDrawer}) => {
   };
 
   const handleTry = (img) => {
-    addItem(img)
+    const proxyImage = img.replace('https://swcap02.s3.ap-northeast-2.amazonaws.com','http://localhost:8080/images')
+    addItem(proxyImage)
     // console.log(img)
     // enqueueSnackbar(img+"미리보기~",{variant:"success"})
     handleClose()

@@ -99,19 +99,27 @@ export default class Scatch extends React.Component {
          //  console.log(canvas.toJSON().objects);   //zos
         
      
-        const a = canvas.toJSON().objects.map (c=> c.src)
+        const a = canvas.toJSON().objects.map (c=> c.src.replace('http://localhost:8080/images','https://swcap02.s3.ap-northeast-2.amazonaws.com'))
         console.log(a);
-      const url = 'http://172.16.100.72:8001/closet/';
+      const url = 'http://localhost:8001/closet/';
       const formData = new FormData();
     
       formData.append('image',blob)
       formData.append('product',a);
       const config ={
           headers:{
-              'content-type':'multipart/form-data'
-          }
+              'content-type':'multipart/form-data',
+              'credentials': 'include'
+          },
       }
-      return post(url,formData,config); //axios
+      // return post(url,formData,config); //axios
+      return fetch(url,{
+        method: 'POST',
+        body: formData,
+        'content-type':'multipart/form-data',
+        credentials: 'include'
+      })
+      .then((res) => {console.log(res)})
      
      }, 1000)
 
@@ -706,7 +714,7 @@ export default class Scatch extends React.Component {
           left: x,           //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!Testhome에서 받는 원본이미지가 존나 크면 잘려나오고, 감당이 되는 사이즈가 주어지면 제대로나옴, 
           top: y                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Testhome의 원본이미지가 800 800크긴데 여기서 width 400 height 400 주면 짤려나오고
         });                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Testhome이 800800 인데 여기서 width 800 hetight 800 주면 제대로 다나옴, 여기서 width height은 기준이 Lest ,Top 왼쪽윗꼭지점기준 width height이여서 원본이미지크기보다 작게 canvas에서 찍을경우 잘려나오는것임
-        newImage.crossOrigin = "*"
+        // newImage.setCrossOrigin('*')
 
         canvas.add(newImage);
          newImage.scaleToWidth(img.width)

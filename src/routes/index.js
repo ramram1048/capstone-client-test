@@ -43,7 +43,7 @@ const routes = (
         <Route path="/counter" component={Counter} />  
         <Route path="/productList/category" component={ProductCategoryPage} /> 
         <Route path="/productList/search" component={ProductSearchPage} /> 
-        <Route path="/product" component={ProductDetailPage} /> 
+        <Route path="/productDetail" component={ProductDetailPage} /> 
 
         <Route path="/order/placeorder" component={OrderPlacePage} /> 
         <Route path="/order/myorder" component={OrderMypage} /> 
