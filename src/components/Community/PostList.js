@@ -7,7 +7,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid,
   Container,
-  List
+  List,
+  Box,
+  Typography
 } from '@material-ui/core'
 
 import PostCard from './PostCard';
@@ -18,35 +20,23 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const PostList = ({fetchurl}) => {
-    const [ loading, setloading ] = useState(true);
-    const [ posts, setPosts ] = useState([]);
-    const classes = useStyles();
+const PostList = ({posts}) => {
+    const [ postCards, setPostCards ] = useState(null)
 
     useEffect(() => {
-        if(loading){
-            fetch(fetchurl, {
-                credentials: 'include',})
-            .then(response => response.json())
-            .then(json => {
-                setPosts(json)
-                console.log(posts)
-                // json.likeInfo
-                // json.followingInfo
-                setloading(false)
-            })
+        if(posts){
+            if(posts.length) setPostCards(posts.map((post) => {
+                return <PostCard post={post} />
+            }))
         }
-    }, [loading]);
-    if(loading) return(<div>loading.</div>)
-
-    const postCards = posts.map((post) => {
-        return <PostCard post={post} />
-    })
+        else setPostCards(<Typography gutterBottom>없어요</Typography>)
+    }, [posts])
+    
 
     return(
-        <Container maxWidth="md" className={classes.root}>
+        <Box p={2} component={Container} maxWidth="md">
                 {postCards}
-        </Container>
+        </Box>
     )
 }
 

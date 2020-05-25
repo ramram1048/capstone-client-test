@@ -48,7 +48,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'none',
     },
     gridList: {
-        flexWrap: 'nowrap',
+        width: '100%',
+        flexWrap: 'wrap',
         // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
         transform: 'translateZ(0)',
       },

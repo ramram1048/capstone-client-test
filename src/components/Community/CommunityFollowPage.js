@@ -1,4 +1,4 @@
-// "/community"에서 커뮤니티글 리스트 보는 페이지
+// "/community/follow"에서 팔로우한 사용자의 글만 보는 페이지
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -14,6 +14,7 @@ import {
 import PostList from './PostList'
 
 import {yujinserver} from '../../restfulapi'
+import CommunitySubheader from './CommunitySubheader';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -21,22 +22,34 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CommunityPage = () => {
+const fetchurl = yujinserver+"/post/followpost"
+
+const CommunityFollowPage = () => {
     const classes = useStyles();
+    const [ postList, setPostList ] = useState(null)
+
+    useEffect(() => {
+        fetch(fetchurl, {credentials: 'include',})
+        .then(response => response.json(),
+            error => console.error(error))
+        .then(json => {
+            setPostList(<PostList posts={json} />)
+        })
+    }, [])
 
     return(
         <Grid container direction="column">
+            <CommunitySubheader />
             <Grid item container>
-                <Typography className={classes.title} variant="h4">패션케어커뮤니티</Typography>
-                <Button component={Link} to="/community/write">글쓰기</Button>
+                <Typography className={classes.title} variant="h4">팔로우한 사람의 글</Typography>
             </Grid>
             <Divider />
-            <PostList fetchurl={yujinserver+"/page/post"} />
+            {postList}
         </Grid>
     )
 }
 
-CommunityPage.propTypes = {
+CommunityFollowPage.propTypes = {
     pathname: PropTypes.string,
     //search: PropTypes.string,
     //hash: PropTypes.string,
@@ -53,4 +66,4 @@ const mapDispatchToProps = (dispatch) => ({
     
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommunityPage)
+export default connect(mapStateToProps, mapDispatchToProps)(CommunityFollowPage)

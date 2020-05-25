@@ -23,7 +23,7 @@ import DesignFollowPage from '../components/Design/DesignFollowPage'
 import DesignHashtagSearchPage from '../components/Design/DesignHashtagSearchPage'
 
 import PostWritePage from '../components/Community/PostWritePage'
-import CommunityPage from '../components/Community/CommunityPage'
+import CommunityRecentPage from '../components/Community/CommunityRecentPage'
 import PostDetailPage from '../components/Community/PostDetailPage'
 
 
@@ -31,6 +31,9 @@ import AdminAddProduct from '../components/Admin/AdminAddProduct'
 import AdminOrders from '../components/Admin/AdminOrders'
 
 import NoMatch from '../components/NoMatch'
+import CommunityFollowPage from '../components/Community/CommunityFollowPage'
+import CommunityMypage from '../components/Community/CommunityMypage'
+import CommunityLikePage from '../components/Community/CommunityLikePage'
 // import LoginPage from '../components/Login/LoginPage'
 // import AuthPage from '../components/Auth/AuthPage'
 
@@ -66,7 +69,11 @@ const routes = (
 
         <Route path="/community/write" component={PostWritePage}/> 
         <Route path="/community/post/" component={PostDetailPage}/> 
-        <Route path="/community" component={CommunityPage}/>
+        <Route path="/community/recent" component={CommunityRecentPage}/>
+        <Route path="/community/follow" component={CommunityFollowPage}/>
+        <Route path="/community/mypage" component={CommunityMypage}/>
+        <Route path="/community/like" component={CommunityLikePage}/>
+        <Route path="/community/" component={CommunityRecentPage}/>
 
         <Route path="/admin/addproduct" component={AdminAddProduct} /> 
         <Route path="/admin/order" component={AdminOrders} /> 
