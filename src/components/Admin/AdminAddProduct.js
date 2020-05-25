@@ -85,7 +85,7 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
     const [ colorImages, setColorImages ] = useState([]);
 
     const handleImageInput = (event) => {
-        if(colorImages.length < 4){
+        if(colorImages.length < 6){
           if(event.target.files[0] !== undefined){
             setColorImages([...colorImages, event.target.files[0]]);
           }
@@ -101,57 +101,51 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
         colorImages.forEach((image) => {form.append("photo", image)})
         // console.log(form)
         console.log(data)
-        // fetch(yujinserver+"/shop/img",{
-        //     method: "POST",
-        //     body: form,
-        //     credentials: 'include',
-        //   })
-        //   .then(
-        //     response => response.json(),
-        //     error => console.log(error)
-        //   )
-        //   .then((json) => {
-        //     const images = json;
-        //     console.log(images)
-        //     const sending = JSON.stringify({
-        //         productname: data.productname,
-        //         price: data.price,
-        //         categoryId: data.categoryId,
-        //         gender: data.gender,
-        //         createdAt: 0,
-        //         photo: images,
-        //         color: data.color,
-        //         S: data.S,
-        //         M: data.M,
-        //         L: data.L,
-        //         XL: data.XL
-        //     })
-        //     console.log(sending)
-        //     fetch(yujinserver+"/shop/addproduct",{
-        //         method: "POST",
-        //         headers: {
-        //           'Accept': 'application/json',
-        //           "Content-Type": "application/json",
-        //           'Cache': 'no-cache'
-        //         },
-        //         body: sending,
-        //         credentials: 'include',
-        //     })
-        //     .then(
-        //       response => response.text(),
-        //       error => console.log(error)
-        //     )
-        //     .then((text) => {
-        //         // if(text === "success"){
-        //         //     enqueueSnackbar("성공이요",{"variant": "success"});
-        //         //     dispatchPush("/community/")
-        //         // }
-        //         // else{
-        //         //     enqueueSnackbar("실패따리",{"variant": "error"});
-        //         // }
-        //         console.log(text)
-        //     })
-        //   })
+        fetch(yujinserver+"/shop/img",{
+            method: "POST",
+            body: form,
+            credentials: 'include',
+          })
+          .then(
+            response => response.json(),
+            error => console.log(error)
+          )
+          .then((json) => {
+            const images = json;
+            console.log(images)
+            const sending = JSON.stringify({
+                ...data,
+                photo: json
+            })
+            console.log(sending)
+            fetch(yujinserver+"/shop/addproduct",{
+                method: "POST",
+                headers: {
+                  'Accept': 'application/json',
+                  "Content-Type": "application/json",
+                  'Cache': 'no-cache'
+                },
+                body: JSON.stringify({
+                    ...data,
+                    photo: json
+                }),
+                credentials: 'include',
+            })
+            .then(
+              response => response.text(),
+              error => console.log(error)
+            )
+            .then((text) => {
+                // if(text === "success"){
+                //     enqueueSnackbar("성공이요",{"variant": "success"});
+                //     dispatchPush("/community/")
+                // }
+                // else{
+                //     enqueueSnackbar("실패따리",{"variant": "error"});
+                // }
+                console.log(text)
+            })
+          })
     }
 
     const imageUpload = <Grid className={classes.imageContainer}>
@@ -182,12 +176,12 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
         <label htmlFor="photo">
         <Avatar variant="rounded" className={clsx({
             [classes.previewImage]: true,
-            [classes.hide]: colorImages.length >= 4
+            [classes.hide]: colorImages.length >= 6
         })}>
             <PhotoCamera />
         </Avatar>
         </label>
-        {["썸네일","설명","색상1누끼","색상2누끼","색생3누끼","색상4누끼"][colorImages.length]}
+        {["썸네일","설명","색상1누끼","색상2누끼","색상3누끼","색상4누끼","더이상올리지마세요"][colorImages.length]}
     </Grid>
 
     const optionInput = {
@@ -225,7 +219,6 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
                             name="price"
                             type="number"
                             label="가격"
-                            autoFocus
                         />
                         <FormControl required component="fieldset" variant="outlined">
                             <FormLabel>카테고리</FormLabel>
@@ -254,58 +247,48 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
                         {[0,1,2,3].map((colorIndex) => (
                             <Box>
                             <TextField
-                                inputRef={register({required: true})}
+                                inputRef={register({})}
                                 variant="outlined"
                                 margin="normal"
-                                required
                                 id="color"
                                 name={"color["+colorIndex+"]"}
                                 label={"색상"+(colorIndex+1)+"번"}
-                                autoFocus
                             />
                             <TextField
-                                inputRef={register({required: true})}
+                                inputRef={register({})}
                                 variant="outlined"
                                 margin="normal"
-                                required
                                 id="S"
                                 name={"S["+colorIndex+"]"}
                                 type="number"
                                 label="S사이즈재고수"
-                                autoFocus
                             />
                             <TextField
-                                inputRef={register({required: true})}
+                                inputRef={register({})}
                                 variant="outlined"
                                 margin="normal"
-                                required
                                 id="M"
                                 name={"M["+colorIndex+"]"}
                                 type="number"
                                 label="M사이즈재고수"
-                                autoFocus
                             />
                             <TextField
-                                inputRef={register({required: true})}
+                                inputRef={register({})}
                                 variant="outlined"
                                 margin="normal"
-                                required
                                 id="L"
                                 name={"L["+colorIndex+"]"}
                                 type="number"
                                 label="L사이즈재고수"
-                                autoFocus
                             />
                             <TextField
-                                inputRef={register({required: true})}
+                                inputRef={register({})}
                                 variant="outlined"
                                 margin="normal"
-                                required
                                 id="XL"
                                 name={"XL["+colorIndex+"]"}
                                 type="number"
                                 label="XL사이즈재고수"
-                                autoFocus
                             />
                         </Box>
                         ))}

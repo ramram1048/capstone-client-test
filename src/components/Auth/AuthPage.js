@@ -125,31 +125,69 @@ const AuthPage = ({authStore, dispatchBack, dispatchPush, requestLogin}) => {
       </Button>
     </form>
 
-  const registerView = 
+
+  const registerSubmit = (data) => {
+    console.log(data)
+    fetch(yujinserver+"/auth/join",{
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          "Content-Type": "application/json",
+          'Cache': 'no-cache'
+        },
+        body: JSON.stringify(data),
+        credentials: 'include',
+    })
+    .then(
+      response => response.text(),
+      error => console.log(error)
+    )
+    .then((text) => {
+        if(text === "success"){
+            enqueueSnackbar("성공이요",{"variant": "success"});
+        }
+        else{
+            enqueueSnackbar("실패따리",{"variant": "error"});
+        }
+        console.log(text)
+    })
+  }
+  const registerView = (
     <form
       className={classes.form}
+      onSubmit={handleSubmit(registerSubmit)}
     >
       <TextField
+        inputRef={register({required: true})}
         variant="outlined"
         margin="normal"
         required
         fullWidth
         id="email"
-        value={email}
-        onChange={(e) => (setEmail(e.target.value))}
-        label="Email Address"
-        autoComplete="email"
-        autoFocus />
+        name="email"
+        label="이메일"
+      />
       <TextField
+        inputRef={register({required: true})}
         variant="outlined"
         margin="normal"
         required
         fullWidth
-        label="Password"
-        type="password"
+        id="name"
+        name="name"
+        label="이름"
+      />
+      <TextField
+        inputRef={register({required: true})}
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
         id="password"
-        onChange={(e) => (setPassword(e.target.value))}
-        autoComplete="current-password" />
+        name="password"
+        type="password"
+        label="비밀번호"
+      />
       <Button
         type="submit"
         fullWidth
@@ -160,102 +198,102 @@ const AuthPage = ({authStore, dispatchBack, dispatchPush, requestLogin}) => {
         가입
       </Button>
     </form>
-
-const shopRegisterSubmit = (data) => {
-  console.log(data)
-  fetch(yujinserver+"/auth/shop",{
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        "Content-Type": "application/json",
-        'Cache': 'no-cache'
-      },
-      body: JSON.stringify(data),
-      credentials: 'include',
-  })
-  .then(
-    response => response.text(),
-    error => console.log(error)
   )
-  .then((text) => {
-      if(text === "success"){
-          enqueueSnackbar("성공이요",{"variant": "success"});
-          dispatchPush("/community/")
-      }
-      else{
-          enqueueSnackbar("실패따리",{"variant": "error"});
-      }
-      console.log(text)
-  })
-}
-const shopRegisterView = (
-  <form
-    className={classes.form}
-    onSubmit={handleSubmit(shopRegisterSubmit)}
-  >
-    <TextField
-      inputRef={register({required: true})}
-      variant="outlined"
-      margin="normal"
-      required
-      fullWidth
-      id="shopname"
-      name="shopname"
-      label="쇼핑몰이름"
-      autoFocus
-    />
-    <TextField
-      inputRef={register({})}
-      variant="outlined"
-      margin="normal"
-      fullWidth
-      id="shopurl"
-      name="shopurl"
-      label="쇼핑몰홈페이지"
-    />
-    <TextField
-      inputRef={register({required: true})}
-      variant="outlined"
-      margin="normal"
-      required
-      fullWidth
-      id="email"
-      name="email"
-      label="이메일"
-    />
-    <TextField
-      inputRef={register({required: true})}
-      variant="outlined"
-      margin="normal"
-      required
-      fullWidth
-      id="password"
-      name="password"
-      type="password"
-      label="비밀번호"
-    />
-    <TextField
-      inputRef={register({required: true})}
-      variant="outlined"
-      margin="normal"
-      required
-      fullWidth
-      type="number"
-      id="phone"
-      name="phone"
-      label="대표번호"
-    />
-    <Button
-      type="submit"
-      fullWidth
-      variant="contained"
-      color="primary"
-      className={classes.submit}
+
+  const shopRegisterSubmit = (data) => {
+    console.log(data)
+    fetch(yujinserver+"/auth/shop",{
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          "Content-Type": "application/json",
+          'Cache': 'no-cache'
+        },
+        body: JSON.stringify(data),
+        credentials: 'include',
+    })
+    .then(
+      response => response.text(),
+      error => console.log(error)
+    )
+    .then((text) => {
+        if(text === "success"){
+            enqueueSnackbar("성공이요",{"variant": "success"});
+        }
+        else{
+            enqueueSnackbar("실패따리",{"variant": "error"});
+        }
+        console.log(text)
+    })
+  }
+  const shopRegisterView = (
+    <form
+      className={classes.form}
+      onSubmit={handleSubmit(shopRegisterSubmit)}
     >
-      가입
-    </Button>
-  </form>
-)
+      <TextField
+        inputRef={register({required: true})}
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        id="shopname"
+        name="shopname"
+        label="쇼핑몰이름"
+        autoFocus
+      />
+      <TextField
+        inputRef={register({})}
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        id="shopurl"
+        name="shopurl"
+        label="쇼핑몰홈페이지"
+      />
+      <TextField
+        inputRef={register({required: true})}
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        id="email"
+        name="email"
+        label="이메일"
+      />
+      <TextField
+        inputRef={register({required: true})}
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        id="password"
+        name="password"
+        type="password"
+        label="비밀번호"
+      />
+      <TextField
+        inputRef={register({required: true})}
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        type="number"
+        id="phone"
+        name="phone"
+        label="대표번호"
+      />
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={classes.submit}
+      >
+        가입
+      </Button>
+    </form>
+  )
 
 
   return(
