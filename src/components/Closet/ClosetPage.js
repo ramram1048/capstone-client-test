@@ -19,29 +19,32 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+const fetchurl=yujinserver+"/page/closet"
+
 const ClosetPage = () => {
     const classes = useStyles();
-    const { enqueueSnackbar } = useSnackbar();
+    const [ loading, setLoading ] = useState(true);
+    const [ closetList, setClosetList ] = useState(null);
 
-    // useEffect(() => {
-    //     checkLoginStatus()
-    //     .then(() => {})
-    //     .then(() => {
-    //         console.log(loginResult)
-    //         if(loginResult !== "SUCCESS"){
-    //             dispatchPush("/auth")
-    //             return (<div>좀기다리셈</div>)
-    //         }
-    //     })
-    // }, [])
-
-    
+    useEffect(() => {
+        if(loading){
+            fetch(fetchurl, {credentials: 'include',})
+            .then(response => response.json(),
+                error => console.error(error))
+            .then(json => {
+                setClosetList(
+                    <ClosetList closets={json} reload={() => setLoading(true)} />
+                )
+                setLoading(false)
+            })
+        }
+    }, [loading]);
 
     return(
         <Grid container direction="column">
             <Typography variant="h4">나의 옷장</Typography>
             <Divider />
-            <ClosetList fetchurl={yujinserver+"/page/closet"} />
+            {closetList}
         </Grid>
     )
 }

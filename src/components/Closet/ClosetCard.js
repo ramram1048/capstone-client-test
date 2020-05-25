@@ -25,10 +25,12 @@ import {
   ExpandMore as ExpandMoreIcon,
   MoreVert as MoreVertIcon,
 } from '@material-ui/icons'
+import { yujinserver } from '../../restfulapi';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme) => ({
     card: {
-        padding: theme.spacing(1),
+        // backgroundColor: theme.palette.
     },
     cardMedia: {
         paddingTop: '100%',
@@ -51,8 +53,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ClosetCard = ({closet}) => {
+const ClosetCard = ({closet, reload}) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [expanded, setExpanded] = useState(false);
   const [confirmPopoverAnchorEl, setConfirmPopoverAnchorEl] = useState(null);
   const open = Boolean(confirmPopoverAnchorEl);
@@ -67,9 +70,26 @@ const ClosetCard = ({closet}) => {
   const handleConfirmPopoverClose = () => {
     setConfirmPopoverAnchorEl(null)
   }
+  const handleRemove = () => {
+    fetch(yujinserver+"/closet/"+closet.id,{
+      method: 'DELETE',
+      credentials: 'include',
+    })
+    .then(
+      (res) => res.text(),
+      (error) => console.error(error)
+    )
+    .then((data) => {
+      if(data === 'success'){
+        enqueueSnackbar("지웠어요",{"variant": "success"});
+        reload()
+      }
+    })
+    handleConfirmPopoverClose()
+  }
 
   return (
-    <Box component={Card} width={1/2} className={classes.card} elevation={0}>
+    <Box component={Card} width={1/2} elevation={0} p={1} className={classes.card} >
       <CardActionArea>
         <CardMedia
           className={classes.cardMedia}
@@ -88,7 +108,7 @@ const ClosetCard = ({closet}) => {
             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
             transformOrigirn={{vertical: 'top', horizontal: 'left'}}>
               <Typography gutterBottom>진짜지울래?</Typography>
-              <Button onClick={handleConfirmPopoverClose}>ㅇㅇ</Button>
+              <Button onClick={handleRemove}>ㅇㅇ</Button>
               <Button onClick={handleConfirmPopoverClose}>ㄴㄴ</Button>
             </Popover>
           <Button
