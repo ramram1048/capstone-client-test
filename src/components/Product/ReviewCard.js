@@ -33,8 +33,8 @@ import FollowButton from '../Community/FollowButton';
 
 const useStyles = makeStyles((theme) => ({
   cardMedia: {
-      width: 'auto',
-      height: 'auto'
+      width: '100%',
+      height: '100%'
   },
   expand: {
     transform: 'rotate(0deg)',

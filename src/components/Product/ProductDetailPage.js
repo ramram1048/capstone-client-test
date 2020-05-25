@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '100%',
   },
+  descriptionImage: {
+    alignSelf: 'center',
+  },
   price: {
     color: theme.palette.primary.main
   },
@@ -414,9 +417,9 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
         <Paper item className={classes.contentPanel} square>
           <Typography variant="h6" gutterBottom>상품상세정보</Typography>
           <Divider variant="middle"/>
-          <Avatar src={data.description} 
-            variant="square"
-            className={classes.imageAvatar}
+          <img src={data.description} 
+            // variant="square"
+            className={classes.descriptionImage}
             alt={data.description}
           />
         </Paper>

@@ -71,7 +71,7 @@ const OrderCartPage = ({ push, }) => {
                     return(
                         <Box display="flex" flexDirection="row" alignItems="center">
                             <Checkbox />
-                            <ButtonBase onClick={() => push("/product/"+cartItem.productId)}>
+                            <ButtonBase onClick={() => push("/productDetail/"+cartItem.productId)}>
                                 <Avatar
                                     variant="rounded"
                                     src={cartItem.img}
