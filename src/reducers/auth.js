@@ -3,6 +3,7 @@ const init = {
     session: false,
     currentUser: '',
     currentId: -1,
+    shopAdmin: false,
 }
 
 const authReducer = (state = init, action) => {
@@ -16,8 +17,9 @@ const authReducer = (state = init, action) => {
             return {
                 fetching: 'SUCCESS',
                 session: true,
-                currentUser: action.email,
+                currentUser: action.name,
                 currentId: action.id,
+                shopAdmin: action.shopAdmin,
             }
         case 'AUTH_LOGIN_FAILURE':
             return {
@@ -25,6 +27,7 @@ const authReducer = (state = init, action) => {
                 session: false,
                 currentUser: '',
                 currentId: -1,
+                shopAdmin: false,
             }
         case 'AUTH_LOGIN_STATUS_NOT_FOUND':
             return {
@@ -32,6 +35,7 @@ const authReducer = (state = init, action) => {
                 session: false,
                 currentUser: '',
                 currentId: -1,
+                shopAdmin: false,
             }
         case 'AUTH_LOGOUT':
             return {
@@ -39,6 +43,7 @@ const authReducer = (state = init, action) => {
                 session: false,
                 currentUser: '',
                 currentId: -1,
+                shopAdmin: false,
             }
         default:
             return state

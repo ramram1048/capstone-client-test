@@ -29,7 +29,7 @@ export const requestLogin = (email, password) => {
         dispatch(designSetLikeList(data.designLike))
         dispatch(postSetLikeList(data.postLike))
         dispatch(followSetList(data.followingInfo))
-        return dispatch(loginSuccess(data.name, data.id))
+        return dispatch(loginSuccess(data.name, data.id, data.shopStatus))
       }
       else return dispatch(loginFailure());
     })
@@ -51,7 +51,7 @@ export const fetchLoginStatus = (initialId) => {
         dispatch(designSetLikeList(data.designLike))
         dispatch(postSetLikeList(data.postLike))
         dispatch(followSetList(data.followingInfo))
-        return dispatch(loginSuccess(data.name, data.id))
+        return dispatch(loginSuccess(data.name, data.id, data.shopStatus))
       }
       else if(initialId !== -1){
         return dispatch(loginFailure())
@@ -90,8 +90,8 @@ export const login = () => ({
   type: 'AUTH_LOGIN',
 })
 
-export const loginSuccess = (name, id) => ({
-  type: 'AUTH_LOGIN_SUCCESS', name, id
+export const loginSuccess = (name, id, shopAdmin) => ({
+  type: 'AUTH_LOGIN_SUCCESS', name, id, shopAdmin
 })
 
 export const loginFailure = () => ({

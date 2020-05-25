@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { Link as RouterLink } from 'react-router-dom'
@@ -47,9 +47,19 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
+const NavBar = ({menus, authStore, handleDrawer, requestLogout, push }) => {
   const classes = useStyles();
+  const [ adminMenu, setAdminMenu ] = useState(null)
 
+  useEffect(() => {
+    // console.log(authStore.shopAdmin)
+    if(authStore.shopAdmin){
+      setAdminMenu(
+        <Link onClick={() => {push("/admin/order")}} color="primary" >{authStore.currentUser}관리자페이지</Link>
+      )
+    }
+    else setAdminMenu(null)
+  }, [authStore.shopAdmin])
 
   const handleLogout = () => {
     requestLogout()
@@ -63,7 +73,7 @@ const NavBar = ({menus, handleDrawer, requestLogout, push }) => {
         <Link onClick={handleLogout} color="inherit" >로그아웃</Link>
         <Link onClick={() => push("/order/cart")} color="inherit" >장바구니</Link>
         <Link onClick={() => {push("/order/myorder")}} color="inherit" >마이페이지</Link>
-
+        {adminMenu}
         </Box>
         <Box display="flex" flexDirection="row">
           <ProductSearchBar />
@@ -105,6 +115,7 @@ NavBar.propTypes = {
 }
 
 const mapStateToProps = state => ({
+  authStore: state.auth,
 })
 
 const mapDispatchToProps = dispatch => ({

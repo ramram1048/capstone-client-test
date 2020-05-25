@@ -25,8 +25,12 @@ import DesignHashtagSearchPage from '../components/Design/DesignHashtagSearchPag
 import PostWritePage from '../components/Community/PostWritePage'
 import CommunityPage from '../components/Community/CommunityPage'
 import PostDetailPage from '../components/Community/PostDetailPage'
+
+
+import AdminAddProduct from '../components/Admin/AdminAddProduct'
+import AdminOrders from '../components/Admin/AdminOrders'
+
 import NoMatch from '../components/NoMatch'
-import AdminProductUpload from '../components/Admin/AdminProductUpload'
 // import LoginPage from '../components/Login/LoginPage'
 // import AuthPage from '../components/Auth/AuthPage'
 
@@ -64,7 +68,8 @@ const routes = (
         <Route path="/community/post/" component={PostDetailPage}/> 
         <Route path="/community" component={CommunityPage}/>
 
-        <Route path="/admin/addproduct" component={AdminProductUpload} /> 
+        <Route path="/admin/addproduct" component={AdminAddProduct} /> 
+        <Route path="/admin/order" component={AdminOrders} /> 
         <Route component={NoMatch} />
       </Switch>
 )

@@ -30,6 +30,7 @@ import { useForm, Controller } from 'react-hook-form'
 import clsx from 'clsx'
 import { useSnackbar } from 'notistack'
 import { yujinserver } from '../../restfulapi'
+import AdminSubheader from './AdminSubheader'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const AdminProductUpload = ({backButtonAction, dispatchPush}) => {
+const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
     // const [ loading, setLoading ] = useState(true);
@@ -251,6 +252,7 @@ const AdminProductUpload = ({backButtonAction, dispatchPush}) => {
   return(
         <Container maxWidth="lg">
             <Grid container={Paper} className={classes.root}>
+                <AdminSubheader />
                 <Grid item container>
                     <Typography className={classes.title} gutterBottom variant="h4">관리자 올리기</Typography>
                     <Button onClick={backButtonAction}>돌아가</Button>
@@ -383,7 +385,7 @@ const AdminProductUpload = ({backButtonAction, dispatchPush}) => {
     )
 }
 
-AdminProductUpload.propTypes = {
+AdminAddProduct.propTypes = {
     //pathname: PropTypes.string,
     //search: PropTypes.string,
     //hash: PropTypes.string,
@@ -401,4 +403,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatchPush: (url) => dispatch(push(url))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminProductUpload)
+export default connect(mapStateToProps, mapDispatchToProps)(AdminAddProduct)

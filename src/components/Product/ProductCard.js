@@ -57,7 +57,7 @@ const ProductCard = ({width, product, preview}) => {
 
   return (
     <Box component={Card} width={cardSize} p={1} elevation={0}>
-      <Link to={"/product/"+product.id}>
+      <Link to={"/productDetail/"+product.id}>
         <CardActionArea>
           <Avatar
             src={product.img} 
