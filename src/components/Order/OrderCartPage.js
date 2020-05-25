@@ -13,7 +13,9 @@ import { Delete } from '@material-ui/icons';
 import { push } from 'connected-react-router';
 
 const useStyles = makeStyles((theme) => ({
-
+    title: {
+        flexGrow: 1,
+    }
 }));
 
 const OrderCartPage = ({ push, }) => {
@@ -63,6 +65,9 @@ const OrderCartPage = ({ push, }) => {
                     )
                 }
                 if(json.cartsByUid !== undefined) setCart(json.cartsByUid.map((cartItem) => {
+                    const handleDelete = () => {
+                        console.log("장바구니삭제는 서버에아직없네요!!")
+                    }
                     return(
                         <Box display="flex" flexDirection="row" alignItems="center">
                             <Checkbox />
@@ -72,10 +77,11 @@ const OrderCartPage = ({ push, }) => {
                                     src={cartItem.img}
                                 />
                             </ButtonBase>
-                            <Typography>{cartItem.pname}</Typography>
+                            <Typography className={classes.title}>{cartItem.pname}</Typography>
                             {optionSelector(cartItem.productId, cartItem.color, cartItem.size)}
                             <TextField 
                                 type="number"
+                                defaultValue={cartItem.cnt}
                                 inputProps={{
                                     min: "1", max: "100", step: "1",
                                     endAdornment: <InputAdornment position="end">개</InputAdornment>
@@ -83,7 +89,7 @@ const OrderCartPage = ({ push, }) => {
                             />
                             <Typography>가격</Typography>
                             <Tooltip title="삭제">
-                                <IconButton>
+                                <IconButton onClick={handleDelete}>
                                 <Delete />
                                 </IconButton>
                             </Tooltip>

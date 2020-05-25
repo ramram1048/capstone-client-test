@@ -34,9 +34,35 @@ const ProductCategoryPage = ({pathname, search}) => {
     const [ category, setCategory ] = useState("")
 
     useEffect(() => {
-        // console.log(search)
-        if(!loading) setLoading(true)
-    }, [search])
+        setLoading(true)
+    }, [pathname])
+
+    useEffect(() => {
+        while(loading){
+            const categoryId = pathname.substring(pathname.lastIndexOf('/') + 1)
+            console.log(categoryId)
+            setCategory(categoryLookup[categoryId])
+            fetch(sangminserver+"/product/category/"+categoryId, {
+                credentials: 'include',
+            })
+            .then(
+                (res) => res.json(),
+                (err) => console.error(err)
+            )
+            .then((json) => {
+                setPreviews(json.imgArr)
+                setInitialProducts(json.productRows)
+                setProducts(json.productRows)
+            })
+            setLoading(false)
+            break
+        }
+    }, [loading])
+
+    // useEffect(() => {
+    //     // console.log(search)
+    //     if(!loading) setLoading(true)
+    // }, [search])
 
     useEffect(() => {
         setProductListComponent(
@@ -44,32 +70,32 @@ const ProductCategoryPage = ({pathname, search}) => {
         )
     }, [products])
 
-    useEffect(() => {
-        if(loading){
-            const categoryId = queryString.parse(search).category
-            // console.log(categoryId)
-            setCategory(
-                categoryLookup[categoryId]
-            )
-            while(categoryId !== 0){
-                fetch(sangminserver+"/product/category/"+categoryId, {
-                    credentials: 'include',
-                })
-                .then(
-                    (res) => res.json(),
-                    (err) => { console.error(err) }
-                )
-                .then((json) => {
-                    console.log()
-                    setPreviews(json.imgArr)
-                    setInitialProducts(json.productRows)
-                    setProducts(json.productRows)
-                    setLoading(false)
-                })
-                break;
-            }
-        }
-    }, [loading])
+    // useEffect(() => {
+    //     if(loading){
+    //         const categoryId = queryString.parse(search).category
+    //         // console.log(categoryId)
+    //         setCategory(
+    //             categoryLookup[categoryId]
+    //         )
+    //         while(category === 0){
+    //             fetch(sangminserver+"/product/category/"+categoryId, {
+    //                 credentials: 'include',
+    //             })
+    //             .then(
+    //                 (res) => res.json(),
+    //                 (err) => { console.error(err) }
+    //             )
+    //             .then((json) => {
+    //                 console.log()
+    //                 setPreviews(json.imgArr)
+    //                 setInitialProducts(json.productRows)
+    //                 setProducts(json.productRows)
+    //                 setLoading(false)
+    //             })
+    //             break;
+    //         }
+    //     }
+    // }, [loading])
 
     const genderLookup = [
         "U", "M", "W"

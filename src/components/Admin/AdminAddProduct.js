@@ -24,6 +24,7 @@ import {
   FormControlLabel,
   RadioGroup,
   FormControl,
+  FormLabel,
 } from '@material-ui/core'
 import { PhotoCamera, Cancel, Check } from '@material-ui/icons';
 import { useForm, Controller } from 'react-hook-form'
@@ -80,27 +81,8 @@ const useStyles = makeStyles((theme) => ({
 const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
-    // const [ loading, setLoading ] = useState(true);
-    const [ colorImages, setColorImages ] = useState([]);
-    
-    // const [ closetData, setClosetData ] = useState([]);
     const { register, control, handleSubmit } = useForm();
-    // useEffect(() => {
-    //     if(loading){
-    //       fetch(yujinserver+"/page/closet", { credentials: 'include', })
-    //       .then(
-    //         response => response.json(),
-    //         error => console.log(error)
-    //       )
-    //       .then(json => {
-    //         setClosetData(json.map((closet) => ({
-    //             selected: false,
-    //             closet: closet
-    //         })))
-    //         setLoading(false)
-    //       })
-    //     }
-    //   }, [loading])
+    const [ colorImages, setColorImages ] = useState([]);
 
     const handleImageInput = (event) => {
         if(colorImages.length < 4){
@@ -115,98 +97,61 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
         setColorImages(newList);
       }
       const productSubmit = (data) => {
-        // console.log(data)
         let form = new FormData()
-        // form.append("productname", data.productname)
-        // form.append("price", data.price)
-        // form.append("categoryId", data.categoryId)
-        // form.append("gender", data.gender)
-        // form.append("createdAt", 0)
-        // // form.append("photo", data.thumbnail),
-        // // form.append("photo", data.description),
-        // form.append("color", [data.color]),
-        // form.append("S", [data.S]),
-        // form.append("M", [data.M]),
-        // form.append("L", [data.L]),
-        // form.append("XL", [data.XL]),
         colorImages.forEach((image) => {form.append("photo", image)})
-        console.log(...form)
-        
-        // fetch("http://localhost:3000"+"/addproduct", {
+        // console.log(form)
+        console.log(data)
+        // fetch(yujinserver+"/shop/img",{
         //     method: "POST",
-        //     headers: {
-        //       'Cache': 'no-cache'
-        //     },
         //     body: form,
         //     credentials: 'include',
         //   })
         //   .then(
-        //     response => response.text(),
+        //     response => response.json(),
         //     error => console.log(error)
         //   )
-        //   .then((text) => {
-        //       console.log(text)
-        //     //   if(text === "success"){
-        //     //     enqueueSnackbar("성공이요",{"variant": "success"});
-        //     //     setOpen(false)
-        //     //     // dispatchPush("/design/recent")
-        //     //   }
-        //     //   else{
-        //     //     enqueueSnackbar("실패따리",{"variant": "error"});
-        //     //   }
+        //   .then((json) => {
+        //     const images = json;
+        //     console.log(images)
+        //     const sending = JSON.stringify({
+        //         productname: data.productname,
+        //         price: data.price,
+        //         categoryId: data.categoryId,
+        //         gender: data.gender,
+        //         createdAt: 0,
+        //         photo: images,
+        //         color: data.color,
+        //         S: data.S,
+        //         M: data.M,
+        //         L: data.L,
+        //         XL: data.XL
+        //     })
+        //     console.log(sending)
+        //     fetch(yujinserver+"/shop/addproduct",{
+        //         method: "POST",
+        //         headers: {
+        //           'Accept': 'application/json',
+        //           "Content-Type": "application/json",
+        //           'Cache': 'no-cache'
+        //         },
+        //         body: sending,
+        //         credentials: 'include',
+        //     })
+        //     .then(
+        //       response => response.text(),
+        //       error => console.log(error)
+        //     )
+        //     .then((text) => {
+        //         // if(text === "success"){
+        //         //     enqueueSnackbar("성공이요",{"variant": "success"});
+        //         //     dispatchPush("/community/")
+        //         // }
+        //         // else{
+        //         //     enqueueSnackbar("실패따리",{"variant": "error"});
+        //         // }
+        //         console.log(text)
+        //     })
         //   })
-
-        fetch("http://172.16.100.109:8001"+"/shop/img",{
-            method: "POST",
-            body: form,
-            credentials: 'include',
-          })
-          .then(
-            response => response.json(),
-            error => console.log(error)
-          )
-          .then((json) => {
-            const images = json;
-            console.log(images)
-            const sending = JSON.stringify({
-                productname: data.productname,
-                price: data.price,
-                categoryId: data.categoryId,
-                gender: data.gender,
-                createdAt: 0,
-                photo: images,
-                color: [data.color],
-                S: [data.S],
-                M: [data.M],
-                L: [data.L],
-                XL: [data.XL]
-            })
-            console.log(sending)
-            fetch("http://172.16.100.109:8001"+"/shop/addproduct",{
-                method: "POST",
-                headers: {
-                  'Accept': 'application/json',
-                  "Content-Type": "application/json",
-                  'Cache': 'no-cache'
-                },
-                body: sending,
-                credentials: 'include',
-            })
-            .then(
-              response => response.text(),
-              error => console.log(error)
-            )
-            .then((text) => {
-                // if(text === "success"){
-                //     enqueueSnackbar("성공이요",{"variant": "success"});
-                //     dispatchPush("/community/")
-                // }
-                // else{
-                //     enqueueSnackbar("실패따리",{"variant": "error"});
-                // }
-                console.log(text)
-            })
-          })
     }
 
     const imageUpload = <Grid className={classes.imageContainer}>
@@ -242,6 +187,7 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
             <PhotoCamera />
         </Avatar>
         </label>
+        {["썸네일","설명","색상1누끼","색상2누끼","색생3누끼","색상4누끼"][colorImages.length]}
     </Grid>
 
     const optionInput = {
@@ -259,126 +205,116 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
                 </Grid>
                 <Divider />
                 <form onSubmit={handleSubmit(productSubmit)}>
-                    <TextField
-                        inputRef={register({required: true})}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        id="productname"
-                        name="productname"
-                        label="상품명"
-                        autoFocus
-                    />
-                    <TextField
-                        inputRef={register({required: true})}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        id="price"
-                        name="price"
-                        type="number"
-                        label="가격"
-                        autoFocus
-                    />
-                    <FormControl required component="fieldset">
-                        <RadioGroup aria-label="categoryId" name="categoryId" >
-                            <FormControlLabel 
-                                inputRef={register({required: true})} value="1" control={<Radio />} label="상의" />
-                            <FormControlLabel 
-                                inputRef={register({required: true})} value="2" control={<Radio />} label="하의" />
-                            <FormControlLabel 
-                                inputRef={register({required: true})} value="3" control={<Radio />} label="신발" />
-                            <FormControlLabel 
-                                inputRef={register({required: true})} value="4" control={<Radio />} label="악세사리" />
-                        </RadioGroup>
-                    </FormControl>
-                    <FormControl required component="fieldset">
-                        <RadioGroup aria-label="gender" name="gender" >
-                            <FormControlLabel 
-                                inputRef={register({required: true})} value="M" control={<Radio />} label="남성" />
-                            <FormControlLabel 
-                                inputRef={register({required: true})} value="W" control={<Radio />} label="여성" />
-                            <FormControlLabel 
-                                inputRef={register({required: true})} value="U" control={<Radio />} label="남녀공용" />
-                        </RadioGroup>
-                    </FormControl>
-                    <TextField
-                        inputRef={register({required: true})}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        id="color"
-                        name="color"
-                        label="색상1번"
-                        autoFocus
-                    />
-                    <TextField
-                        inputRef={register({required: true})}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        id="S"
-                        name="S"
-                        type="number"
-                        label="S사이즈재고수"
-                        autoFocus
-                    />
-                    
-                    {/* <input 
-                        ref={register({required:true})}
-                        required
-                        accpet="image/*"
-                        id="photo_thumbnail"
-                        name="thumbnail"
-                        type="file"
-                        alt="photo_thumbnail"
-                    />
-                    <input 
-                        ref={register({required:true})}
-                        required
-                        accpet="image/*"
-                        id="photo_description"
-                        name="description"
-                        type="file"
-                    /> */}
-                    <TextField
-                        inputRef={register({required: true})}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        id="M"
-                        name="M"
-                        type="number"
-                        label="M사이즈재고수"
-                        autoFocus
-                    />
-                    <TextField
-                        inputRef={register({required: true})}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        id="L"
-                        name="L"
-                        type="number"
-                        label="L사이즈재고수"
-                        autoFocus
-                    />
-                    <TextField
-                        inputRef={register({required: true})}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        id="XL"
-                        name="XL"
-                        type="number"
-                        label="XL사이즈재고수"
-                        autoFocus
-                    />
-                    {imageUpload}
-                    <Box>
+                    <Grid container direction="column">
+                        <TextField
+                            inputRef={register({required: true})}
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            id="productname"
+                            name="productname"
+                            label="상품명"
+                            autoFocus
+                        />
+                        <TextField
+                            inputRef={register({required: true})}
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            id="price"
+                            name="price"
+                            type="number"
+                            label="가격"
+                            autoFocus
+                        />
+                        <FormControl required component="fieldset" variant="outlined">
+                            <FormLabel>카테고리</FormLabel>
+                            <RadioGroup row aria-label="categoryId" name="categoryId" >
+                                <FormControlLabel 
+                                    inputRef={register({required: true})} value="1" control={<Radio />} label="상의" />
+                                <FormControlLabel 
+                                    inputRef={register({required: true})} value="2" control={<Radio />} label="하의" />
+                                <FormControlLabel 
+                                    inputRef={register({required: true})} value="3" control={<Radio />} label="신발" />
+                                <FormControlLabel 
+                                    inputRef={register({required: true})} value="4" control={<Radio />} label="악세사리" />
+                            </RadioGroup>
+                        </FormControl>
+                        <FormControl required component="fieldset" variant="outlined">
+                            <FormLabel>성별</FormLabel>
+                            <RadioGroup row aria-label="gender" name="gender" >
+                                <FormControlLabel 
+                                    inputRef={register({required: true})} value="M" control={<Radio />} label="남성" />
+                                <FormControlLabel 
+                                    inputRef={register({required: true})} value="W" control={<Radio />} label="여성" />
+                                <FormControlLabel 
+                                    inputRef={register({required: true})} value="U" control={<Radio />} label="남녀공용" />
+                            </RadioGroup>
+                        </FormControl>
+                        {[0,1,2,3].map((colorIndex) => (
+                            <Box>
+                            <TextField
+                                inputRef={register({required: true})}
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                id="color"
+                                name={"color["+colorIndex+"]"}
+                                label={"색상"+(colorIndex+1)+"번"}
+                                autoFocus
+                            />
+                            <TextField
+                                inputRef={register({required: true})}
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                id="S"
+                                name={"S["+colorIndex+"]"}
+                                type="number"
+                                label="S사이즈재고수"
+                                autoFocus
+                            />
+                            <TextField
+                                inputRef={register({required: true})}
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                id="M"
+                                name={"M["+colorIndex+"]"}
+                                type="number"
+                                label="M사이즈재고수"
+                                autoFocus
+                            />
+                            <TextField
+                                inputRef={register({required: true})}
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                id="L"
+                                name={"L["+colorIndex+"]"}
+                                type="number"
+                                label="L사이즈재고수"
+                                autoFocus
+                            />
+                            <TextField
+                                inputRef={register({required: true})}
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                id="XL"
+                                name={"XL["+colorIndex+"]"}
+                                type="number"
+                                label="XL사이즈재고수"
+                                autoFocus
+                            />
+                        </Box>
+                        ))}
+                        {imageUpload}
+                        <Box>
 
-                    </Box>
-                    <Button type="submit" fillWidth variant="contained" color="primary">Submit</Button>
+                        </Box>
+                        <Button type="submit" fillWidth variant="contained" color="primary">Submit</Button>
+                    </Grid>
                 </form>
             </Grid>
         </Container>

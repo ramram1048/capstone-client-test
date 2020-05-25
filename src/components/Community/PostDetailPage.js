@@ -23,6 +23,7 @@ import { yujinserver } from '../../restfulapi';
 import CommentWrite from './CommentWrite';
 import FollowButton from './FollowButton';
 import PostLikeButton from './PostLikeButton';
+import ClosetDetail from './ClosetDetail';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -78,9 +79,10 @@ const PostDetailPage = ({pathname}) => {
             if(image.closet){
                 // closet
                 return <Box>
-                    <ButtonBase onClick={() => closetAction(image.closet)}>
+                    {/* <ButtonBase onClick={() => closetAction(image.closet)}>
                     <Avatar variant="rounded" src={image.img} className={classes.image} />
-                    </ButtonBase>
+                    </ButtonBase> */}
+                    <ClosetDetail closet={image} imagestyle={classes.image} />
                     </Box>
             }
             else{
@@ -107,9 +109,7 @@ const PostDetailPage = ({pathname}) => {
                                 if(image.closet){
                                     // closet
                                     return <Box>
-                                        <ButtonBase onClick={() => closetAction(image.closet)}>
-                                        <Avatar variant="rounded" src={image.img} className={classes.commentImage} />
-                                        </ButtonBase>
+                                        <ClosetDetail closet={image} imagestyle={classes.commentImage} />
                                         </Box>
                                 }
                                 else{

@@ -47,8 +47,8 @@ const ProductSearchPage = ({pathname, search}) => {
         .then((json) => {
             console.log(json)
             // TODO: preview 누락!!
-            if(json.searched_products.length){
-                setProductList(<ProductList products={json.searched_products} />)
+            if(json.productRows.length){
+                setProductList(<ProductList products={json.productRows} />)
             }
             else setProductList(<div>결과없어요~</div>)
             
