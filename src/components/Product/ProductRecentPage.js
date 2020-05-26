@@ -91,8 +91,12 @@ const ProductCategoryPage = ({pathname, search}) => {
     const filterGender = (gender) => {
         console.log(gender)
         if(gender === "U") setProducts(initialProducts)
-        else{
-            const newArray = initialProducts.filter((product) => product.gender === gender)
+        else if(gender === "M") {
+            const newArray = initialProducts.filter((product) => product.gender !== "W")
+            setProducts(newArray)
+        }
+        else if(gender === "W") {
+            const newArray = initialProducts.filter((product) => product.gender !== "M")
             setProducts(newArray)
         }
     }

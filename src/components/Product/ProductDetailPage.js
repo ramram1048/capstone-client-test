@@ -137,12 +137,13 @@ const ProductDetailPage = ({pathname, cleanOrderList, pushToOrderList, push}) =>
           );
         }
         else{
-          setDetail(json.detail.map((option) => {
-            return {
+          setDetail(json.detail.reduce((result, option) => {
+            if(option.cnt === 0) return result
+            else return [...result, {
               selected: false, 
               option: option
-            }
-          }))
+            }]
+          }, []))
           setTryButtonComponent(<TryButton previews={json.colors} />);
         };
         setReviews(json.reviews);

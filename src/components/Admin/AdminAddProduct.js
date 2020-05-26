@@ -136,13 +136,13 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
               error => console.log(error)
             )
             .then((text) => {
-                // if(text === "success"){
-                //     enqueueSnackbar("성공이요",{"variant": "success"});
-                //     dispatchPush("/community/")
-                // }
-                // else{
-                //     enqueueSnackbar("실패따리",{"variant": "error"});
-                // }
+                if(text === "add product success"){
+                    enqueueSnackbar("성공이요",{"variant": "success"});
+                    dispatchPush("/admin/order/")
+                }
+                else{
+                    enqueueSnackbar("실패따리",{"variant": "error"});
+                }
                 console.log(text)
             })
           })
