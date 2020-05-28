@@ -47,7 +47,7 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
 
     useEffect(() => {
         if(loading){
-            setEdit(false)
+            // setEdit(false)
             fetch(yujinserver+"/cart",{
                 credentials: "include"
             })
@@ -144,20 +144,20 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
         }
     }, [loading])
 
-    const turnEditOn = () => {
-        setEdit(true)
-    }
-    const turnEditOff = () => {
-        setEdit(false)
-    }
+    // const turnEditOn = () => {
+    //     setEdit(true)
+    // }
+    // const turnEditOff = () => {
+    //     setEdit(false)
+    // }
 
     const purchaseCart = () => {
-        if(!cartList.length){
+        if(!cart.length){
             enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
         }
         else{
             cleanOrderList();
-            cartList.map((option) => {
+            cart.map((option) => {
             pushToOrderList({
 
               pid: option.productId, 
@@ -174,9 +174,9 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
         }
     }
 
-    useEffect(() => {
-        console.log(cartList, products, options)
-    }, [cartList])
+    // useEffect(() => {
+    //     console.log(cartList, products, options)
+    // }, [cartList])
 
     // const getEditInfo = (refs) => {
     //     let newArray = [...editInfo]
@@ -220,13 +220,13 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
         })
       }
 
-      const editButtons = (
-          <Box>
-              <Button variant="outlined" disabled>전체삭제</Button>
-              <Button onClick={submitEdit} variant="outlined">적용하기</Button>
-              <Button onClick={turnEditOff} variant="outlined">취소</Button>
-          </Box>
-      )
+    //   const editButtons = (
+    //       <Box>
+    //           <Button variant="outlined" disabled>전체삭제</Button>
+    //           <Button onClick={submitEdit} variant="outlined">적용하기</Button>
+    //           <Button onClick={turnEditOff} variant="outlined">취소</Button>
+    //       </Box>
+    //   )
 
     if(loading) return (<div>로딩중이요</div>)
     else{
