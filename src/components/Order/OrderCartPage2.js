@@ -70,9 +70,7 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
                     return result
                 }, {}))
                 setCartList(json.cartsByUid)
-                setCartItems(cartList.map((order) => (
-                    <CartItem order={order} product={products[order.productId]} options={options[order.productId]} edit={edit} updatePage={getEditInfo} />
-                )))
+                
                 setLoading(false)
             })
         }
@@ -108,13 +106,12 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
 
     useEffect(() => {
         console.log(cartList, products, options)
+        setCartItems(cartList.map((order) => {
+            return <CartItem order={order} product={products[order.productId]} options={options[order.productId]} edit={edit} updatePage={getEditInfo} />
+        }))
     }, [cartList])
 
-    // const getEditInfo = (refs) => {
-    //     let newArray = [...editInfo]
-    //     newArray[refs.cartId] = refs
-    //     setEditInfo(newArray)
-    // }
+    
 
       
 

@@ -22,16 +22,17 @@ const useStyles = makeStyles((theme) => ({
 
 const CartItem = ({order, product, options, edit, updatePage}) => {
     const classes = useStyles();
+    // console.log(order, product, options,)
 
     const initialOption = (options.find((option) => (option.color === order.color) && (option.size === order.size))).optionId
 
-    const [editInfo, setEditInfo] = useState({
-        cartId: order.id,
-        quantity: order.cnt,
-        optionId: initialOption,
-        color: order.color,
-        size: order.size,
-    })
+    // const [editInfo, setEditInfo] = useState({
+    //     cartId: order.id,
+    //     quantity: order.cnt,
+    //     optionId: initialOption,
+    //     color: order.color,
+    //     size: order.size,
+    // })
     const [quantity, setQuantity] = useState(order.cnt)
     const [optionValue, setOptionValue] = useState(initialOption)
 
@@ -54,30 +55,30 @@ const CartItem = ({order, product, options, edit, updatePage}) => {
 
     const handleOptionChange = (event) => {
         setOptionValue(event.target.value)
-        setEditInfo({
-            ...editInfo,
-            optionId: event.target.value,
-            color: (options.find((option) => (option.optionId === event.target.value))).color,
-            size: (options.find((option) => (option.optionId === event.target.value))).size
-        })
+        // setEditInfo({
+        //     ...editInfo,
+        //     optionId: event.target.value,
+        //     color: (options.find((option) => (option.optionId === event.target.value))).color,
+        //     size: (options.find((option) => (option.optionId === event.target.value))).size
+        // })
     }
 
     const handleQuantityChange = (event) => {
         const value = event.target.value<1? 1 : event.target.value>100? 100: event.target.value
         setQuantity(value)
-        setEditInfo({
-            ...editInfo,
-            quantity: value
-        })
+        // setEditInfo({
+        //     ...editInfo,
+        //     quantity: value
+        // })
     }
 
-    useEffect(() => {
-        const edited = (optionValue !== initialOption) || (quantity !== order.cnt)
-        updatePage({
-            edited: edited,
-            ...editInfo
-        })
-    }, [editInfo])
+    // useEffect(() => {
+    //     const edited = (optionValue !== initialOption) || (quantity !== order.cnt)
+    //     updatePage({
+    //         edited: edited,
+    //         ...editInfo
+    //     })
+    // }, [editInfo])
 
         
 

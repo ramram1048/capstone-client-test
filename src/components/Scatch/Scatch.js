@@ -9,6 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import { Button } from '@material-ui/core';
+import { sangminserver } from '../../restfulapi';
 
 let canvas = null;
 
@@ -55,7 +56,7 @@ export default class Scatch extends React.Component {
       
       initCanvas();
       canvas.on('mouse:down', function(options) {   
-          console.log(options.e.clientX, options.e.clientY);
+          // console.log(options.e.clientX, options.e.clientY);
           getIndex(canvas);
           
           $("#delete").click(function(){
@@ -67,7 +68,7 @@ export default class Scatch extends React.Component {
     
     componentDidUpdate(){
      
-      console.log(this.props.basket);
+      // console.log(this.props.basket);
     }
   
   popdownClick(){
@@ -140,12 +141,13 @@ export default class Scatch extends React.Component {
  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   storebasket1(){ //버튼클릭하면 해당 상품 장바구니 DB로 연결
    console.log(this.props.basket[0]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar/',{
     method: "POST",
-    body: "imgurl="+this.props.basket[0],
+    body: "img="+this.props.basket[0].replace('http://localhost:8080/images','https://swcap02.s3.ap-northeast-2.amazonaws.com'),
     headers:{
       'Content-Type': 'application/x-www-form-urlencoded', //서버에 데이터 보내는 또다른 방법 data타입별로 해더가 총 3가지 종류있다.
     },
+    credentials: 'include'
   })
    
 
@@ -154,28 +156,30 @@ export default class Scatch extends React.Component {
   
   storebasket2(){
     console.log(this.props.basket[1]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
-    body: "imgurl="+this.props.basket[1],
+    body: "img="+this.props.basket[1].replace('http://localhost:8080/images','https://swcap02.s3.ap-northeast-2.amazonaws.com'),
     headers:{
       'Content-Type': 'application/x-www-form-urlencoded', //서버에 데이터 보내는 또다른 방법 data타입별로 해더가 총 3가지 종류있다.
     },
+    credentials: 'include'
   })
   }
   storebasket3(){
     console.log(this.props.basket[2]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
-    body: "imgurl="+this.props.basket[2],
+    body: "img="+this.props.basket[2].replace('http://localhost:8080/images','https://swcap02.s3.ap-northeast-2.amazonaws.com'),
     headers:{
       'Content-Type': 'application/x-www-form-urlencoded', //서버에 데이터 보내는 또다른 방법 data타입별로 해더가 총 3가지 종류있다.
     },
+    credentials: 'include'
   })
   }
 
   storebasket4(){
     console.log(this.props.basket[3]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[3],
     headers:{
@@ -186,7 +190,7 @@ export default class Scatch extends React.Component {
 
   storebasket5(){
     console.log(this.props.basket[4]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[4],
     headers:{
@@ -197,7 +201,7 @@ export default class Scatch extends React.Component {
 
   storebasket6(){
     console.log(this.props.basket[5]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[5],
     headers:{
@@ -208,7 +212,7 @@ export default class Scatch extends React.Component {
 
   storebasket7(){
     console.log(this.props.basket[6]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[6],
     headers:{
@@ -219,7 +223,7 @@ export default class Scatch extends React.Component {
 
   storebasket8(){
     console.log(this.props.basket[7]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[7],
     headers:{
@@ -230,7 +234,7 @@ export default class Scatch extends React.Component {
 
   storebasket9(){
     console.log(this.props.basket[8]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[8],
     headers:{
@@ -241,7 +245,7 @@ export default class Scatch extends React.Component {
 
   storebasket10(){
     console.log(this.props.basket[9]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[9],
     headers:{
@@ -252,7 +256,7 @@ export default class Scatch extends React.Component {
 
   storebasket11(){
     console.log(this.props.basket[10]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[10],
     headers:{
@@ -263,7 +267,7 @@ export default class Scatch extends React.Component {
 
   storebasket12(){
     console.log(this.props.basket[11]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[11],
     headers:{
@@ -274,7 +278,7 @@ export default class Scatch extends React.Component {
 
   storebasket13(){
     console.log(this.props.basket[12]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[12],
     headers:{
@@ -285,7 +289,7 @@ export default class Scatch extends React.Component {
 
   storebasket14(){
     console.log(this.props.basket[13]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[13],
     headers:{
@@ -296,7 +300,7 @@ export default class Scatch extends React.Component {
 
   storebasket15(){
     console.log(this.props.basket[14]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[14],
     headers:{
@@ -307,7 +311,7 @@ export default class Scatch extends React.Component {
 
   storebasket16(){
     console.log(this.props.basket[15]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[15],
     headers:{
@@ -318,7 +322,7 @@ export default class Scatch extends React.Component {
 
   storebasket17(){
     console.log(this.props.basket[16]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[16],
     headers:{
@@ -329,7 +333,7 @@ export default class Scatch extends React.Component {
 
   storebasket18(){
     console.log(this.props.basket[17]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[17],
     headers:{
@@ -340,7 +344,7 @@ export default class Scatch extends React.Component {
 
   storebasket19(){
     console.log(this.props.basket[18]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[18],
     headers:{
@@ -351,7 +355,7 @@ export default class Scatch extends React.Component {
 
   storebasket20(){
     console.log(this.props.basket[19]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[19],
     headers:{
@@ -362,7 +366,7 @@ export default class Scatch extends React.Component {
 
   storebasket21(){
     console.log(this.props.basket[20]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[20],
     headers:{
@@ -373,7 +377,7 @@ export default class Scatch extends React.Component {
 
   storebasket22(){
     console.log(this.props.basket[21]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[21],
     headers:{
@@ -384,7 +388,7 @@ export default class Scatch extends React.Component {
 
   storebasket23(){
     console.log(this.props.basket[22]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[22],
     headers:{
@@ -395,7 +399,7 @@ export default class Scatch extends React.Component {
 
   storebasket24(){
     console.log(this.props.basket[23]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[23],
     headers:{
@@ -406,7 +410,7 @@ export default class Scatch extends React.Component {
 
   storebasket25(){
     console.log(this.props.basket[24]);
-   fetch('http://172.16.100.159:3000/toolbarAdd/',{
+   fetch(sangminserver+'/cart/toolbar',{
     method: "POST",
     body: "imgurl="+this.props.basket[24],
     headers:{
@@ -467,7 +471,11 @@ export default class Scatch extends React.Component {
                     </div>
               
                     <button onClick={this.restart}>list초기화</button>   
-                     <div className="furniture">
+                     <div className="furniture" style={{
+    backgroundColor: 'aqua',
+    height: '33%',
+   
+    overflowY: 'scroll',}}>
                        <Table>
                          <TableBody>
                       
@@ -654,13 +662,13 @@ export default class Scatch extends React.Component {
 
      
       canvas.setHeight(400); //캔버스의 크기설정할수 있음//캔버스의 높이설정 여기서 해줘야함
-      canvas.setWidth(300);  //캔버스랑 배경 안겹치면 이숫자를 맞춰줘라
+      canvas.setWidth(500);  //캔버스랑 배경 안겹치면 이숫자를 맞춰줘라
       // canvas.setBackgroundImage(url, canvas.renderAll.bind(canvas));
   
       var imageOffsetX, imageOffsetY;
   
       function handleDragStart(e) {  //넣을 이미지를 클릭하고 옮기는 딱 start시점에 발생
-        console.log('DragStart');
+        // console.log('DragStart');
         [].forEach.call(images, function(img) {
           img.classList.remove("img_dragging");
         });
@@ -672,7 +680,7 @@ export default class Scatch extends React.Component {
       }
   
       function handleDragOver(e) {   //넣을 이미지가 canvas위에서 자리이동할때 불리는함수
-        console.log('drag over');
+        // console.log('drag over');
         if (e.preventDefault) {
           e.preventDefault();
         }
@@ -681,18 +689,18 @@ export default class Scatch extends React.Component {
       }
   
       function handleDragEnter(e) {  //넣을 이미지가 canvas안에 들어가는 시점에서 발생되는 함수(start와는다름)
-          console.log('drag enter');
+          // console.log('drag enter');
         this.classList.add("over");
       }
   
       function handleDragLeave(e) {  //넣을 이미지가 canvas에서 나오는 시점에서 발생되는함수
-        console.log('drag leave');
+        // console.log('drag leave');
         this.classList.remove("over");
       }
 
 
       async function handleDrop(e) {    
-        console.log('drag drop');
+        // console.log('drag drop');
         e = e || window.event;
         if (e.preventDefault) {
           e.preventDefault();
@@ -724,7 +732,7 @@ export default class Scatch extends React.Component {
      
 
   function handleDragEnd(e) {
-        console.log('Dragend');
+        // console.log('Dragend');
         [].forEach.call(images, function(img) {
           img.classList.remove("img_dragging");
         });
