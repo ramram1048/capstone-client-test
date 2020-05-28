@@ -1,5 +1,5 @@
 // "/order/cart"에서 확인하는 장바구니페이지
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -7,12 +7,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Box, ButtonBase, Avatar, TextField, Typography, Checkbox, Menu, MenuItem, Select, Divider, Button, Tooltip, IconButton, InputAdornment,
 } from '@material-ui/core'
-import { yujinserver } from '../../restfulapi';
+import { yujinserver, sangminserver } from '../../restfulapi';
 import OrderList from './OrderList'
 import { Delete } from '@material-ui/icons';
 import { push } from 'connected-react-router';
 import { pushToOrderList, cleanOrderList } from '../../actions/orderList';
 import { Link } from 'react-router-dom';
+import CartList from './CartList';
+import CartItem from './CartItem';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -34,15 +36,18 @@ const useStyles = makeStyles((theme) => ({
 const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(true)
+
     const [cart, setCart] = useState([])
     const [products, setProducts] = useState({})
     // const [options, setOptions] = useState({})
     const [cartComponent, setCartComponent] = useState([])
     const [total, setTotal] = useState(0)
-    // const [productOptionTable, setProductOptionTable] = useState(null)
+    const [cartItems, setCartItems] = useState([])
+    // const [cartListComponent, setCartListComponent] = useState(null)
 
     useEffect(() => {
         if(loading){
+            setEdit(false)
             fetch(yujinserver+"/cart",{
                 credentials: "include"
             })
@@ -51,6 +56,7 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
                 (err) => console.error(err)
             )
             .then((json) => {
+
                 let total = 0
 
                 // setCart(json.cartsByUid)
@@ -132,28 +138,28 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
                     )
                 }))
                 setTotal(total)
+
                 setLoading(false)
             })
         }
     }, [loading])
 
-    const handleDelete = () => {
-        console.log("장바구니삭제는 서버에아직없네요!!")
+    const turnEditOn = () => {
+        setEdit(true)
     }
-    // useEffect(() => {
-    //     if(productOptionTable){
-    //         console.log(productOptionTable)
-    //     }
-    // }, [productOptionTable])
+    const turnEditOff = () => {
+        setEdit(false)
+    }
 
     const purchaseCart = () => {
-        if(!cart.length){
-          enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
+        if(!cartList.length){
+            enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
         }
         else{
-          cleanOrderList();
-          cart.map((option) => {
+            cleanOrderList();
+            cartList.map((option) => {
             pushToOrderList({
+
               pid: option.productId, 
               pname: option.pname, 
               color: option.color, 
@@ -161,16 +167,72 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
               quantity: option.cnt,
               price: products[option.productId].price, 
               img: option.img
+
             });
-          })
-          push('/order/placeorder');
+            })
+            push('/order/placeorder');
         }
+    }
+
+    useEffect(() => {
+        console.log(cartList, products, options)
+    }, [cartList])
+
+    // const getEditInfo = (refs) => {
+    //     let newArray = [...editInfo]
+    //     newArray[refs.cartId] = refs
+    //     setEditInfo(newArray)
+    // }
+
+      
+
+      const submitEdit = () => {
+        // console.log(editInfo)
+        editInfo.map((edit) => {
+            if(edit !== undefined){
+                if(edit.edited){
+                    fetch(sangminserver+'/cart/'+edit.cartId, {
+                        method: 'PUT',
+                        headers: {
+                          'Accept': 'application/json',
+                          "Content-Type": "application/json",
+                          'Cache': 'no-cache'
+                        },
+                        body: JSON.stringify({
+                            color: edit.color,
+                            cnt: edit.quantity,
+                            size: edit.size
+                        }),
+                        credentials: 'include',
+                    })
+                    .then(
+                        (res) => res.text(),
+                        (error) => console.error(error)
+                    )
+                    .then((text) => {
+                        if(text === "success"){
+                            console.log("성공이요")
+                            setLoading(true)
+                        }
+                    })
+                }
+            }
+        })
       }
+
+      const editButtons = (
+          <Box>
+              <Button variant="outlined" disabled>전체삭제</Button>
+              <Button onClick={submitEdit} variant="outlined">적용하기</Button>
+              <Button onClick={turnEditOff} variant="outlined">취소</Button>
+          </Box>
+      )
 
     if(loading) return (<div>로딩중이요</div>)
     else{
         return (
             <Box>
+
               <Typography variant="h4">장바구니</Typography>
               <Divider />
               <Box>
@@ -180,8 +242,15 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
                 <Button variant="outlined" disabled>선택삭제</Button>
                 <Button variant="outlined" disabled>전체삭제</Button>
               </Box> */}
+
               <Divider />
-              <Typography gutterBottom>총 가격: {total}원</Typography>
+            <Box>
+            <Box>
+                {cartItems}
+            </Box>
+            <Divider />
+            <Typography gutterBottom>총 가격: {total}원</Typography>
+            </Box>
               <Button fullWidth color="primary" variant="contained" onClick={() => purchaseCart()}>모두 구매</Button>
             </Box>
         )
