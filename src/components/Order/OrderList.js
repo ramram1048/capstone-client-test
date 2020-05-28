@@ -71,7 +71,7 @@ const OrderList = ({orders, edit}) => {
                   </Grid></TableCell>
                 <TableCell>{product.color} / {product.size}</TableCell>
                 <TableCell>{product.quantity}</TableCell>
-                <TableCell>{product.price}원</TableCell>
+                <TableCell>{product.price * product.quantity}원</TableCell>
               </TableRow>
           )
   });

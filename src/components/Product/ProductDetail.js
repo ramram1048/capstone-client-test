@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     height: '50vh'
   },
   textFieldQuantity: {
-    width: '3.5em',
+    width: '3em',
   },
   typoTotal: {
     width: '6em',
@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductDetail = ({product, options, previews, pushToOrderList, cleanOrderList, push}) => {
   const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar();
   const [selectedOptions, setSelectedOptions] = useState([])
   const [selectedOptionComponent, setSelectedOptionComponent] = useState([])
   const [totalComponent, setTotalComponent] = useState(null)
@@ -106,7 +107,10 @@ const ProductDetail = ({product, options, previews, pushToOrderList, cleanOrderL
               value={option.quantity} 
               onChange={(event) => handleQuantityChange(event, index)} 
               type="number"
-              inputProps={{ min: "1", max: "100", step: "1"}}
+              inputProps={{
+                style: { textAlign: "right" }, 
+                min: "1", max: "100", step: "1"
+              }}
             />
             <Typography variant="body2" gutterBottom align="right" className={classes.typoTotal}>{subtotal}원</Typography>
             <TryButton previews={[preview]} />

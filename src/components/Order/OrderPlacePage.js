@@ -215,10 +215,10 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
               <RadioGroup aria-label="gender" name="checkout_method" >
                 <FormControlLabel 
               inputRef={register({})} value="card" control={<Radio />} label="카드" />
-                <FormControlLabel 
+                {/* <FormControlLabel 
               inputRef={register({})} value="cash" control={<Radio />} label="무통장?" />
                 <FormControlLabel 
-              inputRef={register({})} value="disabled" disabled control={<Radio />} label="(Disabled option)" />
+              inputRef={register({})} value="disabled" disabled control={<Radio />} label="(Disabled option)" /> */}
               </RadioGroup>
             </FormControl>
           </Grid>

@@ -11,17 +11,31 @@ import { yujinserver } from '../../restfulapi';
 import OrderList from './OrderList'
 import { Delete } from '@material-ui/icons';
 import { push } from 'connected-react-router';
+import { pushToOrderList, cleanOrderList } from '../../actions/orderList';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
-    }
+    },
+    avatarImage: {
+      width: '3em',
+      height: '3em',
+    },
+    textFieldQuantity: {
+      width: '3em',
+    },
+    typoTotal: {
+      width: '6em',
+    },
 }));
 
-const OrderCartPage = ({ push, }) => {
+const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(true)
     const [cart, setCart] = useState([])
+    const [cartComponent, setCartComponent] = useState([])
+    const [total, setTotal] = useState(0)
     // const [productOptionTable, setProductOptionTable] = useState(null)
 
     useEffect(() => {
@@ -34,6 +48,8 @@ const OrderCartPage = ({ push, }) => {
                 (err) => console.error(err)
             )
             .then((json) => {
+                let total = 0
+
                 // setCart(json.cartsByUid)
                 // setProductOptionTable(json.result2.result2)
                 // if(json.result2.result2 !== undefined) setProductOptionTable(json.result2.result2.reduce((result = {}, item) => {
@@ -42,10 +58,12 @@ const OrderCartPage = ({ push, }) => {
                 //     result[id] = [...result[id], {color: item.color, size: item.size, cnt: item.cnt}]
                 //     return result
                 // }, {}))
-                const productOptionTable = json.result2.result2 !== undefined? json.result2.result2.reduce((result = {}, item) => {
-                    const id = item.productId
-                    if(!result[id]) result[id] = []
-                    result[id] = [...result[id], {color: item.color, size: item.size, cnt: item.cnt}]
+                const productOptionTable = json.result2n3.result2 !== undefined? json.result2n3.result2.reduce((result = {}, item) => {
+                    if(item.cnt !== 0){
+                        const id = item.productId
+                        if(!result[id]) result[id] = []
+                        result[id] = [...result[id], {color: item.color, size: item.size, cnt: item.cnt}]
+                    }
                     return result
                 }, {}) : {}
                 // console.log(productOptionTable)
@@ -64,48 +82,76 @@ const OrderCartPage = ({ push, }) => {
                         </Select>
                     )
                 }
-                if(json.cartsByUid !== undefined) setCart(json.cartsByUid.map((cartItem) => {
-                    const handleDelete = () => {
-                        console.log("장바구니삭제는 서버에아직없네요!!")
-                    }
+                if(json.cartsByUid !== undefined) setCart(json.cartsByUid)
+                setCartComponent(json.cartsByUid.map((cartItem) => {
+                    const subtotal = 20000*cartItem.cnt
                     return(
-                        <Box display="flex" flexDirection="row" alignItems="center">
-                            <Checkbox />
-                            <ButtonBase onClick={() => push("/productDetail/"+cartItem.productId)}>
+                        <Box p={1} display="flex" flexDirection="row" alignItems="center">
+                            <Checkbox disabled/>
+                            <ButtonBase component={Link} to={"/productDetail/"+cartItem.productId}>
                                 <Avatar
                                     variant="rounded"
                                     src={cartItem.img}
+                                    className={classes.avatarImage}
                                 />
                             </ButtonBase>
-                            <Typography className={classes.title}>{cartItem.pname}</Typography>
+                            <Box flexGrow={1} component={Typography} variant="body1" gutterBottom>{cartItem.pname}</Box>
                             {optionSelector(cartItem.productId, cartItem.color, cartItem.size)}
                             <TextField 
+                                disabled
+                                size="small" 
+                                className={classes.textFieldQuantity}
                                 type="number"
                                 defaultValue={cartItem.cnt}
                                 inputProps={{
+                                    style: { textAlign: "right" },
                                     min: "1", max: "100", step: "1",
-                                    endAdornment: <InputAdornment position="end">개</InputAdornment>
                                 }}
                             />
-                            <Typography>가격</Typography>
+                            <Typography variant="body2" gutterBottom align="right" className={classes.typoTotal}>{subtotal}원</Typography>
                             <Tooltip title="삭제">
-                                <IconButton onClick={handleDelete}>
+                                <IconButton disabled onClick={handleDelete}>
                                 <Delete />
                                 </IconButton>
                             </Tooltip>
                         </Box>
                     )
                 }))
+                setTotal(total)
                 setLoading(false)
             })
         }
     }, [loading])
 
+    const handleDelete = () => {
+        console.log("장바구니삭제는 서버에아직없네요!!")
+    }
     // useEffect(() => {
     //     if(productOptionTable){
     //         console.log(productOptionTable)
     //     }
     // }, [productOptionTable])
+
+    const purchaseCart = () => {
+        if(!cart.length){
+          enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
+        }
+        else{
+          cleanOrderList();
+          cart.map((option) => {
+            pushToOrderList({
+              pid: option.productId, 
+              pname: option.pname, 
+              color: option.color, 
+              size: option.size, 
+              quantity: option.cnt,
+              price: 20000, 
+              img: option.img
+            });
+          })
+          push('/order/placeorder');
+        }
+      }
 
     if(loading) return (<div>로딩중이요</div>)
     else{
@@ -114,15 +160,15 @@ const OrderCartPage = ({ push, }) => {
               <Typography variant="h4">장바구니</Typography>
               <Divider />
               <Box>
-                {cart}
+                {cartComponent}
               </Box>
               <Box display="flex" flexDirection="row" justifyContent="flex-end">
-                <Button variant="outlined">선택삭제</Button>
-                <Button variant="contained">전체삭제</Button>
+                <Button variant="outlined" disabled>선택삭제</Button>
+                <Button variant="outlined" disabled>전체삭제</Button>
               </Box>
               <Divider />
-              <Typography>총 가격: 얼마얼마원</Typography>
-              <Button fullWidth color="primary" variant="contained">모두 구매</Button>
+              <Typography gutterBottom>총 가격: {total}원</Typography>
+              <Button fullWidth color="primary" variant="contained" onClick={() => purchaseCart()}>모두 구매</Button>
             </Box>
         )
     }
@@ -142,7 +188,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    push: (url) => dispatch(push(url))
+    pushToOrderList : (order) => dispatch(pushToOrderList(order)),
+    cleanOrderList : () => dispatch(cleanOrderList()),
+    push : (url) => dispatch(push(url)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderCartPage)
