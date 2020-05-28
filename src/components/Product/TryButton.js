@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Grid, Tooltip, IconButton, MenuItem, Menu,
+    Grid, Tooltip, IconButton, MenuItem, Menu, Button,
 } from '@material-ui/core'
 import {
     Person as PersonIcon,
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const TryButton = ({previews, addItem, openDrawer}) => {
+const TryButton = ({previews, fullButton, addItem, openDrawer, variant}) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
@@ -47,20 +47,26 @@ const TryButton = ({previews, addItem, openDrawer}) => {
     handleClose()
   }
 
+  const button = fullButton?(
+    <Button onClick={handleOpen} variant={variant}>
+      <Palette /> 코디해보기
+    </Button>
+  ) : (
+    <Tooltip 
+      title="코디해보기"
+    >
+      <IconButton 
+        aria-label="try" 
+        centerRipple 
+        onClick={handleOpen}>
+        <Palette />
+      </IconButton>
+    </Tooltip>
+  )
 
   return(
     <React.Fragment>
-      <Tooltip 
-        placement="top" 
-        title="코디해보기"
-      >
-        <IconButton 
-          aria-label="try" 
-          centerRipple 
-          onClick={handleOpen}>
-          <Palette />
-        </IconButton>
-      </Tooltip>
+      {button}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
