@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
     },
     textFieldQuantity: {
       width: '3em',
-      textAlign: 'right'
     },
     typoTotal: {
       width: '6em',
@@ -36,11 +35,11 @@ const useStyles = makeStyles((theme) => ({
 const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(true)
-
-    const [cart, setCart] = useState([])
+    const [edit, setEdit] = useState(false)
+    const [editInfo, setEditInfo] = useState([])
+    const [cartList, setCartList] = useState([])
     const [products, setProducts] = useState({})
-    // const [options, setOptions] = useState({})
-    const [cartComponent, setCartComponent] = useState([])
+    const [options, setOptions] = useState({})
     const [total, setTotal] = useState(0)
     const [cartItems, setCartItems] = useState([])
     // const [cartListComponent, setCartListComponent] = useState(null)
@@ -56,89 +55,24 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
                 (err) => console.error(err)
             )
             .then((json) => {
-
-                let total = 0
-
-                // setCart(json.cartsByUid)
-                // setProductOptionTable(json.result2.result2)
-                // if(json.result2.result2 !== undefined) setProductOptionTable(json.result2.result2.reduce((result = {}, item) => {
-                //     const id = item.productId
-                //     if(!result[id]) result[id] = []
-                //     result[id] = [...result[id], {color: item.color, size: item.size, cnt: item.cnt}]
-                //     return result
-                // }, {}))
-                const productttt = json.result2n3.result3.reduce((result = {}, product) => {
-                    if(product.cnt !== 0){
-                        const id = product[0].id
+                setOptions(json.result2n3.result2.reduce((result, item) => {
+                    if(item.cnt !== 0){
+                        const id = item.productId
                         if(!result[id]) result[id] = []
-                        result[id] = product[0]
+                        result[id] = [...result[id], {optionId: item.id, color: item.color, size: item.size, cnt: item.cnt}]
                     }
                     return result
-                }, {})
-                setProducts(productttt)
-                // setOptions(json.result2n3.result2 !== undefined? json.result2n3.result2.reduce((result = {}, item) => {
-                //     if(item.cnt !== 0){
-                //         const id = item.productId
-                //         if(!result[id]) result[id] = []
-                //         result[id] = [...result[id], {color: item.color, size: item.size, cnt: item.cnt}]
-                //     }
-                //     return result
-                // }, {}))
-                // console.log(productOptionTable)
-                // const optionSelector = (pid, color, size) => {
-                //     const optionMenu = productOptionTable[pid] !== undefined? productOptionTable[pid].map((option, index) => (
-                //         <MenuItem value={option.color+"&"+option.size}>{option.color} / {option.size}</MenuItem>
-                //     )) : <MenuItem> 없어용</MenuItem>
-
-                //     return(
-                //         <Select
-                //             defaultValue={color+"&"+size}
-                //             displayEmpty
-                //             className={classes.selectEmpty}
-                //         >
-                //             {optionMenu}
-                //         </Select>
-                //     )
-                // }
-                if(json.cartsByUid !== undefined) setCart(json.cartsByUid)
-                setCartComponent(json.cartsByUid.map((cartItem) => {
-                    const subtotal = productttt[cartItem.productId].price * cartItem.cnt
-                    total += subtotal
-                    return(
-                        <Box p={1} display="flex" flexDirection="row" alignItems="center">
-                            <ButtonBase component={Link} to={"/productDetail/"+cartItem.productId}>
-                                <Avatar
-                                    variant="rounded"
-                                    src={cartItem.img}
-                                    className={classes.avatarImage}
-                                />
-                            </ButtonBase>
-                            <Box flexGrow={1} component={Typography} variant="body1" gutterBottom>{cartItem.pname}</Box>
-                            {/* {optionSelector(cartItem.productId, cartItem.color, cartItem.size)}
-                            <TextField 
-                                disabled
-                                size="small" 
-                                className={classes.textFieldQuantity}
-                                type="number"
-                                defaultValue={cartItem.cnt}
-                                inputProps={{
-                                    style: { textAlign: "right" },
-                                    min: "1", max: "100", step: "1",
-                                }}
-                            /> */}
-                            <Typography variant="body1" gutterBottom>{cartItem.color+" / "+cartItem.size}</Typography>
-                            <Typography variant="body1" gutterBottom className={classes.textFieldQuantity}>{cartItem.cnt}</Typography>
-                            <Typography variant="body2" gutterBottom align="right" className={classes.typoTotal}>{subtotal}원</Typography>
-                            {/* <Tooltip title="삭제">
-                                <IconButton disabled onClick={handleDelete}>
-                                <Delete />
-                                </IconButton>
-                            </Tooltip> */}
-                        </Box>
-                    )
-                }))
-                setTotal(total)
-
+                }, {}))
+                setProducts(json.result2n3.result3.reduce((result, product) => {
+                    const id = product[0].id
+                    if(!result[id]) result[id] = []
+                    result[id] = product[0]
+                    return result
+                }, {}))
+                setCartList(json.cartsByUid)
+                setCartItems(cartList.map((order) => (
+                    <CartItem order={order} product={products[order.productId]} options={options[order.productId]} edit={edit} updatePage={getEditInfo} />
+                )))
                 setLoading(false)
             })
         }
@@ -159,15 +93,13 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
             cleanOrderList();
             cartList.map((option) => {
             pushToOrderList({
-
-              pid: option.productId, 
-              pname: option.pname, 
-              color: option.color, 
-              size: option.size, 
-              quantity: option.cnt,
-              price: products[option.productId].price, 
-              img: option.img
-
+                pid: option.productId, 
+                pname: option.pname, 
+                color: option.color, 
+                size: option.size, 
+                quantity: option.cnt,
+                price: products[option.productId].price * option.cnt, 
+                img: option.img
             });
             })
             push('/order/placeorder');
@@ -232,17 +164,11 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
     else{
         return (
             <Box>
-
-              <Typography variant="h4">장바구니</Typography>
-              <Divider />
-              <Box>
-                {cartComponent}
+              <Box display="flex" flexDirection="row">
+                <Box flexGrow={1} component={Typography} variant="h4">장바구니</Box>
+                {edit?editButtons
+                : <Button onClick={turnEditOn} variant="outlined">변경하기</Button>}
               </Box>
-              {/* <Box display="flex" flexDirection="row" justifyContent="flex-end">
-                <Button variant="outlined" disabled>선택삭제</Button>
-                <Button variant="outlined" disabled>전체삭제</Button>
-              </Box> */}
-
               <Divider />
             <Box>
             <Box>
