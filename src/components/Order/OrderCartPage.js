@@ -37,10 +37,11 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
     const [loading, setLoading] = useState(true)
     const [edit, setEdit] = useState(false)
     const [editInfo, setEditInfo] = useState([])
-    const [cartList, setCartList] = useState([])
-    const [products, setProducts] = useState({})
-    const [options, setOptions] = useState({})
+    const [cartList, setCartList] = useState(null)
+    // const [products, setProducts] = useState({})
+    // const [options, setOptions] = useState({})
     const [cartListComponent, setCartListComponent] = useState(null)
+    const [totalComponent, setTotalComponent] = useState(null)
 
     useEffect(() => {
         if(loading){
@@ -53,25 +54,48 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
                 (err) => console.error(err)
             )
             .then((json) => {
-                setOptions(json.result2n3.result2.reduce((result = {}, item) => {
+                const options = json.result2n3.result2.reduce((result = {}, item) => {
                     if(item.cnt !== 0){
                         const id = item.productId
                         if(!result[id]) result[id] = []
                         result[id] = [...result[id], {optionId: item.id, color: item.color, size: item.size, cnt: item.cnt}]
                     }
                     return result
-                }, {}))
-                setProducts(json.result2n3.result3.reduce((result, product) => {
+                }, {})
+                const products = json.result2n3.result3.reduce((result, product) => {
                     const id = product[0].id
                     if(!result[id]) result[id] = []
                     result[id] = product[0]
                     return result
-                }, {}))
-                setCartList(json.cartsByUid)
+                }, {})
+                const order = json.cartsByUid
+                setCartList({
+                  orders: order,
+                  options: options,
+                  products: products,
+                })
                 setLoading(false)
             })
         }
     }, [loading])
+
+    useEffect(() => {
+      if(cartList !== null){
+        setCartListComponent(cartList.orders.map((order) => (
+          <CartItem order={order} product={cartList.products[order.productId]} options={cartList.options[order.productId]} edit={edit} updatePage={getEditInfo} />
+        )))
+        if(edit){
+          setTotalComponent(null)
+        }
+        else{
+          const total = cartList.orders.reduce((result, option) => {
+            result += cartList.products[option.productId].price * option.cnt
+            return result
+        }, 0)
+          setTotalComponent(<Typography gutterBottom>총 가격: {total}원</Typography>)
+        }
+      }
+    }, [cartList, edit])
 
     const turnEditOn = () => {
         setEdit(true)
@@ -101,20 +125,12 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
         }
     }
 
-    const total = cartList.reduce((result, option) => {
-        result += products[option.productId].price * option.cnt
-        return result
-    }, 0)
-
     const getEditInfo = (refs) => {
         let newArray = [...editInfo]
         newArray[refs.cartId] = refs
         setEditInfo(newArray)
     }
 
-      const cartItems = cartList.map((order) => (
-        <CartItem order={order} product={products[order.productId]} options={options[order.productId]} edit={edit} updatePage={getEditInfo} />
-      ))
 
       const submitEdit = () => {
         // console.log(editInfo)
@@ -170,12 +186,12 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
               <Divider />
             <Box>
             <Box>
-                {cartItems}
+                {cartListComponent}
             </Box>
             <Divider />
-            <Typography gutterBottom>총 가격: {total}원</Typography>
+            {totalComponent}
             </Box>
-              <Button fullWidth color="primary" variant="contained" onClick={() => purchaseCart()}>모두 구매</Button>
+              <Button disabled={edit} fullWidth color="primary" variant="contained" onClick={() => purchaseCart()}>모두 구매</Button>
             </Box>
         )
     }
