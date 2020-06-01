@@ -26,7 +26,7 @@ import {
 } from '@material-ui/icons'
 import SketchComponent from './Sketch/SketchComponent'
 
-const drawerWidth = 560;
+const drawerWidth = 535;
 
 const useStyles = makeStyles((theme) => ({
   root: {
