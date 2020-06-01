@@ -168,13 +168,13 @@ const PostWritePage = ({backButtonAction, dispatchPush}) => {
                 credentials: 'include',
             })
             .then(
-              response => response.text(),
+              response => response.json(),
               error => console.log(error)
             )
-            .then((text) => {
-                if(text === "success"){
-                    enqueueSnackbar("성공이요",{"variant": "success"});
-                    dispatchPush("/community/")
+            .then((json) => {
+                if(json.postId !== undefined){
+                  enqueueSnackbar("성공이요",{"variant": "success"});
+                  dispatchPush("/community/post/"+json.postId)
                 }
                 else{
                     enqueueSnackbar("실패따리",{"variant": "error"});
