@@ -55,7 +55,7 @@ const NavBar = ({menus, authStore, handleDrawer, requestLogout, push }) => {
     // console.log(authStore.shopAdmin)
     if(authStore.shopAdmin){
       setAdminMenu(
-        <Link onClick={() => {push("/admin/order")}} color="primary" >{authStore.currentUser}관리자페이지</Link>
+        <Link onClick={() => {push("/admin/")}} color="primary" >{authStore.currentUser}관리자페이지</Link>
       )
     }
     else setAdminMenu(null)

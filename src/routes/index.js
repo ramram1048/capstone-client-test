@@ -34,6 +34,7 @@ import NoMatch from '../components/NoMatch'
 import CommunityFollowPage from '../components/Community/CommunityFollowPage'
 import CommunityMypage from '../components/Community/CommunityMypage'
 import CommunityLikePage from '../components/Community/CommunityLikePage'
+import AdminMypage from '../components/Admin/AdminMypage'
 // import LoginPage from '../components/Login/LoginPage'
 // import AuthPage from '../components/Auth/AuthPage'
 
@@ -77,6 +78,8 @@ const routes = (
 
         <Route path="/admin/addproduct" component={AdminAddProduct} /> 
         <Route path="/admin/order" component={AdminOrders} /> 
+        <Route path="/admin/mypage" component={AdminMypage} /> 
+        <Route path="/admin/" component={AdminMypage} /> 
         <Route component={NoMatch} />
       </Switch>
 )
