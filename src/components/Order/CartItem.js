@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from "react-redux"
-import { Box, ButtonBase, Select, MenuItem, Avatar, Typography, TextField, Tooltip, makeStyles, IconButton } from '@material-ui/core'
+import { Box, ButtonBase, Select, MenuItem, Avatar, Typography, TextField, Tooltip, makeStyles, IconButton, Divider } from '@material-ui/core'
 import { Link } from 'react-router-dom'
-import { Delete } from '@material-ui/icons'
+import { Delete, Undo } from '@material-ui/icons'
+import clsx from 'clsx'
+import { red } from '@material-ui/core/colors'
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -24,26 +26,33 @@ const CartItem = ({order, product, options, edit, updatePage}) => {
     const classes = useStyles();
 
     const initialOption = (options.find((option) => (option.color === order.color) && (option.size === order.size))).optionId
-
-    const [editInfo, setEditInfo] = useState({
-        cartId: order.id,
-        quantity: order.cnt,
-        optionId: initialOption,
-        color: order.color,
-        size: order.size,
-    })
-    const [quantity, setQuantity] = useState(order.cnt)
-    const [optionValue, setOptionValue] = useState(initialOption)
+  const initialEditInfo = {
+    cartId: order.id,
+    quantity: order.cnt,
+    optionId: initialOption,
+    color: order.color,
+    size: order.size,
+    deleted: false,
+  }
+  const [editInfo, setEditInfo] = useState(initialEditInfo)
+    // const [quantity, setQuantity] = useState(order.cnt)
+    // const [optionValue, setOptionValue] = useState(initialOption)
 
     const optionMenu = options.map((option) => (
         <MenuItem value={option.optionId}>{option.color} / {option.size}</MenuItem>
     ))
+
+    useEffect(() => {
+      if(!edit){
+        setEditInfo(initialEditInfo)
+      }
+    }, [edit])
     
 
     const optionSelector = () => {
         return(
             <Select
-                value={optionValue}
+                value={editInfo.optionId}
                 onChange={(event) => handleOptionChange(event)}
                 displayEmpty
             >
@@ -53,7 +62,7 @@ const CartItem = ({order, product, options, edit, updatePage}) => {
     }
 
     const handleOptionChange = (event) => {
-        setOptionValue(event.target.value)
+        // setOptionValue(event.target.value)
         setEditInfo({
             ...editInfo,
             optionId: event.target.value,
@@ -64,15 +73,22 @@ const CartItem = ({order, product, options, edit, updatePage}) => {
 
     const handleQuantityChange = (event) => {
         const value = event.target.value<1? 1 : event.target.value>100? 100: event.target.value
-        setQuantity(value)
+        // setQuantity(value)
         setEditInfo({
             ...editInfo,
             quantity: value
         })
     }
 
+    const handleDeleteChange = () => {
+      setEditInfo({
+        ...editInfo,
+        deleted: !editInfo.deleted,
+      })
+    }
+
     useEffect(() => {
-        const edited = (optionValue !== initialOption) || (quantity !== order.cnt)
+        const edited = (editInfo.optionId !== initialOption) || (editInfo.quantity !== order.cnt)
         updatePage({
             edited: edited,
             ...editInfo
@@ -82,7 +98,17 @@ const CartItem = ({order, product, options, edit, updatePage}) => {
         
 
     return(
-        <Box p={1} display="flex" flexDirection="row" alignItems="center">
+      <React.Fragment>
+        {editInfo.deleted?
+        <Box p={1} display="flex" flexDirection="row" alignItems="center" bgcolor={red[200]}>
+            <Box flexGrow={1} component={Typography} align="center" variant="body2" gutterBottom>{order.pname}: {order.color} / {order.size}를 삭제할거에요.</Box>
+            <Tooltip title="되돌리기">
+              <IconButton onClick={handleDeleteChange}>
+                <Undo />
+              </IconButton>
+            </Tooltip>
+        </Box>
+        : <Box p={1} display="flex" flexDirection="row" alignItems="center">
             <ButtonBase component={Link} to={"/productDetail/"+product.id}>
                 <Avatar
                     variant="rounded"
@@ -97,21 +123,22 @@ const CartItem = ({order, product, options, edit, updatePage}) => {
                 size="small" 
                 className={classes.textFieldQuantity}
                 type="number"
-                value={quantity}
+                value={editInfo.quantity}
                 onChange={(event) => handleQuantityChange(event)}
                 inputProps={{
                     style: { textAlign: "right" },
                     min: "1", max: "100", step: "1",
                 }}
-            /> : <Typography variant="body2" gutterBottom className={classes.textFieldQuantity}>{order.cnt}</Typography>}
-            <Typography variant="body2" gutterBottom align="right" className={classes.typoTotal}>{product.price * quantity}원</Typography>
-            {edit? //<Tooltip title="삭제안되요">
-                <IconButton disabled>
+            /> : <Typography variant="body2" align="right" gutterBottom className={classes.textFieldQuantity}>{order.cnt}</Typography>}
+            <Typography variant="body2" gutterBottom align="right" className={classes.typoTotal}>{product.price * editInfo.quantity}원</Typography>
+            {edit? <Tooltip title="삭제">
+                <IconButton onClick={handleDeleteChange} color="secondary">
                 <Delete />
                 </IconButton>
-            //</Tooltip>
+            </Tooltip>
             :null}
-        </Box>
+        </Box>}
+      </React.Fragment>
     )
 }
 

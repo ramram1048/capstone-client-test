@@ -24,7 +24,7 @@ const theme = createMuiTheme({
       main: purple[500],
     },
     secondary: {
-      main: purple['A400'],
+      main: red['A400'],
     },
     error: {
       main: red.A400,
