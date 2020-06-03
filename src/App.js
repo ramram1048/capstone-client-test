@@ -53,9 +53,6 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "auto",
     height: 0,
   },
-  drawer: {
-    flex: "0 0 auto"
-  }
 }));
 
 const menus = [
@@ -99,13 +96,11 @@ const App = ({ history, pathname, authStore, fetchLoginStatus, dispatchPush }) =
             <React.Fragment key={authStore.currentId}>
               <Box component={Container} maxWidth="lg" className={classes.main}>
                 <NavBar menus={menus}/>
-                <Box flex="1 1 auto" className={classes.context} key={authStore.currentId}>
+                <Box flexGrow={1} className={classes.context} key={authStore.currentId}>
                   { routes }
                 </Box>
               </Box>
-              <Box className={classes.drawer}>
-                <SketchDrawer />
-              </Box>
+              <SketchDrawer />
             </React.Fragment>
             : <AuthPage />
           }

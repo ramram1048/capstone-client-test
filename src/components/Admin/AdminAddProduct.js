@@ -25,8 +25,12 @@ import {
   RadioGroup,
   FormControl,
   FormLabel,
+  Table,
+  TableCell,
+  TableRow,
+  Tooltip,
 } from '@material-ui/core'
-import { PhotoCamera, Cancel, Check } from '@material-ui/icons';
+import { PhotoCamera, Cancel, Check, Add, Remove } from '@material-ui/icons';
 import { useForm, Controller } from 'react-hook-form'
 import clsx from 'clsx'
 import { useSnackbar } from 'notistack'
@@ -83,6 +87,12 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
     const { enqueueSnackbar } = useSnackbar();
     const { register, control, handleSubmit } = useForm();
     const [ colorImages, setColorImages ] = useState([]);
+    const [category, setCategory] = useState(0)
+    const [optionInput, setOptionInput] = useState([])
+    const [colorCount, setColorCount] = useState(1)
+    const [sizeCount, setSizeCount] = useState(1)
+    const [colorArray, setColorArray] = useState([""])
+    const [sizeArray, setSizeArray] = useState([])
 
     const handleImageInput = (event) => {
         if(colorImages.length < 6){
@@ -183,124 +193,249 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
         </label>
         {["썸네일","설명","색상1누끼","색상2누끼","색상3누끼","색상4누끼","더이상올리지마세요"][colorImages.length]}
     </Grid>
+  
+  useEffect(() => {
+    switch(category){
+      case "1":
+      case "2": { 
+        setOptionInput([0,1,2,3].map((colorIndex) => (
+            <TableRow key={colorIndex}>
+              <TableCell component={TextField} 
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="color"
+              name={"color["+colorIndex+"]"}
+              label={"색상"+(colorIndex+1)+"번"} />
+              <TableCell component={TextField} 
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="S"
+              name={"S["+colorIndex+"]"}
+              type="number"
+              label="S사이즈재고수" />
+              <TableCell component={TextField} 
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="M"
+              name={"M["+colorIndex+"]"}
+              type="number"
+              label="M사이즈재고수" />
+              <TableCell component={TextField} 
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="L"
+              name={"L["+colorIndex+"]"}
+              type="number"
+              label="L사이즈재고수"/>
+              <TableCell component={TextField} 
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="XL"
+              name={"XL["+colorIndex+"]"}
+              type="number"
+              label="XL사이즈재고수"/>
+            </TableRow>
+        )))
+        break
+      }
+      case "3": { // 패션잡화: 사이즈없음
+        setOptionInput([0,1,2,3].map((colorIndex) => (
+            <TableRow key={colorIndex}>
+              <TableCell component={TextField} 
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="color"
+              name={"color["+colorIndex+"]"}
+              label={"색상"+(colorIndex+1)+"번"} />
+              <TableCell component={TextField} 
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="cnt"
+              name={"cnt["+colorIndex+"]"}
+              type="number"
+              label="재고수" />
+            </TableRow>
+        )))
+        break
+      }
+      case "4": { // 신발: 사이즈도 입력
+        setOptionInput(
+          <Box flexGrow={1} component={Table}>
+            <TableRow key={0}>
+              <TableCell />
+              <TableCell component={TextField}
+              />
+            </TableRow>
+            {[0,1,2,3].map((colorIndex) => (
+            <TableRow key={colorIndex}>
+              <TableCell component={TextField} 
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="color"
+              name={"color["+colorIndex+"]"}
+              label={"색상"+(colorIndex+1)+"번"} />
+              
+            </TableRow>
+        ))}
 
-    const optionInput = {
-        
+          </Box>
+          )
+        break
+      }
+      default: {setOptionInput([])}
     }
+  }, [category])
 
+  
+
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  }
+
+  const inputTableTest = (
+    <Table>
+      <TableRow>
+        <TableCell />
+        {[...Array(sizeCount).keys()].map((index) => {
+          return (
+            <TableCell>
+              <Tooltip title="사이즈 삭제~">
+                <IconButton size="small" onClick={() => setSizeArray([
+                  sizeArray.slice(0, index-1), sizeArray.slice(index+1)
+                ])}>
+                  <Remove />
+                </IconButton>
+              </Tooltip>
+              <TextField
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="size"
+              name={"size["+index+"]"}
+              label={"사이즈"} />
+            </TableCell>
+          )
+        })}
+        <TableCell rowSpan={colorCount+1}>
+          <Tooltip title="사이즈 추가">
+            <IconButton onClick={() => setSizeCount(sizeCount+1)}>
+              <Add />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+      </TableRow>
+      {[...Array(colorCount).keys()].map((colorIndex) => {
+        return <TableRow key={colorIndex}>
+          <Box display="flex" alignItems="center" component={TableCell}>
+              <Tooltip title="색상 삭제~">
+                <IconButton size="small">
+                  <Remove />
+                </IconButton>
+              </Tooltip>
+              <Box flexGrow={1} component={TextField}
+              inputRef={register({})}
+              variant="outlined"
+              margin="normal"
+              id="color"
+              name={"color["+colorIndex+"]"}
+              label={"색상"} />
+            </Box>
+          {[sizeArray].map((sizeIndex) => {
+            return <TableCell component={TextField} 
+            inputRef={register({})}
+            variant="outlined"
+            margin="normal"
+            id="quantity"
+            name={"quantity["+sizeIndex+"]"}
+            label={"재고"} />
+          })}
+        </TableRow>
+      })}
+      <TableRow>
+        <TableCell colSpan={sizeCount+1}>
+          <Tooltip title="색상 추가~">
+            <IconButton onClick={() => setColorCount(colorCount+1)}>
+              <Add />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+      </TableRow>
+    </Table>
+  )
     
   return(
-        <Container maxWidth="lg">
-            <Grid container={Paper} className={classes.root}>
-                <AdminSubheader />
-                <Grid item container>
-                    <Typography className={classes.title} gutterBottom variant="h4">관리자 올리기</Typography>
-                    <Button onClick={backButtonAction}>돌아가</Button>
-                </Grid>
-                <Divider />
-                <form onSubmit={handleSubmit(productSubmit)}>
-                    <Grid container direction="column">
-                        <TextField
-                            inputRef={register({required: true})}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            id="productname"
-                            name="productname"
-                            label="상품명"
-                            autoFocus
-                        />
-                        <TextField
-                            inputRef={register({required: true})}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            id="price"
-                            name="price"
-                            type="number"
-                            label="가격"
-                        />
-                        <FormControl required component="fieldset" variant="outlined">
-                            <FormLabel>카테고리</FormLabel>
-                            <RadioGroup row aria-label="categoryId" name="categoryId" >
-                                <FormControlLabel 
-                                    inputRef={register({required: true})} value="1" control={<Radio />} label="상의" />
-                                <FormControlLabel 
-                                    inputRef={register({required: true})} value="2" control={<Radio />} label="하의" />
-                                <FormControlLabel 
-                                    inputRef={register({required: true})} value="3" control={<Radio />} label="신발" />
-                                <FormControlLabel 
-                                    inputRef={register({required: true})} value="4" control={<Radio />} label="악세사리" />
-                            </RadioGroup>
-                        </FormControl>
-                        <FormControl required component="fieldset" variant="outlined">
-                            <FormLabel>성별</FormLabel>
-                            <RadioGroup row aria-label="gender" name="gender" >
-                                <FormControlLabel 
-                                    inputRef={register({required: true})} value="M" control={<Radio />} label="남성" />
-                                <FormControlLabel 
-                                    inputRef={register({required: true})} value="W" control={<Radio />} label="여성" />
-                                <FormControlLabel 
-                                    inputRef={register({required: true})} value="U" control={<Radio />} label="남녀공용" />
-                            </RadioGroup>
-                        </FormControl>
-                        {[0,1,2,3].map((colorIndex) => (
-                            <Box>
-                            <TextField
-                                inputRef={register({})}
-                                variant="outlined"
-                                margin="normal"
-                                id="color"
-                                name={"color["+colorIndex+"]"}
-                                label={"색상"+(colorIndex+1)+"번"}
-                            />
-                            <TextField
-                                inputRef={register({})}
-                                variant="outlined"
-                                margin="normal"
-                                id="S"
-                                name={"S["+colorIndex+"]"}
-                                type="number"
-                                label="S사이즈재고수"
-                            />
-                            <TextField
-                                inputRef={register({})}
-                                variant="outlined"
-                                margin="normal"
-                                id="M"
-                                name={"M["+colorIndex+"]"}
-                                type="number"
-                                label="M사이즈재고수"
-                            />
-                            <TextField
-                                inputRef={register({})}
-                                variant="outlined"
-                                margin="normal"
-                                id="L"
-                                name={"L["+colorIndex+"]"}
-                                type="number"
-                                label="L사이즈재고수"
-                            />
-                            <TextField
-                                inputRef={register({})}
-                                variant="outlined"
-                                margin="normal"
-                                id="XL"
-                                name={"XL["+colorIndex+"]"}
-                                type="number"
-                                label="XL사이즈재고수"
-                            />
-                        </Box>
-                        ))}
-                        {imageUpload}
-                        <Box>
-
-                        </Box>
-                        <Button type="submit" fillWidth variant="contained" color="primary">Submit</Button>
-                    </Grid>
-                </form>
+    <Container maxWidth="md">
+        <Grid container={Paper} className={classes.root}>
+            <AdminSubheader />
+            <Grid item container>
+                <Typography className={classes.title} gutterBottom variant="h4">관리자 올리기</Typography>
+                <Button onClick={backButtonAction}>돌아가</Button>
             </Grid>
-        </Container>
+            <Divider />
+            <form onSubmit={handleSubmit(productSubmit)}>
+                <Grid container direction="column">
+                    <TextField
+                        inputRef={register({required: true})}
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        id="productname"
+                        name="productname"
+                        label="상품명"
+                        autoFocus
+                    />
+                    <TextField
+                        inputRef={register({required: true})}
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        id="price"
+                        name="price"
+                        type="number"
+                        label="가격"
+                    />
+                    <FormControl required component="fieldset" variant="outlined">
+                        <FormLabel>카테고리</FormLabel>
+                        <RadioGroup row aria-label="categoryId" name="categoryId" value={category} onChange={handleCategoryChange}>
+                            <FormControlLabel 
+                                value="1" control={<Radio />} label="상의" />
+                            <FormControlLabel 
+                                value="2" control={<Radio />} label="하의" />
+                            <FormControlLabel 
+                                value="3" control={<Radio />} label="패션잡화" />
+                            <FormControlLabel 
+                                value="4" control={<Radio />} label="신발" />
+                        </RadioGroup>
+                    </FormControl>
+                    <FormControl required component="fieldset" variant="outlined">
+                        <FormLabel>성별</FormLabel>
+                        <RadioGroup row aria-label="gender" name="gender" >
+                            <FormControlLabel 
+                                inputRef={register({required: true})} value="M" control={<Radio />} label="남성" />
+                            <FormControlLabel 
+                                inputRef={register({required: true})} value="W" control={<Radio />} label="여성" />
+                            <FormControlLabel 
+                                inputRef={register({required: true})} value="U" control={<Radio />} label="남녀공용" />
+                        </RadioGroup>
+                    </FormControl>
+                    {inputTableTest}
+                    {imageUpload}
+                    <Box>
+
+                    </Box>
+                    <Button type="submit" fillWidth variant="contained" color="primary">Submit</Button>
+                </Grid>
+            </form>
+        </Grid>
+    </Container>
     )
 }
 

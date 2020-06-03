@@ -17,6 +17,7 @@ import {
   ListItemIcon,
   ListItemText,
   Hidden,
+  Container,
 } from '@material-ui/core'
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -26,17 +27,16 @@ import {
 } from '@material-ui/icons'
 import SketchComponent from './Sketch/SketchComponent'
 
-const drawerWidth = 535;
-
 const useStyles = makeStyles((theme) => ({
   root: {
-    flex: "0 0 auto",
-    width: drawerWidth,
-    transition: "all 0.2s ease-in-out",
+    flexGrow: 1,
+    transition: "all 1s ease-in-out",
   },
   closed: {
-    marginRight: -(drawerWidth),
+    display: 'none',
+    marginRight: '-100vh',
     opacity: 0,
+    flexGrow: 0,
   }
 }));
 
@@ -53,10 +53,10 @@ const SketchDrawer = function({drawerOpen, handleDrawer}){
       [classes.root]: true,
       [classes.closed]: !drawerOpen
     })}>
-        <Box flex="1 1 auto">
-          {/* <SketchComponent /> */}
-          <Scatch />
-        </Box>
+      <Container maxWidth="sm" fixed>
+        <SketchComponent />
+        {/* <Scatch /> */}
+      </Container>
     </Box>
   )
 }

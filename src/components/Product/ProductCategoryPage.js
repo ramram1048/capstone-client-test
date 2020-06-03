@@ -130,7 +130,7 @@ const ProductCategoryPage = ({pathname, search}) => {
     }
 
     return(
-        <Container maxWidth="lg">
+        <Container maxWidth="md">
             <Typography variant="h4" gutterBottom>{category}</Typography>
             <Divider />
             {genderLookup.map((gender) => (

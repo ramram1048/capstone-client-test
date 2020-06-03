@@ -10,8 +10,12 @@ export const handleDrawerClose = () => ({
   type: 'SKETCH_HANDLE_DRAWER_CLOSE',
 })
 
-export const sketchAddItem = (src) => ({
-  type: 'SKETCH_ADD_ITEM', src
+export const sketchAddItem = (pid, color, src) => ({
+  type: 'SKETCH_ADD_ITEM', pid, color, src
+})
+
+export const sketchRemoveItem = (src) => ({
+  type: 'SKETCH_REMOVE_ITEM', src
 })
 
 export const sketchResetItems = () => ({

@@ -57,7 +57,7 @@ const ProductSearchPage = ({pathname, search}) => {
     }, [search])
 
     return(
-        <Container maxWidth="lg">
+        <Container maxWidth="md">
             <Typography variant="h4" gutterBottom>'{keyword}' 검색 결과</Typography>
             <Divider />
             {productList}

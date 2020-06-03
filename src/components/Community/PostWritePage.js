@@ -249,7 +249,7 @@ const PostWritePage = ({backButtonAction, dispatchPush}) => {
 
     if(loading) return <Button disabled>옷장 공유하기</Button>
   else return(
-        <Container maxWidth="lg">
+        <Container maxWidth="md">
             <Grid container={Paper} className={classes.root}>
                 <Grid item container>
                     <Typography className={classes.title} gutterBottom variant="h4">글쓰기</Typography>

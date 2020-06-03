@@ -33,11 +33,6 @@ const useStyles = makeStyles((theme) => ({
     cardContent: {
         flexGrow: 1,
     },
-    cardActions: {
-      display: 'flex',
-      flexDirection: 'column',
-      // alignItems: "flex-start"
-    }
 }));
 
 const ProductCard = ({width, product, preview}) => {
@@ -68,18 +63,13 @@ const ProductCard = ({width, product, preview}) => {
           </CardContent>
         </CardActionArea>
       </Link>
-      <Box className={classes.cardActions}>
-        <Typography gutterBottom>{product.price}원</Typography>
-        <Typography gutterBottom variant="body2">{product.seller}</Typography>
+      <Box display="flex" flexDirection="row" alignItems="center">
+        <Box display="flex" flexDirection="column" flexGrow={1}>
+          <Typography gutterBottom>{product.price}원</Typography>
+          <Typography gutterBottom variant="body2">{product.shopname}</Typography>
+        </Box>
+        <TryButton pid={product.id} previews={preview} />
       </Box>
-      <CardActions>
-        <Tooltip>
-          <IconButton>
-            <AddShoppingCart />
-          </IconButton>
-        </Tooltip>
-        <TryButton previews={preview} />
-      </CardActions>
     </Box>
   );
 }

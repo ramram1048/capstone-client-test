@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const TryButton = ({previews, fullButton, addItem, openDrawer, variant}) => {
+const TryButton = ({pid, previews, fullButton, addItem, openDrawer, variant}) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
@@ -39,9 +39,10 @@ const TryButton = ({previews, fullButton, addItem, openDrawer, variant}) => {
     setAnchorEl(null);
   };
 
-  const handleTry = (img) => {
-    const proxyImage = img.replace('https://swcap02.s3.ap-northeast-2.amazonaws.com','http://localhost:8080/images')
-    addItem(proxyImage)
+  const handleTry = (preview) => {
+    const proxyImage = preview.img.replace('https://swcap02.s3.ap-northeast-2.amazonaws.com','http://localhost:8080/images')
+    // console.log(pid, preview.color, proxyImage)
+    addItem(pid, preview.color, proxyImage)
     // console.log(img)
     // enqueueSnackbar(img+"미리보기~",{variant:"success"})
     handleClose()
@@ -82,7 +83,7 @@ const TryButton = ({previews, fullButton, addItem, openDrawer, variant}) => {
         onClose={handleClose}
       >
         {previews !== undefined? previews.map((preview) => (
-          <MenuItem onClick={() => handleTry(preview.img)}>{preview.color}</MenuItem>
+          <MenuItem onClick={() => handleTry(preview)}>{preview.color}</MenuItem>
         ))
         : <MenuItem onClick={handleClose}>누끼이미지가없어요~</MenuItem>}
       </Menu>
@@ -102,7 +103,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  addItem: (img) => dispatch(sketchAddItem(img)),
+  addItem: (pid, color, img) => dispatch(sketchAddItem(pid, color, img)),
   openDrawer: () => dispatch(handleDrawerOpen())
 //   requestFollow: (userId) => dispatch(requestFollow(userId)),
 //   requestUnfollow: (userId) => dispatch(requestUnfollow(userId)),

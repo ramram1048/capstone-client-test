@@ -11,7 +11,9 @@ import { Box,
 } from '@material-ui/core'
 import { Menu as MenuIcon,
   ExpandMore as ExpandMoreIcon,
-  Search as SearchIcon
+  Search as SearchIcon,
+  Palette,
+  ChevronLeft
 } from '@material-ui/icons'
 import { requestLogout } from '../../actions/auth'
 import { handleDrawer } from '../../actions/sketch';
@@ -47,9 +49,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const NavBar = ({menus, authStore, handleDrawer, requestLogout, push }) => {
+const NavBar = ({menus, authStore, sketchOpened, handleDrawer, requestLogout, push }) => {
   const classes = useStyles();
   const [ adminMenu, setAdminMenu ] = useState(null)
+  const [designMenu, setDesignMenu] = useState(null)
 
   useEffect(() => {
     // console.log(authStore.shopAdmin)
@@ -60,6 +63,23 @@ const NavBar = ({menus, authStore, handleDrawer, requestLogout, push }) => {
     }
     else setAdminMenu(null)
   }, [authStore.shopAdmin])
+
+  useEffect(() => {
+    if(sketchOpened){
+      setDesignMenu(
+        <Button variant="outlined" size="small" onClick={() => handleDrawer()}>
+          <ChevronLeft />닫기
+        </Button>
+      )
+    }
+    else{
+      setDesignMenu(
+        <Button variant="contained" color="primary" size="small" onClick={() => handleDrawer()}>
+          <Palette />코디하기
+        </Button>
+      )
+    }
+  }, [sketchOpened])
 
   const handleLogout = () => {
     requestLogout()
@@ -77,9 +97,7 @@ const NavBar = ({menus, authStore, handleDrawer, requestLogout, push }) => {
         </Box>
         <Box display="flex" flexDirection="row">
           <ProductSearchBar />
-          <Button variant="outlined" size="small" onClick={() => handleDrawer()}>
-            툴바열어요
-          </Button>
+          {designMenu}
         </Box>
       </Box>
       <Toolbar className={classes.toolbar}>  
@@ -115,6 +133,7 @@ NavBar.propTypes = {
 }
 
 const mapStateToProps = state => ({
+  sketchOpened: state.sketch.opened,
   authStore: state.auth,
 })
 

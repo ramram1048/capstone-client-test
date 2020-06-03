@@ -64,6 +64,7 @@ const ProductDetail = ({product, options, previews, pushToOrderList, cleanOrderL
   const [selectedOptions, setSelectedOptions] = useState([])
   const [selectedOptionComponent, setSelectedOptionComponent] = useState([])
   const [totalComponent, setTotalComponent] = useState(null)
+  const [optionOpen, setOptionOpen] = useState(false)
 
   const optionMenuItem = options.map((option) => {
     return(
@@ -113,7 +114,7 @@ const ProductDetail = ({product, options, previews, pushToOrderList, cleanOrderL
               }}
             />
             <Typography variant="body2" gutterBottom align="right" className={classes.typoTotal}>{subtotal}원</Typography>
-            <TryButton previews={[preview]} />
+            <TryButton pid={product.id} previews={[preview]} />
             <IconButton onClick={() => removeList(option.id)}>
               <DeleteIcon />
             </IconButton>
@@ -132,9 +133,15 @@ const ProductDetail = ({product, options, previews, pushToOrderList, cleanOrderL
     ) : (null))
   }, [selectedOptions])
 
+  const handleOptionOpen = () => {
+    setOptionOpen(true)
+  }
+  const handleOptionClose = () => {
+    setOptionOpen(false)
+  }
   const purchaseThis = () => {
     if(!selectedOptions.length){
-      enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
+      handleOptionOpen()
     }
     else{
       cleanOrderList();
@@ -152,14 +159,11 @@ const ProductDetail = ({product, options, previews, pushToOrderList, cleanOrderL
       push('/order/placeorder');
     }
   }
-
-  const putItemIntoCart = () => {
+  const putItemIntoCart = async () => {
     if(!selectedOptions.length){
-      enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
+      handleOptionOpen()
     }
     else{
-      let cartCount = 0;
-      let error = false;
       selectedOptions.forEach((option) => {
         fetch(yujinserver+"/cart/"+product.id, {
           method: "POST",
@@ -180,17 +184,11 @@ const ProductDetail = ({product, options, previews, pushToOrderList, cleanOrderL
           err => {console.error(err);}
         )
         .then(text => {
-          if(text === 'success') cartCount++;
-          else error = true;
+          if(text === 'success'){
+            enqueueSnackbar("장바구니담았어요",{"variant": "success"})
+          }
         })
       })
-      if(error){
-        enqueueSnackbar("장바구니 담기 에러요",{"variant": "error"});
-      }
-      if(cartCount>0){
-        enqueueSnackbar(cartCount+"개 옵션을 장바구니에 담았어요.",{"variant": "success"});
-      }
-      else enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
     }
   }
 
@@ -213,6 +211,9 @@ const ProductDetail = ({product, options, previews, pushToOrderList, cleanOrderL
             <Select
               value=""
               displayEmpty
+              open={optionOpen}
+              onOpen={handleOptionOpen}
+              onClose={handleOptionClose}
             >
               <MenuItem value="" disabled>
                 옵션 선택
@@ -224,11 +225,11 @@ const ProductDetail = ({product, options, previews, pushToOrderList, cleanOrderL
           {totalComponent}
         </Box>
         <Box display="flex" justifyContent="flex-end">
-          <TryButton previews={previews} fullButton variant="outlined" />
-          <Button variant="outlined" disabled={totalComponent===null} onClick={putItemIntoCart}>
+          <TryButton pid={product.id} previews={previews} fullButton variant="outlined" />
+          <Button variant="outlined" onClick={putItemIntoCart}>
             <AddShoppingCart />장바구니
           </Button>
-          <Button variant="outlined" disabled={totalComponent===null} onClick={purchaseThis}>
+          <Button variant="outlined" onClick={purchaseThis}>
             <AssignmentTurnedIn />바로구매
           </Button>
         </Box>
