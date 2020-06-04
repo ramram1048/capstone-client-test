@@ -112,7 +112,7 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
             L: [...result.L, quantityByColor[2]],
             XL: [...result.XL, quantityByColor[3]],
           })
-        }, {})
+        }, {S: [], M: [], L: [], XL: []})
         return JSON.stringify({
           ...data,
           categoryId: category,
@@ -183,7 +183,7 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
         .then((text) => {
             if(text === "add product success"){
                 enqueueSnackbar("성공이요",{"variant": "success"});
-                dispatchPush("/admin/order/")
+                dispatchPush("/admin/mypage/")
             }
             else{
                 enqueueSnackbar("실패따리",{"variant": "error"});
