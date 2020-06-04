@@ -137,7 +137,7 @@ const SketchComponent = ({ sketchItems, sketchResetItems, sketchRemoveItem }) =>
         // console.log(product.pid)
           return(
               <Box p={1} position="relative">
-                <Avatar draggable={true} className={classes.paletteImage} src={product.src} variant="rounded" onDragStart={handleDragStart} />
+                <Avatar alt={product.pid} draggable={true} className={classes.paletteImage} src={product.src} variant="rounded" onDragStart={handleDragStart} />
                 <Box p={1} className={classes.floatingButtonBox}>
                   <Tooltip title="장바구니담기">
                     <ButtonBase disableRipple onClick={() => storebasket(product)}>
