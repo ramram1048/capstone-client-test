@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ImageInput = ({images, setImages, maxInput = 3}) => {
+const ImageInput = ({name = "photo", images, setImages, maxInput = 3}) => {
     const classes = useStyles();
 
     const handleImageInput = (event) => {
@@ -64,13 +64,12 @@ const ImageInput = ({images, setImages, maxInput = 3}) => {
         <input 
             accpet="image/*"
             className={classes.hide}
-            id="icon-button-file"
-            name="photo"
+            id={name}
             multiple
             type="file"
             onChange={(event) => handleImageInput(event)}
         />
-        <label htmlFor="icon-button-file">
+        <label htmlFor={name}>
         <Avatar variant="rounded" className={clsx({
             [classes.previewImage]: true,
             [classes.hide]: images.length >= maxInput
