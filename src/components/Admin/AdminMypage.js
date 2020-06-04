@@ -20,35 +20,39 @@ const useStyles = makeStyles((theme) => ({
 const AdminMypage = ({}) => {
   const classes = useStyles();
   const [shopProductList, setShopProductList] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(yujinserver+"/shop/productListBySeller", {
-      credentials: 'include'
-    })
-    .then(
-      (res) => res.json(),
-      (error) => console.error(error)
-    )
-    .then((json) => {
-      const parsedPreviews = json.imgs.reduce((result = {}, item) => {
-          const id = item.productId
-          if(!result[id]) result[id] = []
-          result[id] = [...result[id], {color: item.color, img: item.img}]
-          return result
-      }, {})
-      const options = json.productInfos.reduce((result = {}, item) => {
-          if(item.cnt !== 0){
-              const id = item.productId
-              if(!result[id]) result[id] = []
-              result[id] = [...result[id], {optionId: item.id, color: item.color, size: item.size, cnt: item.cnt}]
-          }
-          return result
-      }, {})
-      setShopProductList(
-        <ShopProductList products={json.products} options={options} previews={parsedPreviews} />
+    if(loading){
+      fetch(yujinserver+"/shop/productListBySeller", {
+        credentials: 'include'
+      })
+      .then(
+        (res) => res.json(),
+        (error) => console.error(error)
       )
-    })
-  }, [])
+      .then((json) => {
+        const parsedPreviews = json.imgs.reduce((result = {}, item) => {
+            const id = item.productId
+            if(!result[id]) result[id] = []
+            result[id] = [...result[id], {color: item.color, img: item.img}]
+            return result
+        }, {})
+        const options = json.productInfos.reduce((result = {}, item) => {
+            if(item.cnt !== 0){
+                const id = item.productId
+                if(!result[id]) result[id] = []
+                result[id] = [...result[id], {optionId: item.id, color: item.color, size: item.size, cnt: item.cnt}]
+            }
+            return result
+        }, {})
+        setShopProductList(
+          <ShopProductList products={json.products} options={options} previews={parsedPreviews} reload={() => setLoading(true)} />
+        )
+        setLoading(false)
+      })
+    }
+  }, [loading])
 
   return(
     <Container maxWidth="md">

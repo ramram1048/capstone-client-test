@@ -19,15 +19,15 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const ShopProductList = ({products, options, previews}) => {
+const ShopProductList = ({products, options, previews, reload}) => {
   const classes = useStyles();
 
   const productList = products.map((product) => (
-    <ShopProductItem product={product} options={options[product.id]} previews={previews[product.id]} />
+    <ShopProductItem product={product} options={options[product.id]} previews={previews[product.id]} reload={reload} />
   ))
 
   return(
-    <Grid>
+    <Grid container>
       {productList}
     </Grid>
   )
