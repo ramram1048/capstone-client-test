@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import CartList from './CartList';
 import CartItem from './CartItem';
 import { red } from '@material-ui/core/colors';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -35,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 
 const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
     const classes = useStyles();
+    const { enqueueSnackbar } = useSnackbar();
+    
     const [loading, setLoading] = useState(true)
     const [edit, setEdit] = useState(false)
     const [editInfo, setEditInfo] = useState([])
@@ -106,24 +109,24 @@ const OrderCartPage = ({pushToOrderList, cleanOrderList, push}) => {
     }
 
     const purchaseCart = () => {
-        if(!cartList.length){
-            enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
-        }
-        else{
-            cleanOrderList();
-            cartList.map((option) => {
-            pushToOrderList({
-                pid: option.productId, 
-                pname: option.pname, 
-                color: option.color, 
-                size: option.size, 
-                quantity: option.cnt,
-                price: products[option.productId].price * option.cnt, 
-                img: option.img
-            });
-            })
-            push('/order/placeorder');
-        }
+      if(!cartList.orders.length){
+        enqueueSnackbar("먼저 옵션을 선택해주세요.",{"variant": "error"});
+      }
+      else{
+        cleanOrderList();
+        cartList.orders.map((option) => {
+          pushToOrderList({
+            pid: option.productId, 
+            pname: option.pname, 
+            color: option.color, 
+            size: option.size, 
+            quantity: option.cnt,
+            price: cartList.products[option.productId].price * option.cnt, 
+            img: option.img
+          });
+        })
+        push('/order/placeorder');
+      }
     }
 
     const getEditInfo = (refs) => {
