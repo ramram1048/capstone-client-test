@@ -8,6 +8,8 @@ import { Box,
   Button,
   TextField,
   InputAdornment,
+  ButtonBase,
+  Avatar,
 } from '@material-ui/core'
 import { Menu as MenuIcon,
   ExpandMore as ExpandMoreIcon,
@@ -20,6 +22,7 @@ import { handleDrawer } from '../../actions/sketch';
 import {yujinserver} from '../../restfulapi'
 import { push } from 'connected-react-router';
 import ProductSearchBar from '../Product/ProductSearchBar';
+import Logo from '../../../public/logo.png'
 
 const useStyles = makeStyles((theme) => ({
   topbar: {
@@ -32,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     color: theme.palette.primary.light
+  },
+  logo: {
+    width: theme.spacing(30),
+    height: 'auto',
   },
   toolbarSecondary: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -108,18 +115,9 @@ const NavBar = ({menus, authStore, sketchOpened, handleDrawer, requestLogout, pu
         </Box>
       </Box>
       <Toolbar className={classes.toolbar}>  
-        <Link component={RouterLink} to="/"
-              color="inherit"
-              noWrap >
-            <Typography
-              component="h2"
-              variant="h5"
-              color="inherit"
-              align="center"
-            >
-            멋쟁이마당
-            </Typography>
-          </Link>
+        <ButtonBase component={RouterLink} to="/">
+          <Avatar src={Logo} className={classes.logo} variant="square" />
+        </ButtonBase>
       </Toolbar>
       <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
             {menus.map(({component, path}) => (
