@@ -32,6 +32,7 @@ import clsx from 'clsx';
 import ChipInput from 'material-ui-chip-input'
 import { push } from 'connected-react-router';
 import { Link } from 'react-router-dom';
+import TryButton from '../Product/TryButton.js';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -76,6 +77,7 @@ const ClosetDetail = ({ closet, imagestyle }) => {
             <Avatar variant="rounded" src={closet.img} className={classes.image} />
           </ButtonBase>
           {closet.closet.products.map((product) => {
+            const previews = product.imgByColors
             return(
               <Box component={Card} width={1} elevation={0} className={classes.product}>
                 <Link component={CardActionArea} to={"/productDetail/"+product.id} style={{width: "25%"}}>
@@ -84,10 +86,13 @@ const ClosetDetail = ({ closet, imagestyle }) => {
                     image={product.img}
                   />
                 </Link>
-                <CardContent style={{flexGrow:1}}>
+                <Box flexGrow={1}>
                   <Typography gutterBottom>{product.pname}</Typography>
                   <Typography gutterBottom variant="body2">{product.price}원</Typography>
-                </CardContent>
+                </Box>
+                <Box justifyContent="center">
+                  <TryButton pid={product.id} previews={previews} />
+                </Box>
               </Box>
             )
           })}

@@ -44,7 +44,7 @@ const TryButton = ({pid, previews, fullButton, addItem, openDrawer, variant}) =>
     // console.log(pid, preview.color, proxyImage)
     addItem(pid, preview.color, proxyImage)
     // console.log(img)
-    // enqueueSnackbar(img+"미리보기~",{variant:"success"})
+    enqueueSnackbar("코디해보기 메뉴에 들어갔어요.",{variant:"success"})
     handleClose()
   }
 
