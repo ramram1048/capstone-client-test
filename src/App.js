@@ -92,10 +92,10 @@ const App = ({ history, pathname, authStore, fetchLoginStatus, dispatchPush }) =
         <Grid container className={classes.root}>
           <CssBaseline />
           <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-          { authStore.session?
+          { authStore.session !== "LOGOUT"?
             <React.Fragment key={authStore.currentId}>
               <Box component={Container} maxWidth="lg" className={classes.main}>
-                <NavBar menus={menus}/>
+                <NavBar menus={menus} mode={authStore.session} />
                 <Box flexGrow={1} className={classes.context} key={authStore.currentId}>
                   { routes }
                 </Box>

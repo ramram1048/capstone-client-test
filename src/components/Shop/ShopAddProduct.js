@@ -1,4 +1,4 @@
-// "/admin/productupload"에서 상품등록
+// "/shop/productupload"에서 상품등록
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -35,7 +35,7 @@ import { useForm, Controller } from 'react-hook-form'
 import clsx from 'clsx'
 import { useSnackbar } from 'notistack'
 import { yujinserver } from '../../restfulapi'
-import AdminSubheader from './AdminSubheader'
+import ShopSubheader from './ShopSubheader'
 import ImageInput from '../Product/ImageInput'
 
 const useStyles = makeStyles((theme) => ({
@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
 const MAX_SIZE_COUNT = 8
 const MAX_COLOR_COUNT = 4
 
-const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
+const ShopAddProduct = ({backButtonAction, dispatchPush}) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const { register, handleSubmit } = useForm();
@@ -183,7 +183,7 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
         .then((text) => {
             if(text === "add product success"){
                 enqueueSnackbar("성공이요",{"variant": "success"});
-                dispatchPush("/admin/mypage/")
+                dispatchPush("/shop/mypage/")
             }
             else{
                 enqueueSnackbar("실패따리",{"variant": "error"});
@@ -344,7 +344,7 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
   return(
     <Container maxWidth="md">
       <Grid container={Paper} className={classes.root}>
-        <AdminSubheader />
+        <ShopSubheader />
         <Grid item container>
           <Typography className={classes.title} gutterBottom variant="h4">관리자 올리기</Typography>
           <Button onClick={backButtonAction}>돌아가</Button>
@@ -417,7 +417,7 @@ const AdminAddProduct = ({backButtonAction, dispatchPush}) => {
   )
 }
 
-AdminAddProduct.propTypes = {
+ShopAddProduct.propTypes = {
     //pathname: PropTypes.string,
     //search: PropTypes.string,
     //hash: PropTypes.string,
@@ -435,4 +435,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatchPush: (url) => dispatch(push(url))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminAddProduct)
+export default connect(mapStateToProps, mapDispatchToProps)(ShopAddProduct)

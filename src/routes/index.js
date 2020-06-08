@@ -27,15 +27,16 @@ import CommunityRecentPage from '../components/Community/CommunityRecentPage'
 import PostDetailPage from '../components/Community/PostDetailPage'
 
 
-import AdminAddProduct from '../components/Admin/AdminAddProduct'
-import AdminOrders from '../components/Admin/AdminOrders'
+import ShopAddProduct from '../components/Shop/ShopAddProduct'
+import ShopOrders from '../components/Shop/ShopOrders'
+import ShopMypage from '../components/Shop/ShopMypage'
+import ShopAnalyze from '../components/Shop/ShopAnalyze'
 
 import NoMatch from '../components/NoMatch'
 import CommunityFollowPage from '../components/Community/CommunityFollowPage'
 import CommunityMypage from '../components/Community/CommunityMypage'
 import CommunityLikePage from '../components/Community/CommunityLikePage'
-import AdminMypage from '../components/Admin/AdminMypage'
-import AdminAnalyze from '../components/Admin/AdminAnalyze'
+import AdminManageShopPage from '../components/Admin/AdminManageShopPage'
 // import LoginPage from '../components/Login/LoginPage'
 // import AuthPage from '../components/Auth/AuthPage'
 
@@ -77,11 +78,16 @@ const routes = (
         <Route path="/community/like" component={CommunityLikePage}/>
         <Route path="/community/" component={CommunityRecentPage}/>
 
-        <Route path="/admin/addproduct" component={AdminAddProduct} /> 
-        <Route path="/admin/order" component={AdminOrders} /> 
-        <Route path="/admin/mypage" component={AdminMypage} /> 
-        <Route path="/admin/analyze" component={AdminAnalyze} /> 
-        <Route path="/admin/" component={AdminAnalyze} /> 
+        <Route path="/shop/addproduct" component={ShopAddProduct} /> 
+        <Route path="/shop/order" component={ShopOrders} /> 
+        <Route path="/shop/mypage" component={ShopMypage} /> 
+        <Route path="/shop/analyze" component={ShopAnalyze} /> 
+        <Route path="/shop/" component={ShopAnalyze} /> 
+
+        
+        <Route path="/admin/manageShop" component={AdminManageShopPage} /> 
+        <Route path="/admin/" component={AdminManageShopPage} /> 
+
         <Route component={NoMatch} />
       </Switch>
 )

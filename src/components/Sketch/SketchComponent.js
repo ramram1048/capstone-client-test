@@ -91,7 +91,7 @@ const SketchComponent = ({ sketchItems, sketchResetItems, sketchRemoveItem }) =>
   }
   useEffect(() => {
     if(canvas !== null){
-      fabric.Image.fromURL(grid,(background) => {
+      fabric.Image.fromURL("",(background) => {
         backgroundCanvas.setWidth(175)
         backgroundCanvas.setHeight(175)
         backgroundCanvas.add(background)

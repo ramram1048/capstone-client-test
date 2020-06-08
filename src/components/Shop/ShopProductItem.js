@@ -21,7 +21,7 @@ import {
   Tooltip,
 } from '@material-ui/core'
 import { yujinserver, sangminserver } from '../../restfulapi';
-import AdminSubheader from './AdminSubheader';
+import ShopSubheader from './ShopSubheader';
 import OrderList from './OrderList';
 import { Link } from 'react-router-dom';
 import { Edit } from '@material-ui/icons';

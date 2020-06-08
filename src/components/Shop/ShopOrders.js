@@ -8,40 +8,53 @@ import {
   Grid, Container,
 } from '@material-ui/core'
 import { yujinserver } from '../../restfulapi';
-import AdminSubheader from './AdminSubheader';
+import ShopSubheader from './ShopSubheader';
 import OrderList from './OrderList';
 
 const useStyles = makeStyles((theme) => ({
 
 }));
 
-const AdminOrders = ({}) => {
+const ShopOrders = ({}) => {
   const classes = useStyles();
   const [orderList, setOrderList] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [carriers, setCarriers] = useState([])
 
   useEffect(() => {
-    fetch(yujinserver+'/shop/orders',{
-      credentials: 'include',
-    })
+    fetch('https://apis.tracker.delivery/carriers')
     .then(
       (res) => res.json(),
-      (error) => console.log(error)
+      (error) => console.error(error)
     )
-    .then((data) => {
-      console.log(data)
-      setOrderList(<OrderList orders={data} variant="shop" />)
-    })
+    .then((json) => setCarriers(json))
   }, [])
+  useEffect(() => {
+    if(loading && carriers.length > 0){
+      fetch(yujinserver+'/shop/orders',{
+        credentials: 'include',
+      })
+      .then(
+        (res) => res.json(),
+        (error) => console.error(error)
+      )
+      .then((data) => {
+        console.log(data)
+        setOrderList(<OrderList orders={data} carriers={carriers} reload={() => setLoading(true)} />)
+        setLoading(false)
+      })
+    }
+  }, [loading, carriers])
 
   return(
     <Container maxWidth="md">
-      <AdminSubheader />
+      <ShopSubheader />
       {orderList}
     </Container>
   )
 }
 
-AdminOrders.propTypes = {
+ShopOrders.propTypes = {
   //pathname: PropTypes.string,
   //search: PropTypes.string,
   //hash: PropTypes.string,
@@ -58,4 +71,4 @@ const mapDispatchToProps = (dispatch) => ({
   
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminOrders)
+export default connect(mapStateToProps, mapDispatchToProps)(ShopOrders)

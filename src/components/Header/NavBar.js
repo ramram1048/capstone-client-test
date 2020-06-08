@@ -56,13 +56,20 @@ const NavBar = ({menus, authStore, sketchOpened, handleDrawer, requestLogout, pu
 
   useEffect(() => {
     // console.log(authStore.shopAdmin)
-    if(authStore.shopAdmin){
+    if(authStore.session === "shopadmin"){
       setAdminMenu(
-        <Link onClick={() => {push("/admin/")}} color="primary" >{authStore.currentUser}관리자페이지</Link>
+        <Link onClick={() => {push("/shop/")}} color="primary" >{authStore.currentUser}관리자페이지</Link>
       )
     }
-    else setAdminMenu(null)
-  }, [authStore.shopAdmin])
+    else if(authStore.session === "admin"){
+      setAdminMenu(
+        <Link onClick={() => {push("/admin/")}} color="primary" >플랫폼관리자페이지</Link>
+      )
+    }
+    else {
+      setAdminMenu(null)
+    }
+  }, [authStore.session])
 
   useEffect(() => {
     if(sketchOpened){

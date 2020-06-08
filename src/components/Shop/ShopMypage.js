@@ -1,4 +1,4 @@
-// "/admin/mypage"에서 확인하는 장바구니페이지
+// "/shop/mypage"에서 확인하는 장바구니페이지
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -9,7 +9,7 @@ import {
   Box,
   Container,
 } from '@material-ui/core'
-import AdminSubheader from './AdminSubheader';
+import ShopSubheader from './ShopSubheader';
 import { yujinserver } from '../../restfulapi';
 import ShopProductList from './ShopProductList';
 
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const AdminMypage = ({}) => {
+const ShopMypage = ({}) => {
   const classes = useStyles();
   const [shopProductList, setShopProductList] = useState([])
   const [loading, setLoading] = useState(true)
@@ -56,7 +56,7 @@ const AdminMypage = ({}) => {
 
   return(
     <Container maxWidth="md">
-      <AdminSubheader />
+      <ShopSubheader />
       <Box>
         {shopProductList}
       </Box>
@@ -64,7 +64,7 @@ const AdminMypage = ({}) => {
   )
 }
 
-AdminMypage.propTypes = {
+ShopMypage.propTypes = {
   //pathname: PropTypes.string,
   //search: PropTypes.string,
   //hash: PropTypes.string,
@@ -81,4 +81,4 @@ const mapDispatchToProps = (dispatch) => ({
   
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminMypage)
+export default connect(mapStateToProps, mapDispatchToProps)(ShopMypage)

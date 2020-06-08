@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { yujinserver } from '../../restfulapi';
-import AdminSubheader from './AdminSubheader';
+import ShopSubheader from './ShopSubheader';
 import OrderList from './OrderList';
 import ShopProductItem from './ShopProductItem';
 
