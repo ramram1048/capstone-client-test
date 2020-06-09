@@ -18,7 +18,8 @@ import {
   FormControl,
   FormLabel,
   FormControlLabel,
-  Container
+  Container,
+  Checkbox
 } from '@material-ui/core'
 
 import OrderList from './OrderList'
@@ -34,11 +35,15 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(3)
     }
 }));
+const IMP = window.IMP;
+const code = 'imp52620503';  // FIXME: 가맹점 식별코드
 
 const OrderPlacePage = ({orderList, authStore, push}) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const { register, handleSubmit, errors } = useForm();
+  
+  const [ sameAsPurchaser, setSameAsPurchaser ] = useState(false)
   const [ isPurchasing, setIsPurchasing ] = useState(false)
 
   useEffect(() => {
@@ -53,55 +58,95 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
   })
 
   const orderSubmit = (data) => {
-    setIsPurchasing(true)
-    console.log(data.checkout_method)
-    fetch(yujinserver+"/order",{
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        "Content-Type": "application/json",
-        'Cache': 'no-cache'
-      },
-      body: JSON.stringify({
-        ordererInfo: {
-          name: data.purchaser_name,
-          email: data.purchaser_email,
-          phone: data.purchaser_phone,
-          phone2: (data.purchaser_phone2 || ""),
-        },
-        orderProductInfo: orderList.map((order) => ({
-          id: order.pid,
-          size: order.size,
-          color: order.color,
-          cnt: order.quantity,
-          price: order.price,
-        })),
-        deliveryInfo: {
-          email: data.delivery_email,
-          name: data.delivery_name,
-          phone: data.delivery_phone,
-          addr1: data.delivery_address1,
-          addr2: data.delivery_address2,
-          zipCode: data.delivery_zipcode,
-          message: (data.delivery_message || "")
+    if(data.checkout_method === "card"){
+      IMP.init(code);
+      setIsPurchasing(true)
+      // console.log(data.checkout_method)
+      const pname = orderList.length <= 1?orderList[0].pname : orderList[0].pname+" 외 "+orderList.length-1+"개"
+      const reducedPrice = Math.ceil(total/1000)*10
+      const deliveryInfo = sameAsPurchaser?{
+        name: data.purchaser_name,
+        email: data.purchaser_email,
+        phone: data.purchaser_phone,
+      } : {
+        email: data.delivery_email,
+        name: data.delivery_name,
+        phone: data.delivery_phone,
+      }
+      IMP.request_pay({
+        // name과 amount만 있어도 결제 진행가능
+        //pg와 pay_method는 테스트 버전에선 필요X
+        merchant_uid : '멋쟁이마당' + new Date().getTime(), // 가맹점에서 생성/관리하는 고유 주문번호
+        name : pname,
+        amount : reducedPrice,
+        buyer_email : data.purchaser_email,
+        buyer_name : data.purchaser_name,
+        buyer_tel : data.purchaser_phone,
+        m_redirect_url : 'https://www.yourdomain.com/payments/complete'
+      }, function(rsp) {
+        if ( rsp.success ) {
+          var msg = '결제가 완료되었습니다.';
+          msg += '고유ID : ' + rsp.imp_uid;
+          msg += '상점 거래ID : ' + rsp.merchant_uid;
+          msg += '결제 금액 : ' + rsp.paid_amount;
+          msg += '카드 승인번호 : ' + rsp.apply_num;
+          console.log(msg)
+
+          ///
+          fetch(yujinserver+"/order",{
+            method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              "Content-Type": "application/json",
+              'Cache': 'no-cache'
+            },
+            body: JSON.stringify({
+              ordererInfo: {
+                name: data.purchaser_name,
+                email: data.purchaser_email,
+                phone: data.purchaser_phone,
+                phone2: (data.purchaser_phone2 || ""),
+              },
+              orderProductInfo: orderList.map((order) => ({
+                id: order.pid,
+                size: order.size,
+                color: order.color,
+                cnt: order.quantity,
+                price: order.price,
+              })),
+              deliveryInfo: {
+                ...deliveryInfo,
+                addr1: data.delivery_address1,
+                addr2: data.delivery_address2,
+                zipCode: data.delivery_zipcode,
+                message: (data.delivery_message || "")
+              }
+            }),
+            credentials: 'include',
+          })
+          .then(
+            response => response.text(),
+            error => console.log(error)
+          )
+          .then((text) => {
+            if(text === "success"){
+              enqueueSnackbar(pname+" 구매 완료되었습니다.",{"variant": "success"});
+              push("/order/myorder")
+            }
+            else{
+              enqueueSnackbar("내부 에러입니다. 관리자에게 문의하세요",{"variant": "error"});
+              setIsPurchasing(false)
+            }
+          })
         }
-      }),
-      credentials: 'include',
-    })
-    .then(
-      response => response.text(),
-      error => console.log(error)
-    )
-    .then((text) => {
-        if(text === "success"){
-            enqueueSnackbar("샀어요",{"variant": "success"});
-            push("/order/myorder")
+        else {
+          var msg = '결제에 실패하였습니다. 에러내용 : ' + rsp.error_msg
+          console.log(msg)
+          setIsPurchasing(false)
         }
-        else{
-            enqueueSnackbar("못샀어요",{"variant": "error"});
-        }
-        setIsPurchasing(false)
-    })
+        // alert(msg);
+      });
+    }
   }
 
   return(
@@ -149,10 +194,16 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
         </Paper>
         <Paper elevation={0} className={classes.paper}>
           <Typography variant="h6" gutterBottom>배송 정보</Typography>
+          <FormControlLabel control={<Checkbox 
+          checked={sameAsPurchaser} 
+          onChange={() => setSameAsPurchaser(!sameAsPurchaser)} 
+          inputProps={{ 'aria-label': '주문자와 동일' }} />}
+          label="주문자와 동일" />
           <Divider variant="middle"/>
           <Grid container direction="column">
             <TextField
-              inputRef={register({required: true})}
+              disabled={sameAsPurchaser}
+              inputRef={register({required: !sameAsPurchaser})}
               margin="normal"
               required
               name="delivery_name"
@@ -160,14 +211,16 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
               label="이름"
               autoComplete="name" />
             <TextField
-              inputRef={register({required: true})}
+              disabled={sameAsPurchaser}
+              inputRef={register({required: !sameAsPurchaser})}
               margin="normal"
               required
               name="delivery_email"
               label="이메일 주소"
               autoComplete="email" />
             <TextField
-              inputRef={register({required: true})}
+              disabled={sameAsPurchaser}
+              inputRef={register({required: !sameAsPurchaser})}
               margin="normal"
               required
               name="delivery_phone"
