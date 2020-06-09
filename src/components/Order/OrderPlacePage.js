@@ -69,7 +69,7 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
       // console.log(data.checkout_method)
       const pname = orderList.length <= 1?orderList[0].pname : (orderList[0].pname+" 외 "+(orderList.length-1)+"개")
       console.log(pname)
-      const reducedPrice = Math.ceil(total/1000)*10
+      // const reducedPrice = Math.ceil(total/1000)*10
       const deliveryInfo = sameAsPurchaser?{
         name: data.purchaser_name,
         email: data.purchaser_email,
@@ -84,7 +84,8 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
         //pg와 pay_method는 테스트 버전에선 필요X
         merchant_uid : '멋쟁이마당' + new Date().getTime(), // 가맹점에서 생성/관리하는 고유 주문번호
         name : pname,
-        amount : reducedPrice,
+        // amount : reducedPrice,
+        amount: total,
         buyer_email : data.purchaser_email,
         buyer_name : data.purchaser_name,
         buyer_tel : data.purchaser_phone,
@@ -140,6 +141,7 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
               push("/order/myorder")
             }
             else{
+              // 원래 이런 경우에는 환불과정이 들어가야됩니다 환불처리 어케할건지..
               enqueueSnackbar("내부 에러입니다. 관리자에게 문의하세요",{"variant": "error"});
               setIsPurchasing(false)
             }
