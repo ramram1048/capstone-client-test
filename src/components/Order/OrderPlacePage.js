@@ -19,15 +19,20 @@ import {
   FormLabel,
   FormControlLabel,
   Container,
-  Checkbox
+  Checkbox,
+  Box
 } from '@material-ui/core'
 
 import OrderList from './OrderList'
 import { useSnackbar } from 'notistack';
 import { yujinserver } from '../../restfulapi';
 import { push } from 'connected-react-router';
+import clsx from 'clsx';
 
 const useStyles = makeStyles((theme) => ({
+  hide: {
+    display: 'none'
+  },
     root:{
       flexGrow: 1,
     },
@@ -62,7 +67,8 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
       IMP.init(code);
       setIsPurchasing(true)
       // console.log(data.checkout_method)
-      const pname = orderList.length <= 1?orderList[0].pname : orderList[0].pname+" 외 "+orderList.length-1+"개"
+      const pname = orderList.length <= 1?orderList[0].pname : (orderList[0].pname+" 외 "+(orderList.length-1)+"개")
+      console.log(pname)
       const reducedPrice = Math.ceil(total/1000)*10
       const deliveryInfo = sameAsPurchaser?{
         name: data.purchaser_name,
@@ -142,6 +148,7 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
         else {
           var msg = '결제에 실패하였습니다. 에러내용 : ' + rsp.error_msg
           console.log(msg)
+          enqueueSnackbar(msg,{"variant": "error"});
           setIsPurchasing(false)
         }
         // alert(msg);
@@ -158,7 +165,7 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
       <form onSubmit={handleSubmit(orderSubmit)}>
         <Paper elevation={0} className={classes.paper}>
           <Typography variant="h6" gutterBottom>주문자 정보</Typography>
-          <Divider variant="middle"/>
+          <Divider/>
           <Grid container direction="column">
             <TextField
               inputRef={register({required: true})}
@@ -193,15 +200,18 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
           </Grid>
         </Paper>
         <Paper elevation={0} className={classes.paper}>
-          <Typography variant="h6" gutterBottom>배송 정보</Typography>
-          <FormControlLabel control={<Checkbox 
-          checked={sameAsPurchaser} 
-          onChange={() => setSameAsPurchaser(!sameAsPurchaser)} 
-          inputProps={{ 'aria-label': '주문자와 동일' }} />}
-          label="주문자와 동일" />
-          <Divider variant="middle"/>
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <Typography variant="h6" gutterBottom>배송 정보</Typography>
+            <FormControlLabel control={<Checkbox 
+            checked={sameAsPurchaser} 
+            onChange={() => setSameAsPurchaser(!sameAsPurchaser)} 
+            inputProps={{ 'aria-label': '주문자와 동일' }} />}
+            label="주문자와 동일" />
+          </Box>
+          <Divider/>
           <Grid container direction="column">
             <TextField
+              className={clsx({[classes.hide]: sameAsPurchaser})}
               disabled={sameAsPurchaser}
               inputRef={register({required: !sameAsPurchaser})}
               margin="normal"
@@ -211,6 +221,7 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
               label="이름"
               autoComplete="name" />
             <TextField
+              className={clsx({[classes.hide]: sameAsPurchaser})}
               disabled={sameAsPurchaser}
               inputRef={register({required: !sameAsPurchaser})}
               margin="normal"
@@ -219,6 +230,7 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
               label="이메일 주소"
               autoComplete="email" />
             <TextField
+              className={clsx({[classes.hide]: sameAsPurchaser})}
               disabled={sameAsPurchaser}
               inputRef={register({required: !sameAsPurchaser})}
               margin="normal"
