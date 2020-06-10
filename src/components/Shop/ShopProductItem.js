@@ -131,6 +131,34 @@ const ShopProductItem = ({product, options, previews, reload}) => {
     })
   }
 
+  const deleteProduct = () => {
+    fetch(yujinserver+'/shop/deleteProductBySeller',{
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        'Cache': 'no-cache'
+      },
+      body: JSON.stringify({
+          productId: product.id
+      }),
+      credentials: 'include',
+    })
+    .then(
+      (res) => res.text(),
+      (error) => console.error(error)
+    )
+    .then((text) => {
+      if(text === "success"){
+        enqueueSnackbar(product.pname+": 삭제했습니다.",{"variant": "success"});
+        reload()
+      }
+      else{
+        enqueueSnackbar("삭제하지 못했습니다. 관리자에게 문의해주세요",{"variant": "error"});
+      }
+    })
+  }
+
   return(
     <React.Fragment>
       <Box width={1/2} display="flex" alignItems="center" p={1}>
@@ -160,8 +188,9 @@ const ShopProductItem = ({product, options, previews, reload}) => {
           {optionComponents}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>취소</Button>
-          <Button onClick={submitQuantity}>공유하기</Button>
+          <Button onClick={handleClose}>닫기</Button>
+          <Button variant="contained" color="warning" onClick={deleteProduct}>상품 삭제</Button>
+          <Button onClick={submitQuantity}>재고 수정</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
