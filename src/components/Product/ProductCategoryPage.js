@@ -11,10 +11,13 @@ import {
   Typography,
   Divider,
   Button,
+  ButtonGroup,
+  Box,
 } from '@material-ui/core'
 import {sangminserver} from '../../restfulapi';
 
 import ProductList from './ProductList'
+import { ArrowDropUp, ArrowDropDown } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -50,19 +53,15 @@ const ProductCategoryPage = ({pathname, search}) => {
                 (err) => console.error(err)
             )
             .then((json) => {
+              const recentProducts = json.productRows.sort((a,b) => Math.max(new Date(b.createdAt), new Date(b.updatedAt)) - Math.max(new Date(a.createdAt), new Date(a.updatedAt))).slice()
                 setPreviews(json.imgArr)
-                setInitialProducts(json.productRows)
-                setProducts(json.productRows)
+                setInitialProducts(recentProducts)
+                setProducts(recentProducts)
             })
             setLoading(false)
             break
         }
     }, [loading])
-
-    // useEffect(() => {
-    //     // console.log(search)
-    //     if(!loading) setLoading(true)
-    // }, [search])
 
     useEffect(() => {
         setProductListComponent(
@@ -70,55 +69,45 @@ const ProductCategoryPage = ({pathname, search}) => {
         )
     }, [products])
 
-    // useEffect(() => {
-    //     if(loading){
-    //         const categoryId = queryString.parse(search).category
-    //         // console.log(categoryId)
-    //         setCategory(
-    //             categoryLookup[categoryId]
-    //         )
-    //         while(category === 0){
-    //             fetch(sangminserver+"/product/category/"+categoryId, {
-    //                 credentials: 'include',
-    //             })
-    //             .then(
-    //                 (res) => res.json(),
-    //                 (err) => { console.error(err) }
-    //             )
-    //             .then((json) => {
-    //                 console.log()
-    //                 setPreviews(json.imgArr)
-    //                 setInitialProducts(json.productRows)
-    //                 setProducts(json.productRows)
-    //                 setLoading(false)
-    //             })
-    //             break;
-    //         }
-    //     }
-    // }, [loading])
-
     const genderLookup = [
-        "U", "M", "W"
+      {
+        code: "A",
+        description: "전체보기"
+      },
+      {
+        code: "M",
+        description: "남성용"
+      },
+      {
+        code: "W",
+        description: "여성용"
+      },
+      {
+        code: "U",
+        description: "공용"
+      },
     ]
     const filterGender = (gender) => {
-        console.log(gender)
-        if(gender === "U") setProducts(initialProducts)
-        else if(gender === "M") {
-            const newArray = initialProducts.filter((product) => product.gender !== "W")
-            setProducts(newArray)
-        }
-        else if(gender === "W") {
-            const newArray = initialProducts.filter((product) => product.gender !== "M")
-            setProducts(newArray)
-        }
+      if(gender === "A") setProducts(initialProducts)
+      else if(gender === "U") {
+        const newArray = initialProducts.filter((product) => product.gender === "U")
+        setProducts(newArray)
+      }
+      else if(gender === "M") {
+        const newArray = initialProducts.filter((product) => product.gender !== "W")
+        setProducts(newArray)
+      }
+      else if(gender === "W") {
+        const newArray = initialProducts.filter((product) => product.gender !== "M")
+        setProducts(newArray)
+      }
     }
     const sortUpdatedAscending = () => {
         const newArray = products.sort((a,b) => Math.max(new Date(a.createdAt), new Date(a.updatedAt)) - Math.max(new Date(b.createdAt), new Date(b.updatedAt))).slice()
         setProducts(newArray)
     }
     const sortUpdatedDescending = () => {
-        const newArray = products.sort((a,b) => Math.max(new Date(b.createdAt), new Date(b.updatedAt)) - Math.max(new Date(a.createdAt), new Date(a.updatedAt))).slice()
-        setProducts(newArray)
+      setProducts(initialProducts)
     }
     const sortPriceAscending = () => {
         const newArray = products.sort((a,b) => a.price - b.price).slice()
@@ -129,20 +118,26 @@ const ProductCategoryPage = ({pathname, search}) => {
         setProducts(newArray)
     }
 
-    return(
-        <Container maxWidth="md">
-            <Typography variant="h4" gutterBottom>{category}</Typography>
-            <Divider />
+  return(
+    <Container maxWidth="md">
+      <Box display="flex" flexDirection="row" alignItems="center">
+        <Box flexGrow={1} component={Typography} variant="h4" gutterBottom>{category}</Box>
+        <Box>
+          <ButtonGroup>
             {genderLookup.map((gender) => (
-                <Button onClick={() => filterGender(gender)}>{gender}</Button>
+              <Button onClick={() => filterGender(gender.code)}>{gender.description}</Button>
             ))}
-            <Button onClick={() => sortUpdatedAscending()}>최신오름</Button>
-            <Button onClick={() => sortUpdatedDescending()}>최신내림</Button>
-            <Button onClick={() => sortPriceAscending()}>가격오름</Button>
-            <Button onClick={() => sortPriceDescending()}>가격내림</Button>
-            {productListComponent}
-        </Container>
-    )
+          </ButtonGroup>
+          <Button onClick={() => sortUpdatedAscending()}>최신<ArrowDropDown /></Button>
+          <Button onClick={() => sortUpdatedDescending()}>최신<ArrowDropUp /></Button>
+          <Button onClick={() => sortPriceAscending()}>가격<ArrowDropDown /></Button>
+          <Button onClick={() => sortPriceDescending()}>가격<ArrowDropUp /></Button>
+        </Box>
+      </Box>
+      <Divider />
+      {productListComponent}
+    </Container>
+  )
     
 }
 

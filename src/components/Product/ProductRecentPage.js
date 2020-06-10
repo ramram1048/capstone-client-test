@@ -11,10 +11,13 @@ import {
   Typography,
   Divider,
   Button,
+  Box,
+  ButtonGroup,
 } from '@material-ui/core'
 import {sangminserver} from '../../restfulapi';
 
 import ProductList from './ProductList'
+import { ArrowDropDown, ArrowDropUp } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -23,27 +26,26 @@ const useStyles = makeStyles((theme) => ({
 const ProductCategoryPage = ({pathname, search}) => {
     const classes = useStyles();
     const [ loading, setLoading ] = useState(true)
-    const [initialProducts, setInitialProducts] = useState([])
     const [products, setProducts] = useState([])
     const [previews, setPreviews] = useState([])
     const [ productListComponent, setProductListComponent ] = useState(null)
 
     useEffect(() => {
         while(loading){
-            fetch(sangminserver+"/product", {
-                credentials: 'include',
-            })
-            .then(
-                (res) => res.json(),
-                (err) => console.error(err)
-            )
-            .then((json) => {
-                setPreviews(json.imgArr)
-                setInitialProducts(json.productRows)
-                setProducts(json.productRows)
-            })
-            setLoading(false)
-            break
+          fetch(sangminserver+"/product", {
+              credentials: 'include',
+          })
+          .then(
+              (res) => res.json(),
+              (err) => console.error(err)
+          )
+          .then((json) => {
+            const recentProducts = (json.productRows.sort((a,b) => Math.max(new Date(b.createdAt), new Date(b.updatedAt)) - Math.max(new Date(a.createdAt), new Date(a.updatedAt)))).slice(0,8)
+            setPreviews(json.imgArr)
+            setProducts(recentProducts)
+          })
+          setLoading(false)
+          break
         }
     }, [loading])
 
@@ -85,52 +87,17 @@ const ProductCategoryPage = ({pathname, search}) => {
     //     }
     // }, [loading])
 
-    const genderLookup = [
-        "U", "M", "W"
-    ]
-    const filterGender = (gender) => {
-        console.log(gender)
-        if(gender === "U") setProducts(initialProducts)
-        else if(gender === "M") {
-            const newArray = initialProducts.filter((product) => product.gender !== "W")
-            setProducts(newArray)
-        }
-        else if(gender === "W") {
-            const newArray = initialProducts.filter((product) => product.gender !== "M")
-            setProducts(newArray)
-        }
-    }
-    const sortUpdatedAscending = () => {
-        const newArray = products.sort((a,b) => Math.max(new Date(a.createdAt), new Date(a.updatedAt)) - Math.max(new Date(b.createdAt), new Date(b.updatedAt))).slice()
-        setProducts(newArray)
-    }
-    const sortUpdatedDescending = () => {
-        const newArray = products.sort((a,b) => Math.max(new Date(b.createdAt), new Date(b.updatedAt)) - Math.max(new Date(a.createdAt), new Date(a.updatedAt))).slice()
-        setProducts(newArray)
-    }
-    const sortPriceAscending = () => {
-        const newArray = products.sort((a,b) => a.price - b.price).slice()
-        setProducts(newArray)
-    }
-    const sortPriceDescending = () => {
-        const newArray = products.sort((a,b) => b.price - a.price).slice()
-        setProducts(newArray)
-    }
+    
 
-    return(
-        <Container maxWidth="md">
-            <Typography variant="h4" gutterBottom>최신~</Typography>
-            <Divider />
-            {genderLookup.map((gender) => (
-                <Button onClick={() => filterGender(gender)}>{gender}</Button>
-            ))}
-            <Button onClick={() => sortUpdatedAscending()}>최신오름</Button>
-            <Button onClick={() => sortUpdatedDescending()}>최신내림</Button>
-            <Button onClick={() => sortPriceAscending()}>가격오름</Button>
-            <Button onClick={() => sortPriceDescending()}>가격내림</Button>
-            {productListComponent}
-        </Container>
-    )
+  return(
+    <Container maxWidth="md">
+      <Box display="flex" flexDirection="row" alignItems="center">
+        <Box flexGrow={1} component={Typography} variant="h4" gutterBottom>최신상품</Box>
+      </Box>
+      <Divider />
+      {productListComponent}
+    </Container>
+  )
     
 }
 
