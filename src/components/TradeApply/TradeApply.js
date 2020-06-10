@@ -69,7 +69,7 @@ handleClose(){
       
      
       return(  
-       <div>
+       <React.Fragment>
           
            <TableRow>
                  <TableCell>{this.props.id}</TableCell>
@@ -96,7 +96,7 @@ handleClose(){
 
              </DialogActions>
          </Dialog>
-       </div>
+       </React.Fragment>
         );   
     }
 }

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grid, Box,
+  Grid, Box, Container,
 } from '@material-ui/core'
 import Trade from '../Trade'
 
@@ -17,9 +17,9 @@ const AdminManageShopPage = ({post}) => {
   const classes = useStyles();
 
   return(
-    <Box>
+    <Container maxWidth="md">
       <Trade />
-    </Box>
+    </Container>
   )
 }
 

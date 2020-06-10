@@ -69,7 +69,7 @@ export default class Trademember extends React.Component {
       
      
       return(  
-       <div>
+       <React.Fragment>
           
            <TableRow>
            <TableCell>{this.props.id}</TableCell>
@@ -94,7 +94,7 @@ export default class Trademember extends React.Component {
               
              </DialogActions>
          </Dialog>
-       </div>
+       </React.Fragment>
         );   
     }
 }
