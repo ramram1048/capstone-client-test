@@ -20,7 +20,8 @@ import {
   FormControlLabel,
   Container,
   Checkbox,
-  Box
+  Box,
+  Dialog
 } from '@material-ui/core'
 
 import OrderList from './OrderList'
@@ -28,6 +29,7 @@ import { useSnackbar } from 'notistack';
 import { yujinserver } from '../../restfulapi';
 import { push } from 'connected-react-router';
 import clsx from 'clsx';
+import DaumPostcode from 'react-daum-postcode'
 
 const useStyles = makeStyles((theme) => ({
   hide: {
@@ -50,6 +52,9 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
   
   const [ sameAsPurchaser, setSameAsPurchaser ] = useState(false)
   const [ isPurchasing, setIsPurchasing ] = useState(false)
+  const [zipcode, setZipcode] = useState("")
+  const [address, setAddress] = useState("")
+  const [openPostcodeEditor, setOpenPostcodeEditor] = useState(false)
 
   useEffect(() => {
     console.log(orderList)
@@ -158,6 +163,19 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
     }
   }
 
+  const openPostcodeWindow = () => {
+    setOpenPostcodeEditor(true)
+  }
+  const closePostcodeWindow = () => {
+    setOpenPostcodeEditor(false)
+  }
+  const handlePostcodeComplete = (data) => {
+    // console.log(data)
+    setZipcode(data.zonecode)
+    setAddress(data.address)
+    closePostcodeWindow()
+  }
+
   return(
     <Container width="sm" component={Grid} container className={classes.root} direction="column">
       <Paper className={classes.paper}>
@@ -242,25 +260,30 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
               type="number" inputProps={{ min: "0", step: "1" }}
               autoComplete="phone" />
             <TextField
-              inputRef={register({required: true})}
+            inputRef={register({required: true})}
+            value={zipcode}
               margin="normal"
               required
               name="delivery_zipcode"
               label="우편번호"
-              autoComplete="zipcode" />
+              autoComplete="zipcode" 
+              onClick={openPostcodeWindow}
+              />
             <TextField
               inputRef={register({required: true})}
+              value={address}
               margin="normal"
               required
               name="delivery_address1"
-              label="배송지 정보1"
-              autoComplete="address1" />
+              label="배송지 기본 주소"
+              autoComplete="address1"
+              onClick={openPostcodeWindow} />
             <TextField
               inputRef={register({required: true})}
               margin="normal"
               required
               name="delivery_address2"
-              label="배송지 정보2"
+              label="배송지 상세 주소"
               autoComplete="address2" />
             <TextField
               inputRef={register({})}
@@ -295,6 +318,15 @@ const OrderPlacePage = ({orderList, authStore, push}) => {
 
         </Paper>
       </form>
+      <Dialog 
+        fullWidth
+        maxWidth="sm"
+        open={openPostcodeEditor}
+        onClose={closePostcodeWindow}
+        aria-labelledby="design-write-dialog"
+      >
+        <DaumPostcode onComplete={handlePostcodeComplete}/>
+      </Dialog>
     </Container>
   )
 }
