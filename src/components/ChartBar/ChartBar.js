@@ -2,7 +2,7 @@ import React from 'react';
 
 
 import {
-  BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 
 const data = [
@@ -42,11 +42,8 @@ export default class ChartBar extends React.Component {
    
       
         return (
-           <div>
-             막대그래프
+          <ResponsiveContainer width="100%" height={300}>
              <BarChart
-        width={800}
-        height={300}
         data={this.props.barData}
         margin={{
           top: 20, right: 30, left: 20, bottom: 5,
@@ -60,7 +57,7 @@ export default class ChartBar extends React.Component {
       
         <Bar dataKey="num" stackId="a" fill="#82ca9d" />
       </BarChart>
-            </div>
+      </ResponsiveContainer>
         );
     }
 }

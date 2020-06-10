@@ -46,10 +46,8 @@ export default class ChartGra extends React.Component {
    
       
         return (
-           <div>
-             그래프
              <LineChart
-          width={600}
+          width={500}
           height={300}
           data={this.props.grapData}
           syncId="anyId"
@@ -63,9 +61,6 @@ export default class ChartGra extends React.Component {
           <Tooltip />
           <Line type="monotone" dataKey="num" stroke="#8884d8" fill="#8884d8" />
         </LineChart>
-
-      
-            </div>
         );
     }
 }

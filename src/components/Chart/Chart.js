@@ -3,6 +3,7 @@ import ChartBar from '../ChartBar';
 import ChartGra from '../ChartGra';
 import ChartPie from '../ChartPie'
 import { yujinserver } from '../../restfulapi';
+import { Box, Typography, Paper, Grid, Divider } from '@material-ui/core';
 
 export default class Chart extends React.Component {
   constructor(props) {
@@ -105,25 +106,67 @@ componentDidMount(){
   .catch(err => console.log(err));
   }
 
-    render() {
-        return (
-           <div>
-             통계관련
-             카테고리별 판매량
-             <ChartPie pieData={this.state.pieData} />
-             상의품목별판매량
-             <ChartBar barData={this.state.barData.category1}/>
-             하의품목별판매량
-             <ChartBar barData={this.state.barData.category2}/>
-             신발품목별판매량
-             <ChartBar barData={this.state.barData.category3}/>
-             악세서리품목별판매량
-             <ChartBar barData={this.state.barData.category4}/>
-             총 수익 그래프
-             <ChartGra grapData={this.state.grapData}/>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <Box>
+        <Typography gutterBottom variant="h5">요약</Typography>
+        <Divider />
+        <Box display="flex" p={1} flexDirection="row">
+          <Box p={1} m={3} component={Paper}>
+            <Typography gutterBottom>월 수익 그래프</Typography>
+            <ChartGra grapData={this.state.grapData}/>
+          </Box>
+          <Box flexGrow={1} p={1} m={3} component={Paper}>
+            <Typography gutterBottom>카테고리별 판매총량</Typography>
+            <ChartPie pieData={this.state.pieData} />
+          </Box>
+        </Box>
+        <Typography gutterBottom variant="h5">품목별 판매량</Typography>
+        <Divider />
+        <Box p={1}>
+          <Grid container direction="row">
+            <Box width={1/2} p={1}>
+              <Box p={1} component={Paper}>
+                <Typography gutterBottom>👔상의</Typography>
+                <ChartBar barData={this.state.barData.category1}/>
+              </Box>
+            </Box>
+            <Box width={1/2} p={1}>
+              <Box p={1} component={Paper}>
+              <Typography gutterBottom>👖하의</Typography>
+              <ChartBar barData={this.state.barData.category2}/>
+              </Box>
+            </Box>
+            <Box width={1/2} p={1}>
+              <Box p={1} component={Paper}>
+              <Typography gutterBottom>🎀패션잡화</Typography>
+              <ChartBar barData={this.state.barData.category3}/>
+              </Box>
+            </Box>
+            <Box width={1/2} p={1}>
+              <Box p={1} component={Paper}>
+              <Typography gutterBottom>🥾신발</Typography>
+              <ChartBar barData={this.state.barData.category4}/>
+              </Box>
+            </Box>
+          </Grid>
+        </Box>
+      </Box>
+            //  통계관련
+            //  카테고리별 판매량
+            //  <ChartPie pieData={this.state.pieData} />
+            //  상의품목별판매량
+            //  <ChartBar barData={this.state.barData.category1}/>
+            //  하의품목별판매량
+            //  <ChartBar barData={this.state.barData.category2}/>
+            //  신발품목별판매량
+            //  <ChartBar barData={this.state.barData.category3}/>
+            //  악세서리품목별판매량
+            //  <ChartBar barData={this.state.barData.category4}/>
+            //  총 수익 그래프
+            // </div>
+    );
+  }
 
     convertResDataToChartPie(datas) {
       const tempData = [];
@@ -137,10 +180,10 @@ componentDidMount(){
             name = '하의';
             break;
           case 3:
-            name = '신발';
+            name = '패션잡화';
             break;
           case 4:
-            name = '악세사리';
+            name = '신발';
             break;
         }
 
@@ -158,15 +201,15 @@ componentDidMount(){
       Object.keys(datas).map((key) => {
         const tempData = [];
         for (const data of datas[key]) {
-          let name = '';
-          if(data.product.pname.length > 4) {
-            for ( let i =0; i < 4; i++) {
-              name += data.product.pname[i];
-            }
-            name += '...';
-          }
+          // let name = '';
+          // if(data.product.pname.length > 4) {
+          //   for ( let i =0; i < 4; i++) {
+          //     name += data.product.pname[i];
+          //   }
+          //   name += '...';
+          // }
           tempData.push({
-            name, // name: data.product.pname, 
+            name: data.product.pname, 
             num: data.sales - 0
           });
         }
@@ -226,13 +269,17 @@ componentDidMount(){
 
 
 const callApi1 = async () => {
-  const response = await fetch(yujinserver+'/category')
+  const response = await fetch(yujinserver+'/category', {
+    credentials: 'include'
+  })
   const body = await response.json();
  // console.log(body); //consolelog찍어보면 res로 image경로가 제대로넘어오긴한다 근데 나오질않는다 시발!!!
   return body;
 }
   const callApi2 = async () => {
-    const response = await fetch(yujinserver+'/category/detail')
+    const response = await fetch(yujinserver+'/category/detail', {
+      credentials: 'include'
+    })
     const body = await response.json();
    // console.log(body); //consolelog찍어보면 res로 image경로가 제대로넘어오긴한다 근데 나오질않는다 시발!!!
     return body;
@@ -240,7 +287,9 @@ const callApi1 = async () => {
   
 
   const callApi3 = async () => {
-    const response = await fetch(yujinserver+'/month')
+    const response = await fetch(yujinserver+'/month', {
+      credentials: 'include'
+    })
     const body = await response.json();
    // console.log(body); //consolelog찍어보면 res로 image경로가 제대로넘어오긴한다 근데 나오질않는다 시발!!!
     return body;
