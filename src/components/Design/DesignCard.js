@@ -30,6 +30,8 @@ import {
   Person as PersonIcon,
   PersonAdd as FollowIcon,
   PersonAddDisabled as UnfollowIcon,
+  Clear,
+  Done,
 } from '@material-ui/icons'
 
 import {yujinserver} from '../../restfulapi'
@@ -39,6 +41,8 @@ import { requestUnfollow, requestFollow } from '../../actions/follow';
 import { push } from 'connected-react-router';
 import ChipInput from 'material-ui-chip-input';
 import FollowButton from '../Community/FollowButton';
+import NameAvatar from '../common/NameAvatar';
+import ConfirmPopover from '../Closet/ConfirmPopover';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -93,6 +97,7 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
   const [hashtagEdit, setHashtagEdit] = useState(false)
   const [hashtagFormValue, setHashtagFormValue] =useState([])
   const [cardSize, setCardSize] = useState(1)
+  const [popoverTarget, setPopoverTarget] = useState(null)
   // const [ userPopoverAnchor, setUserPopoverAnchor ] = useState(null)
 
   
@@ -150,13 +155,48 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
     }
     else setHashtagEdit(!hashtagEdit)
   }
-
-  const hashtagEditForm = <ChipInput 
-    label="태그 수정"
-    fullWidth
-    defaultValue={hashtags}
-    onChange={(chips) => setHashtagFormValue(chips)}
-  />
+  const hashtagView = (
+    <Box display="flex" flexGrow={1}>
+      <Box flexGrow={1}>
+        {hashtagChips}
+      </Box>
+      {sessionId === design.user.id?(
+        <React.Fragment>
+          <Tooltip title="수정">
+            <IconButton onClick={handleHashtagEdit}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="삭제">
+            <IconButton onClick={(event) => setPopoverTarget(event.target)}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+          <ConfirmPopover text="정말 삭제하시겠습니까?" target={popoverTarget} action={() => deleteDesign()} cancel={() => setPopoverTarget(null)} />
+        </React.Fragment>
+      ):null}
+    </Box>
+  )
+  const hashtagEditForm = (
+    <Box display="flex" flexGrow={1}>
+      <Box flexGrow={1} component={ChipInput}
+      label="태그 수정"
+      fullWidth
+      defaultValue={hashtags}
+      onChange={(chips) => setHashtagFormValue(chips)}
+      />
+      <Tooltip title="수정 취소">
+        <IconButton onClick={() => setHashtagEdit(false)}>
+          <Clear />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="적용">
+        <IconButton onClick={() => submitHashtagEdit()} >
+          <Done />
+        </IconButton>
+      </Tooltip>
+    </Box>
+  )
   const submitHashtagEdit = () => {
     if(sessionId !== design.user.id){
       enqueueSnackbar("자기 글만 수정합시다",{"variant": "error"});
@@ -172,17 +212,36 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
           content: hashtagFormValue,
       }),
       credentials: 'include',
-  })
-  .then(response => response.text(),
-      error => console.error(error))
-  .then(text => {
-      if(text === 'success'){
-        enqueueSnackbar("수정완료요",{"variant": "success"});
-        setHashtags(hashtagFormValue)
-      }
-      else enqueueSnackbar("실패요",{"variant": "error"});
-      setHashtagEdit(false)
-  })
+    })
+    .then(response => response.text(),
+        error => console.error(error))
+    .then(text => {
+        if(text === 'success'){
+          enqueueSnackbar("태그를 수정했습니다.",{"variant": "success"});
+          setHashtags(hashtagFormValue)
+        }
+        else enqueueSnackbar("삭제에 실패했습니다. 계속되면 관리자에게 문의해주세요.",{"variant": "error"});
+        setHashtagEdit(false)
+    })
+  }
+  const deleteDesign = () => {
+    if(sessionId !== design.user.id){
+      enqueueSnackbar("자기 글만 삭제합시다",{"variant": "error"});
+    }
+    fetch(yujinserver+"/design/"+design.id, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
+    .then(response => response.text(),
+        error => console.error(error))
+    .then(text => {
+        if(text === 'success'){
+          enqueueSnackbar("공유한 코디를 삭제했습니다.",{"variant": "success"});
+          reload()
+        }
+        else enqueueSnackbar("삭제에 실패했습니다. 계속되면 관리자에게 문의해주세요.",{"variant": "error"});
+        setHashtagEdit(false)
+    })
   }
 
   return (
@@ -193,39 +252,7 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
             // onMouseEnter={handlePopoverOpen}
             // onMouseLeave={handlePopoverClose}
             >
-            <Avatar>{design.user.name}</Avatar>
-            {/* <Popover
-              className={classes.popover}
-              open={userPopoverOpened}
-              anchorEl={userPopoverAnchor}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              onClose={handlePopoverClose}
-
-              disableRestoreFocus
-              >
-              <Box
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}>
-                <Typography>{design.user.name}</Typography>
-                <Tooltip 
-                  placement="top" 
-                  title={follows?"언팔로우":"팔로우"}
-                  >
-                  <IconButton aria-label="follow" color="primary" centerRipple onClick={handleFollow}>
-                    {follows?
-                      <UnfollowIcon  />
-                    :<FollowIcon  />}
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </Popover> */}
+            <NameAvatar name={design.user.name} />
           </Grid>
           <Box>
             <Typography>{design.user.name}</Typography>
@@ -254,24 +281,7 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
           className={classes.cardMedia} />
       </CardActionArea>
       <CardActions disableSpacing>
-        <Box flexGrow={1}>
-          {hashtagEdit? hashtagEditForm:hashtagChips}
-        </Box>
-        <Tooltip title="수정">
-          <IconButton onClick={submitHashtagEdit}>
-            
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="수정">
-          <IconButton onClick={handleHashtagEdit}>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="삭제">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+        {hashtagEdit? hashtagEditForm : hashtagView}
         <Tooltip title="사용된 상품">
           <IconButton
             className={clsx(classes.expand, {
@@ -287,7 +297,7 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          {design.closet.products.map((product) => {
+          {design.closet !== null?design.closet.products.map((product) => {
             return(
               <Box component={Card} width={1} elevation={0} className={classes.product}>
                 <Link component={CardActionArea} to={"/productDetail/"+product.id} style={{width: "25%"}}>
@@ -302,7 +312,7 @@ const DesignCard = ({sessionId, width, design, designStore, followStore, request
                 </CardContent>
               </Box>
             )
-          })}
+          }) : null}
         </CardContent>
       </Collapse>
     </Box>
